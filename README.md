@@ -1,14 +1,10 @@
 # 🔌 Ali Alfridawi — Portfolio Website
 
-A professional portfolio website showcasing my work as an Electrical Engineering student with a passion for photonics, signal processing, and computational engineering. Built with a custom "Silicon & Schematic" design theme featuring animated PCB patterns, circuit symbols, and signal flow visualizations.
-
 ---
 
 ## 👤 About Me
 
-I'm **Ali Alfridawi**, an Electrical Engineering student at the University of Texas at Arlington driven by curiosity in photonics and signal processing. Currently conducting undergraduate research in nanophotonics, developing Python-based simulation frameworks to model optical phenomena and analyze experimental data.
-
-My work bridges theory and practice—translating complex mathematical models into efficient computational tools. I'm passionate about solving engineering challenges, contributing to meaningful research, and building elegant solutions that combine hardware knowledge with software expertise.
+I'm **Ali Alfridawi**, an Electrical Engineering student at the University of Texas at Arlington driven by curiosity in photonics and signal processing. Currently conducting undergraduate research in nanophotonics, developing Python-based simulation frameworks to model optical phenomena and analyze experimental data. I'm passionate about solving engineering challenges, contributing to meaningful research, and building elegant solutions that combine hardware knowledge with software expertise.
 
 ---
 
@@ -80,13 +76,4 @@ portfolioWebsite/
 │   └── icon.png          # Favicon
 └── README.md             # This file
 ```
-
-### Key Features
-
-- **Multi-layer PCB background** with animated via holes and copper traces
-- **Circuit schematic symbols** (resistors, capacitors, ICs, logic gates, op-amps)
-- **Signal flow animations** representing data buses and waveforms
-- **Terminal-style header** with typing effect
-- **Section reveal animations** on scroll
-- **Responsive design** with mobile support
 
