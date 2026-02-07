@@ -6,16 +6,16 @@ import Taskbar from './Taskbar.jsx';
 const portfolioData = {
   header: {
     name: 'Ali Alfridawi',
-    title: 'Electrical Engineering Student',
-    bio: 'Young engineer passionate about photonics excited to participate in research and innovate in the field of electrical engineering.',
+    title: 'Computer Science and Electrical Engineering Major',
+    bio: 'Engineer passionate about the intersection of computer science and electrical engineering, with a focus on photonics research and building the tools that power discovery.',
   },
   about: {
     content:
-      "I'm an Electrical Engineering student at UTA driven by curiosity in photonics and signal processing. Currently conducting undergraduate research in nanophotonics, developing Python-based simulation frameworks to model optical phenomena and analyze experimental data. My work bridges theory and practice—translating complex mathematical models into efficient computational tools. I'm passionate about solving engineering challenges, contributing to meaningful research, and building elegant solutions that combine hardware knowledge with software expertise. Always eager to collaborate, learn from experienced engineers, and explore opportunities at the intersection of photonics and computational engineering.",
+      "I'm a Computer Science and Electrical Engineering student at UTA driven by curiosity at the intersection of both fields. Currently conducting undergraduate research in nanophotonics, developing Python-based simulation frameworks to model optical phenomena and analyze experimental data. I'm exploring how machine learning can be applied to my research—from pattern recognition in optical datasets to predictive modeling of photonic structures. My work bridges theory and practice, translating complex mathematical models into efficient computational tools. I'm passionate about building robust engineering tooling, contributing to meaningful research, and crafting elegant solutions that combine hardware knowledge with software expertise. Always eager to collaborate and learn—feel free to reach out.",
   },
   education: [
     {
-      degree: 'Bachelor of Science in Electrical Engineering',
+      degree: 'Bachelor of Science in Computer Science & Electrical Engineering',
       school: 'University of Texas at Arlington',
       year: '2029',
     },
@@ -101,209 +101,9 @@ const TypingEffect = ({ text, speed = 30, className = "" }) => {
   );
 };
 
-// Floating Particle Component
-const FloatingParticle = ({ color, size, delay, duration, left }) => {
-  return (
-    <div
-      className={`animate-float-particle ${color}`}
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: '50%',
-        left: `${left}%`,
-        animationDelay: `${delay}s`,
-        animationDuration: `${duration}s`,
-        boxShadow: `0 0 ${size / 2}px currentColor`,
-      }}
-    />
-  );
-};
-
-// Matrix-style Text Component
-const MatrixText = ({ char, delay, duration, left, top, color }) => {
-  return (
-    <div
-      className={`animate-matrix-fall ${color}`}
-      style={{
-        left: `${left}%`,
-        top: `${top}px`,
-        animationDelay: `${delay}s`,
-        animationDuration: `${duration}s`,
-        color: color === 'text-blue-400' ? '#3b82f6' : color === 'text-orange-500' ? '#f97316' : '#22c55e',
-      }}
-    >
-      {char}
-    </div>
-  );
-};
-
-// Circuit Trace Component
-const CircuitTrace = ({ className, style }) => (
-  <svg className={`absolute pointer-events-none ${className}`} style={style} viewBox="0 0 100 100" preserveAspectRatio="none">
-    <path className="circuit-trace animate-trace" d="M0,50 L20,50 L30,20 L50,20 L60,80 L80,80 L100,50" />
-  </svg>
-);
-
-// ===== NEW CIRCUIT SYMBOL COMPONENTS =====
-
-// Resistor Symbol (EE)
-const ResistorSymbol = ({ style, className = "" }) => (
-  <div className={`circuit-symbol animated ${className}`} style={style}>
-    <svg viewBox="0 0 100 40" fill="none" stroke="#f97316" strokeWidth="2">
-      <path d="M0,20 L20,20 L25,5 L35,35 L45,5 L55,35 L65,5 L75,35 L80,20 L100,20" />
-    </svg>
-  </div>
-);
-
-// Capacitor Symbol (EE)
-const CapacitorSymbol = ({ style, className = "" }) => (
-  <div className={`circuit-symbol animated ${className}`} style={style}>
-    <svg viewBox="0 0 60 60" fill="none" stroke="#3b82f6" strokeWidth="2">
-      <path d="M0,30 L20,30" />
-      <path d="M20,10 L20,50" />
-      <path d="M30,10 L30,50" />
-      <path d="M30,30 L50,30" />
-    </svg>
-  </div>
-);
-
-// IC Chip Symbol (CS/EE)
-const ICChipSymbol = ({ style, className = "" }) => (
-  <div className={`circuit-symbol animated ${className}`} style={style}>
-    <svg viewBox="0 0 80 100" fill="none" stroke="#f97316" strokeWidth="1.5">
-      <rect x="15" y="10" width="50" height="80" rx="2" />
-      {/* Left pins */}
-      <path d="M0,25 L15,25" />
-      <path d="M0,40 L15,40" />
-      <path d="M0,55 L15,55" />
-      <path d="M0,70 L15,70" />
-      {/* Right pins */}
-      <path d="M65,25 L80,25" />
-      <path d="M65,40 L80,40" />
-      <path d="M65,55 L80,55" />
-      <path d="M65,70 L80,70" />
-      {/* Notch */}
-      <circle cx="40" cy="18" r="4" />
-    </svg>
-  </div>
-);
-
-// AND Gate Symbol (CS/EE - Logic)
-const AndGateSymbol = ({ style, className = "" }) => (
-  <div className={`circuit-symbol animated ${className}`} style={style}>
-    <svg viewBox="0 0 80 60" fill="none" stroke="#3b82f6" strokeWidth="2">
-      <path d="M0,15 L20,15 L20,5 Q60,5 60,30 Q60,55 20,55 L20,45 L0,45" />
-      <path d="M60,30 L80,30" />
-    </svg>
-  </div>
-);
-
-// Op-Amp Symbol (EE)
-const OpAmpSymbol = ({ style, className = "" }) => (
-  <div className={`circuit-symbol animated ${className}`} style={style}>
-    <svg viewBox="0 0 80 60" fill="none" stroke="#f97316" strokeWidth="2">
-      <path d="M10,5 L10,55 L70,30 Z" />
-      <path d="M0,15 L10,15" />
-      <path d="M0,45 L10,45" />
-      <path d="M70,30 L80,30" />
-      {/* Plus/Minus symbols */}
-      <text x="15" y="20" fontSize="10" fill="#f97316" stroke="none">−</text>
-      <text x="15" y="50" fontSize="10" fill="#f97316" stroke="none">+</text>
-    </svg>
-  </div>
-);
-
-// Signal Flow Path Component
-const SignalFlowPath = ({ id, pathData, color = "orange", style }) => (
-  <svg className="signal-path" style={style} viewBox="0 0 400 200" preserveAspectRatio="none">
-    <path className="trace-glow" d={pathData} />
-    <path className={`trace-${color}`} d={pathData} style={{ animationDelay: `${id * 0.5}s` }} />
-  </svg>
-);
-
-// Data Bus Component
-const DataBus = ({ style, lines = 8 }) => (
-  <svg className="data-bus" style={style} viewBox="0 0 100 200">
-    {Array.from({ length: lines }).map((_, i) => (
-      <line
-        key={i}
-        className="data-bus-line"
-        x1="0"
-        y1={10 + i * 22}
-        x2="100"
-        y2={10 + i * 22}
-        style={{ animationDelay: `${i * 0.3}s` }}
-      />
-    ))}
-  </svg>
-);
-
-// Oscilloscope Waveform Component
-const OscilloscopeWave = ({ style, type = "sine", color = "orange" }) => {
-  const paths = {
-    sine: "M0,50 Q25,0 50,50 T100,50 T150,50 T200,50",
-    square: "M0,50 L0,10 L25,10 L25,90 L50,90 L50,10 L75,10 L75,90 L100,90 L100,10 L125,10 L125,90 L150,90 L150,10 L175,10 L175,90 L200,90",
-    triangle: "M0,50 L12.5,10 L37.5,90 L62.5,10 L87.5,90 L112.5,10 L137.5,90 L162.5,10 L187.5,90 L200,50"
-  };
-  
-  return (
-    <div className="oscilloscope-container" style={style}>
-      <svg className={`oscilloscope-wave ${color === "blue" ? "blue" : ""}`} viewBox="0 0 200 100" preserveAspectRatio="none" style={{ width: '200%' }}>
-        <path d={paths[type]} />
-      </svg>
-    </div>
-  );
-};
-
-// Via Hole Layer Component
-const ViaLayer = () => {
-  const vias = [
-    { left: 5, top: 15, size: 8, delay: 0 },
-    { left: 12, top: 45, size: 6, delay: 1, blue: true },
-    { left: 25, top: 80, size: 10, delay: 2 },
-    { left: 35, top: 25, size: 7, delay: 0.5, blue: true },
-    { left: 48, top: 60, size: 9, delay: 1.5 },
-    { left: 55, top: 10, size: 6, delay: 2.5 },
-    { left: 68, top: 35, size: 8, delay: 0.8, blue: true },
-    { left: 75, top: 75, size: 10, delay: 1.8 },
-    { left: 82, top: 50, size: 7, delay: 2.2 },
-    { left: 90, top: 20, size: 9, delay: 0.3, blue: true },
-    { left: 95, top: 85, size: 6, delay: 1.2 },
-  ];
-
-  return (
-    <div className="via-layer">
-      {vias.map((via, i) => (
-        <div
-          key={i}
-          className={`via-hole ${via.blue ? 'blue' : ''}`}
-          style={{
-            left: `${via.left}%`,
-            top: `${via.top}%`,
-            width: `${via.size}px`,
-            height: `${via.size}px`,
-            animationDelay: `${via.delay}s`
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-// Binary Overlay Component
-const BinaryOverlay = ({ text, style }) => (
-  <div className="binary-overlay" style={style}>
-    {text}
-  </div>
-);
-
-// PCB Divider Component
-const PCBDivider = () => (
-  <div className="pcb-divider relative">
-    <div className="absolute top-1/2 left-0 w-full h-px bg-slate-700"></div>
-    <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-orange-500 rounded-full transform -translate-y-1/2 shadow-lg shadow-orange-500/50"></div>
-    <div className="absolute top-1/2 left-3/4 w-2 h-2 bg-orange-500 rounded-full transform -translate-y-1/2 shadow-lg shadow-orange-500/50"></div>
-  </div>
+// Section Divider Component
+const SectionDivider = () => (
+  <div className="section-divider" />
 );
 
 // New Project Card Component
@@ -313,13 +113,13 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
       {/* Card Header */}
       <button
         onClick={onToggle}
-        className="w-full px-8 py-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors focus-visible:outline-2 focus-visible:outline-orange-500"
+        className="w-full px-8 py-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors focus-visible:outline-2 focus-visible:outline-green-500"
         aria-expanded={isExpanded}
       >
         <div className="flex-1 text-left">
           <div className="flex items-center gap-4 mb-2">
-            <h3 className="text-xl md:text-2xl font-mono text-orange-500 hover-glitch">{project.name}</h3>
-            <span className="px-2 py-1 text-xs border border-blue-500/30 text-blue-400 bg-blue-500/10 font-mono">
+            <h3 className="text-xl md:text-2xl font-mono text-green-500 hover-glitch">{project.name}</h3>
+            <span className="px-2 py-1 text-xs border border-green-500/30 text-green-400 bg-green-500/10 font-mono">
               STATUS::{project.status.toUpperCase()}
             </span>
           </div>
@@ -335,7 +135,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
           </div>
         </div>
         <ChevronDown
-          className={`w-5 h-5 text-orange-500 transition-transform duration-300 ${
+          className={`w-5 h-5 text-green-500 transition-transform duration-300 ${
             isExpanded ? 'rotate-180' : ''
           }`}
         />
@@ -344,17 +144,17 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
       {/* Expandable Content */}
       <div className={`project-expand-grid ${isExpanded ? 'open' : ''}`}>
         <div className="project-expand-inner border-t border-slate-700 px-8 py-8 bg-slate-900/50">
-          <div className="font-mono text-slate-300 mb-6 text-sm leading-relaxed border-l-2 border-orange-500/50 pl-4">
+          <div className="font-mono text-slate-300 mb-6 text-sm leading-relaxed border-l-2 border-green-500/50 pl-4">
             {project.longDescription}
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div>
-              <h4 className="text-sm font-mono text-blue-400 mb-3 uppercase tracking-wider">System Features</h4>
+              <h4 className="text-sm font-mono text-green-400 mb-3 uppercase tracking-wider">System Features</h4>
               <ul className="space-y-2">
                 {project.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-slate-400 font-mono">
-                    <span className="text-orange-500 mt-1">▹</span>
+                    <span className="text-green-500 mt-1">▹</span>
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -362,7 +162,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
             </div>
 
             <div>
-              <h4 className="text-sm font-mono text-blue-400 mb-3 uppercase tracking-wider">Tech Stack</h4>
+              <h4 className="text-sm font-mono text-green-400 mb-3 uppercase tracking-wider">Tech Stack</h4>
               <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech, idx) => (
                   <span
@@ -380,7 +180,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-2 border border-orange-500 text-orange-400 hover:bg-orange-500/10 hover:text-orange-300 transition-all font-mono text-sm group"
+            className="inline-flex items-center gap-2 px-6 py-2 border border-green-500 text-green-400 hover:bg-green-500/10 hover:text-green-300 transition-all font-mono text-sm group"
           >
             <Github className="w-4 h-4" />
             <span>SOURCE_CODE</span>
@@ -394,7 +194,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
 
 // Simple Briefcase Icon substitute for Lucide import
 const BriefcaseIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500 w-8 h-8">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500 w-8 h-8">
     <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
   </svg>
@@ -414,7 +214,7 @@ export default function Portfolio() {
     const timer = setTimeout(() => {
       setIsFadingOut(true);
       // Remove overlay from DOM after fade animation completes
-      setTimeout(() => setIsLoading(false), 500);
+      setTimeout(() => setIsLoading(false), 800);
     }, 2000);
     return () => clearTimeout(timer);
   }, []);
@@ -452,89 +252,22 @@ export default function Portfolio() {
       {/* Loading Overlay */}
       {isLoading && (
         <div className={`loading-overlay ${isFadingOut ? 'fade-out' : ''}`}>
-          <Cpu className="loading-chip" />
-          <div className="loading-text">INITIALIZING...</div>
+          <div className="loading-ambient" />
+          <div className="loading-rings">
+            <div className="loading-ring" />
+            <div className="loading-ring" />
+            <div className="loading-ring" />
+          </div>
+          <div className="loading-text">LOADING</div>
           <div className="loading-progress-container">
             <div className="loading-progress-bar"></div>
           </div>
         </div>
       )}
 
-      {/* Multi-Layer PCB Background */}
-      <div className="schematic-grid"></div>
-      
-      {/* Via Holes Layer */}
-      <ViaLayer />
-      
-      {/* Circuit Symbols - EE Theme */}
-      <ResistorSymbol style={{ top: '8%', left: '3%', width: '120px' }} />
-      <CapacitorSymbol style={{ top: '25%', right: '5%', width: '60px' }} />
-      <ICChipSymbol style={{ top: '45%', left: '2%', width: '70px' }} />
-      <OpAmpSymbol style={{ top: '65%', right: '3%', width: '80px' }} />
-      <ResistorSymbol style={{ top: '82%', left: '8%', width: '100px' }} />
-      
-      {/* Circuit Symbols - CS/Logic Theme */}
-      <AndGateSymbol style={{ top: '15%', right: '8%', width: '70px' }} />
-      <ICChipSymbol style={{ top: '55%', right: '6%', width: '60px' }} />
-      <AndGateSymbol style={{ top: '75%', left: '5%', width: '65px' }} />
-      <CapacitorSymbol style={{ top: '35%', left: '6%', width: '50px' }} />
-      
-      {/* Signal Flow Paths */}
-      <SignalFlowPath 
-        id={1} 
-        pathData="M0,100 C100,80 150,120 250,60 S350,100 400,50" 
-        color="orange" 
-        style={{ top: '10%', left: '-5%', width: '50%', height: '150px', opacity: 0.4 }} 
-      />
-      <SignalFlowPath 
-        id={2} 
-        pathData="M0,50 C80,120 160,20 240,80 S320,40 400,100" 
-        color="blue" 
-        style={{ bottom: '20%', right: '-5%', width: '45%', height: '120px', opacity: 0.4 }} 
-      />
-      <SignalFlowPath 
-        id={3} 
-        pathData="M0,80 L100,80 L120,40 L180,40 L200,100 L280,100 L300,60 L400,60" 
-        color="orange" 
-        style={{ top: '50%', left: '10%', width: '40%', height: '100px', opacity: 0.3 }} 
-      />
-      
-      {/* Data Bus */}
-      <DataBus style={{ top: '30%', right: '2%', width: '60px', height: '180px', opacity: 0.5 }} />
-      <DataBus style={{ bottom: '35%', left: '1%', width: '50px', height: '160px', opacity: 0.4 }} lines={6} />
-      
-      {/* Oscilloscope Waveforms */}
-      <OscilloscopeWave type="sine" style={{ bottom: '5%', left: '10%', width: '300px', height: '60px' }} />
-      <OscilloscopeWave type="square" color="blue" style={{ top: '5%', right: '15%', width: '250px', height: '50px' }} />
-      <OscilloscopeWave type="triangle" style={{ top: '40%', right: '10%', width: '200px', height: '40px' }} />
-      
-      {/* Binary/Hex Overlay Text */}
-      <BinaryOverlay text="0x4F 0x72 0x61 0x6E 0x67 0x65" style={{ top: '18%', left: '15%', animationDelay: '0s' }} />
-      <BinaryOverlay text="10110100 11001010 01010111" style={{ top: '42%', right: '20%', animationDelay: '5s' }} />
-      <BinaryOverlay text="0xDEADBEEF 0xCAFEBABE" style={{ bottom: '30%', left: '25%', animationDelay: '10s' }} />
-      
-      {/* Floating Particles */}
-      <FloatingParticle color="text-blue-400" size={6} delay={0} duration={12} left={10} />
-      <FloatingParticle color="text-orange-500" size={4} delay={2} duration={14} left={20} />
-      <FloatingParticle color="text-green-500" size={5} delay={4} duration={13} left={30} />
-      <FloatingParticle color="text-purple-500" size={4} delay={1} duration={15} left={40} />
-      <FloatingParticle color="text-cyan-400" size={6} delay={3} duration={12} left={50} />
-      <FloatingParticle color="text-blue-400" size={5} delay={5} duration={14} left={60} />
-      <FloatingParticle color="text-pink-500" size={4} delay={2} duration={13} left={70} />
-      <FloatingParticle color="text-green-500" size={6} delay={0} duration={15} left={80} />
-      <FloatingParticle color="text-orange-500" size={5} delay={4} duration={12} left={90} />
-      
-      {/* Matrix-style Characters */}
-      <MatrixText char="&lt;" delay={0} duration={15} left={5} top={100} color="text-blue-400" />
-      <MatrixText char="&gt;" delay={2} duration={15} left={15} top={200} color="text-orange-500" />
-      <MatrixText char="/" delay={4} duration={15} left={25} top={300} color="text-green-500" />
-      <MatrixText char="0" delay={1} duration={15} left={35} top={150} color="text-cyan-400" />
-      <MatrixText char="1" delay={3} duration={15} left={45} top={250} color="text-purple-500" />
-      <MatrixText char="&lt;" delay={5} duration={15} left={55} top={350} color="text-pink-500" />
-      <MatrixText char="=" delay={2} duration={15} left={65} top={100} color="text-blue-400" />
-      <MatrixText char="&gt;" delay={4} duration={15} left={75} top={200} color="text-orange-500" />
-      <MatrixText char="/" delay={1} duration={15} left={85} top={300} color="text-green-500" />
-      
+      {/* PCB Circuit Board Background */}
+      <div className="pcb-background" />
+
       <Taskbar sectionRefs={sectionRefs.current} />
 
       <div id="scroll-progress" className="scroll-progress transform scale-x-0 origin-left" />
@@ -547,8 +280,6 @@ export default function Portfolio() {
         
         {/* HEADER Section */}
         <header ref={el => sectionRefs.current['header'] = el} className="min-h-[80vh] flex flex-col justify-center mb-24 relative">
-          <CircuitTrace className="top-20 left-10 w-64 h-32 opacity-20" />
-          
           <div className="terminal-window max-w-3xl w-full mx-auto section-reveal visible">
             <div className="terminal-header">
               <div className="terminal-dot dot-red"></div>
@@ -560,12 +291,12 @@ export default function Portfolio() {
               <h1 className="text-4xl md:text-6xl font-bold text-slate-100 mb-4 hover-glitch">
                 {portfolioData.header.name}
               </h1>
-              <h2 className="text-xl md:text-2xl text-orange-500 font-mono mb-8">
+              <h2 className="text-xl md:text-2xl text-green-500 font-mono mb-8">
                 &lt;{portfolioData.header.title} /&gt;
               </h2>
               
               <div className="font-mono text-sm md:text-base text-slate-400 leading-relaxed border-l-2 border-slate-700 pl-4 mb-8">
-                 <span className="text-blue-400">const</span> bio = <span className="text-green-400">"</span>
+                 <span className="text-green-400">const</span> bio = <span className="text-green-400">"</span>
                  <TypingEffect text={portfolioData.header.bio} speed={30} />
                  <span className="text-green-400">"</span>;
               </div>
@@ -574,10 +305,10 @@ export default function Portfolio() {
               <div className="text-xs text-slate-600 mt-4 hidden">Raw: {portfolioData.header.bio}</div>
 
               <div className="flex flex-wrap gap-4">
-                <div className="px-4 py-2 border border-orange-500/30 bg-orange-500/10 text-orange-400 font-mono text-sm">
+                <div className="px-4 py-2 border border-green-500/30 bg-green-500/10 text-green-400 font-mono text-sm">
                   :: UTA Freshman
                 </div>
-                <div className="px-4 py-2 border border-blue-500/30 bg-blue-500/10 text-blue-400 font-mono text-sm">
+                <div className="px-4 py-2 border border-green-500/30 bg-green-500/10 text-green-400 font-mono text-sm">
                   :: Research Assistant
                 </div>
               </div>
@@ -585,12 +316,12 @@ export default function Portfolio() {
           </div>
         </header>
 
-        <PCBDivider />
+        <SectionDivider />
 
         {/* ABOUT Section */}
         <section ref={el => sectionRefs.current['about'] = el} className={`section-reveal ${visibleSections.has('about') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
-             <Terminal className="w-8 h-8 text-orange-500" />
+             <Terminal className="w-8 h-8 text-green-500" />
              <h2 className="text-3xl font-bold text-slate-100">SYSTEM_OVERVIEW</h2>
           </div>
           
@@ -604,14 +335,14 @@ export default function Portfolio() {
         {/* INFO GRID (Hobbies/Focus/Interest) */}
         <section ref={el => sectionRefs.current['bio'] = el} className={`section-reveal ${visibleSections.has('bio') ? 'visible' : ''} mb-32`}>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="card-schematic p-6 hover:border-blue-500 group">
+            <div className="card-schematic p-6 hover:border-green-500 group">
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 01</div>
-              <h3 className="text-xl text-blue-400 font-mono mb-2 group-hover:text-blue-300">Hobbies</h3>
+              <h3 className="text-xl text-green-400 font-mono mb-2 group-hover:text-green-300">Hobbies</h3>
               <p className="text-sm text-slate-400 font-mono">Card Games & Working Out</p>
             </div>
-            <div className="card-schematic p-6 hover:border-orange-500 group">
+            <div className="card-schematic p-6 hover:border-green-500 group">
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 02</div>
-              <h3 className="text-xl text-orange-500 font-mono mb-2 group-hover:text-orange-300">Focus</h3>
+              <h3 className="text-xl text-green-500 font-mono mb-2 group-hover:text-green-300">Focus</h3>
               <p className="text-sm text-slate-400 font-mono">Photonics & Electronics</p>
             </div>
             <div className="card-schematic p-6 hover:border-green-500 group">
@@ -622,13 +353,13 @@ export default function Portfolio() {
           </div>
         </section>
 
-        <PCBDivider />
+        <SectionDivider />
 
         {/* EDUCATION Section */}
         <section ref={el => sectionRefs.current['education'] = el} className={`section-reveal ${visibleSections.has('education') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
-             <div className="w-8 h-8 border border-orange-500 flex items-center justify-center">
-               <span className="text-orange-500 font-mono font-bold">E</span>
+             <div className="w-8 h-8 border border-green-500 flex items-center justify-center">
+               <span className="text-green-500 font-mono font-bold">E</span>
              </div>
             <h2 className="text-3xl font-bold text-slate-100">EDUCATION_LOG</h2>
           </div>
@@ -641,7 +372,7 @@ export default function Portfolio() {
                 </div>
                 <h3 className="text-2xl text-slate-100 font-bold mb-2">{edu.degree}</h3>
                 <div className="flex flex-wrap items-center gap-4 text-sm font-mono text-slate-400">
-                  <span className="text-orange-500">{edu.school}</span>
+                  <span className="text-green-500">{edu.school}</span>
                   <span>|</span>
                   <span>Class of {edu.year}</span>
                 </div>
@@ -660,16 +391,16 @@ export default function Portfolio() {
            <div className="border-l-2 border-slate-800 ml-4 space-y-12">
              {portfolioData.experience.map((exp, idx) => (
                <div key={idx} className="relative pl-8">
-                 <div className="absolute -left-[9px] top-0 w-4 h-4 bg-slate-900 border-2 border-orange-500 rounded-full"></div>
+                 <div className="absolute -left-[9px] top-0 w-4 h-4 bg-slate-900 border-2 border-green-500 rounded-full"></div>
                  
                  <div className="card-schematic p-8">
                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                      <h3 className="text-xl font-bold text-slate-100">{exp.role}</h3>
-                     <span className="font-mono text-xs px-2 py-1 bg-slate-800 text-orange-400 rounded">
+                     <span className="font-mono text-xs px-2 py-1 bg-slate-800 text-green-400 rounded">
                        {exp.date}
                      </span>
                    </div>
-                   <div className="text-blue-400 font-mono text-sm mb-4">{exp.company}</div>
+                   <div className="text-green-400 font-mono text-sm mb-4">{exp.company}</div>
                    <p className="text-slate-400 leading-relaxed font-mono text-sm">
                      {exp.description}
                    </p>
@@ -679,7 +410,7 @@ export default function Portfolio() {
            </div>
         </section>
 
-        <PCBDivider />
+        <SectionDivider />
 
         {/* SKILLS Section */}
         <section ref={el => sectionRefs.current['skills'] = el} className={`section-reveal ${visibleSections.has('skills') ? 'visible' : ''} mb-32`}>
@@ -708,7 +439,7 @@ export default function Portfolio() {
         {/* PROJECTS Section */}
         <section ref={el => sectionRefs.current['projects'] = el} className={`section-reveal ${visibleSections.has('projects') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
-            <Grid className="w-8 h-8 text-blue-500" />
+            <Grid className="w-8 h-8 text-green-500" />
             <h2 className="text-3xl font-bold text-slate-100">PROJECT_MANIFEST</h2>
           </div>
 
@@ -724,7 +455,7 @@ export default function Portfolio() {
           </div>
         </section>
 
-        <PCBDivider />
+        <SectionDivider />
 
         {/* CONTACT Section */}
         <section ref={el => sectionRefs.current['contact'] = el} className={`section-reveal ${visibleSections.has('contact') ? 'visible' : ''} mb-20`}>
@@ -732,20 +463,20 @@ export default function Portfolio() {
             <h2 className="text-4xl font-bold text-slate-100 mb-8">INITIATE_COMMUNICATION</h2>
             
             <div className="flex flex-col md:flex-row gap-6 justify-center">
-              <a href={`mailto:${portfolioData.contact.email}`} className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-orange-500 min-w-[200px]">
-                <Mail className="w-8 h-8 text-slate-400 group-hover:text-orange-500 transition-colors" />
+              <a href={`mailto:${portfolioData.contact.email}`} className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+                <Mail className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">EMAIL_PROTOCOL</span>
                 <span className="text-sm text-slate-300">Send Message</span>
               </a>
               
-              <a href={portfolioData.contact.github} target="_blank" className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-blue-500 min-w-[200px]">
-                <Github className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
+              <a href={portfolioData.contact.github} target="_blank" className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+                <Github className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">GIT_REPO</span>
                 <span className="text-sm text-slate-300">View Source</span>
               </a>
               
-              <a href={portfolioData.contact.linkedin} target="_blank" className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-blue-500 min-w-[200px]">
-                <Linkedin className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
+              <a href={portfolioData.contact.linkedin} target="_blank" className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+                <Linkedin className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">LINKEDIN</span>
                 <span className="text-sm text-slate-300">Connect</span>
               </a>

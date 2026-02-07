@@ -16,12 +16,12 @@ const TaskbarItem = ({ icon: Icon, label, sectionRef, isActive, onClick }) => {
       <Icon className="w-6 h-6 transition-all duration-300 ease-out group-hover:w-7 group-hover:h-7" />
 
       {/* Expanding Label */}
-      <span className="taskbar-label absolute left-full ml-4 px-3 py-2 bg-slate-900 border border-orange-500 text-orange-500 text-sm font-mono opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition-opacity duration-300 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+      <span className="taskbar-label absolute left-full ml-4 px-3 py-2 bg-black/80 border border-green-500 text-green-500 text-sm font-mono opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition-opacity duration-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">
         {label}
       </span>
 
       {/* Glow Effect on Hover */}
-      <div className="absolute inset-0 bg-orange-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10" />
+      <div className="absolute inset-0 bg-green-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10" />
     </button>
   );
 };
@@ -84,7 +84,7 @@ export default function Taskbar({ sectionRefs }) {
   return (
     <nav
       ref={taskbarRef}
-      className="taskbar fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 p-3 backdrop-blur-md bg-slate-900/90 border-r border-orange-500/50 rounded-r-sm transition-all duration-300 ease-out shadow-[5px_0_20px_rgba(0,0,0,0.5)]"
+      className="taskbar fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 p-3 backdrop-blur-lg bg-black/60 border-r border-green-500/50 rounded-r-sm transition-all duration-300 ease-out shadow-[5px_0_20px_rgba(0,0,0,0.5)]"
       aria-label="Section Navigation"
     >
       <TaskbarItem
