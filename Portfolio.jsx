@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Mail, Github, Linkedin, Cpu, Terminal, Zap, ExternalLink, Grid, ArrowUp } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { ChevronDown, Mail, Github, Linkedin, Cpu, Terminal, Zap, ExternalLink, Grid, ArrowUp, FileCode2, BarChart3, Braces, CircuitBoard, Layers, Ruler, GitBranch, Bot, FileText } from 'lucide-react';
 import Taskbar from './Taskbar.jsx';
 
 // Portfolio Data
@@ -61,7 +61,25 @@ const portfolioData = {
         'Automated daily market reports at 4:15 PM ET',
         'Financial news aggregation and stock-specific headlines'
       ],
-      status: 'Production Ready'
+      status: 'Production Ready',
+      icon: 'bot'
+    },
+    {
+      name: 'Citation Manager',
+      shortDescription: 'Edge extension for managing research citations in IEEE format',
+      longDescription: 'A Microsoft Edge extension for managing research citations in IEEE format across multiple projects. Built with vanilla JavaScript and Manifest V3 for simplicity, performance, and privacy. All citation data is stored locally with zero external dependencies, ensuring complete user privacy while providing powerful citation management capabilities.',
+      technologies: ['JavaScript', 'HTML5', 'CSS3', 'Manifest V3', 'CrossRef API'],
+      githubUrl: 'https://github.com/AliAlfridawi/citationExtension',
+      features: [
+        'IEEE-formatted citations for journals, conferences, websites, and books',
+        'Multi-project workspace citation management',
+        'Auto-cite from URL or DOI via CrossRef API',
+        'BibTeX import and export support',
+        'Drag-and-drop citation reordering with auto-renumbering',
+        'Dark and light theme with OS preference detection'
+      ],
+      status: 'Production Ready',
+      icon: 'fileText'
     }
   ],
   contact: {
@@ -69,6 +87,102 @@ const portfolioData = {
     github: 'https://github.com/AliAlfridawi',
     linkedin: 'https://www.linkedin.com/in/alialfridawi/',
   },
+};
+
+// Skill to icon mapping
+const skillIconMap = {
+  Python: FileCode2,
+  MATLAB: BarChart3,
+  'C/C++': Braces,
+  Multisim: CircuitBoard,
+  Altium: Layers,
+  KiCad: Ruler,
+  Git: GitBranch,
+};
+
+// Project to icon mapping
+const projectIconMap = {
+  bot: Bot,
+  fileText: FileText,
+};
+
+// Floating Binary Particles Component
+const BinaryParticles = () => {
+  const particles = useMemo(() => {
+    const chars = ['0', '1', '0x3F', '0xA7', '0x1B', '01', '10', '0xFF', '0b1010', '11'];
+    return Array.from({ length: 18 }, (_, i) => ({
+      id: i,
+      text: chars[Math.floor(Math.random() * chars.length)],
+      left: `${Math.random() * 100}%`,
+      fontSize: `${10 + Math.random() * 4}px`,
+      duration: `${18 + Math.random() * 16}s`,
+      delay: `${-Math.random() * 20}s`,
+      maxOpacity: 0.06 + Math.random() * 0.08,
+    }));
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      {particles.map(p => (
+        <span
+          key={p.id}
+          className="binary-particle"
+          style={{
+            left: p.left,
+            fontSize: p.fontSize,
+            '--duration': p.duration,
+            '--delay': p.delay,
+            '--max-opacity': p.maxOpacity,
+          }}
+        >
+          {p.text}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+// Scanline bar element for card hover effect
+const ScanlineBar = () => <span className="scanline-bar" aria-hidden="true" />;
+
+// Animated Counter Component
+const AnimatedCounter = ({ target, suffix = '', decimals = 0 }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const start = performance.now();
+          const duration = 1500;
+          const animate = (now) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(parseFloat((eased * target).toFixed(decimals)));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, decimals]);
+
+  return (
+    <span ref={ref}>
+      {decimals > 0 ? count.toFixed(decimals) : Math.round(count)}{suffix}
+    </span>
+  );
 };
 
 // Typing Effect Component
@@ -101,24 +215,22 @@ const TypingEffect = ({ text, speed = 30, className = "" }) => {
   );
 };
 
-// Section Divider Component
-const SectionDivider = () => (
-  <div className="section-divider" />
-);
-
 // New Project Card Component
 const ProjectCard = ({ project, isExpanded, onToggle }) => {
+  const ProjectIcon = project.icon ? projectIconMap[project.icon] : null;
   return (
-    <div className="card-schematic overflow-hidden mb-6">
+    <div className="card-schematic card-scanline overflow-hidden mb-6 project-card">
+      <ScanlineBar />
       {/* Card Header */}
       <button
         onClick={onToggle}
-        className="w-full px-8 py-6 flex items-center justify-between hover:bg-slate-800/50 transition-colors focus-visible:outline-2 focus-visible:outline-green-500"
+        className="w-full px-8 py-6 flex items-center justify-between transition-colors focus-visible:outline-2 focus-visible:outline-green-500"
         aria-expanded={isExpanded}
       >
         <div className="flex-1 text-left">
-          <div className="flex items-center gap-4 mb-2">
-            <h3 className="text-xl md:text-2xl font-mono text-green-500 hover-glitch">{project.name}</h3>
+          <div className="flex items-center gap-3 mb-2">
+            {ProjectIcon && <ProjectIcon className="w-6 h-6 text-green-500 flex-shrink-0" />}
+            <h3 className="text-xl md:text-2xl font-mono text-green-500 hover-scanline relative overflow-hidden">{project.name}</h3>
             <span className="px-2 py-1 text-xs border border-green-500/30 text-green-400 bg-green-500/10 font-mono">
               STATUS::{project.status.toUpperCase()}
             </span>
@@ -265,6 +377,9 @@ export default function Portfolio() {
         </div>
       )}
 
+      {/* Floating Binary Particles */}
+      <BinaryParticles />
+
       {/* PCB Circuit Board Background */}
       <div className="pcb-background" />
 
@@ -288,7 +403,7 @@ export default function Portfolio() {
               <span className="ml-4 text-xs text-slate-400">user@portfolio:~</span>
             </div>
             <div className="p-8 md:p-12">
-              <h1 className="text-4xl md:text-6xl font-bold text-slate-100 mb-4 hover-glitch">
+              <h1 className="text-4xl md:text-6xl font-bold text-slate-100 mb-4 hover-scanline relative overflow-hidden">
                 {portfolioData.header.name}
               </h1>
               <h2 className="text-xl md:text-2xl text-green-500 font-mono mb-8">
@@ -316,16 +431,17 @@ export default function Portfolio() {
           </div>
         </header>
 
-        <SectionDivider />
-
         {/* ABOUT Section */}
         <section ref={el => sectionRefs.current['about'] = el} className={`section-reveal ${visibleSections.has('about') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
              <Terminal className="w-8 h-8 text-green-500" />
              <h2 className="text-3xl font-bold text-slate-100">SYSTEM_OVERVIEW</h2>
+             <span className="status-dot" />
+             <span className="text-xs font-mono text-green-500/50">ONLINE</span>
           </div>
           
-          <div className="card-schematic p-8 md:p-12">
+          <div className="card-schematic card-scanline p-8 md:p-12">
+            <ScanlineBar />
              <p className="text-lg leading-relaxed font-mono text-slate-300">
                {portfolioData.about.content}
              </p>
@@ -335,25 +451,26 @@ export default function Portfolio() {
         {/* INFO GRID (Hobbies/Focus/Interest) */}
         <section ref={el => sectionRefs.current['bio'] = el} className={`section-reveal ${visibleSections.has('bio') ? 'visible' : ''} mb-32`}>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="card-schematic p-6 hover:border-green-500 group">
+            <div className="card-schematic card-scanline p-6 hover:border-green-500 group">
+              <ScanlineBar />
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 01</div>
               <h3 className="text-xl text-green-400 font-mono mb-2 group-hover:text-green-300">Hobbies</h3>
               <p className="text-sm text-slate-400 font-mono">Card Games & Working Out</p>
             </div>
-            <div className="card-schematic p-6 hover:border-green-500 group">
+            <div className="card-schematic card-scanline p-6 hover:border-green-500 group">
+              <ScanlineBar />
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 02</div>
               <h3 className="text-xl text-green-500 font-mono mb-2 group-hover:text-green-300">Focus</h3>
               <p className="text-sm text-slate-400 font-mono">Photonics & Electronics</p>
             </div>
-            <div className="card-schematic p-6 hover:border-green-500 group">
+            <div className="card-schematic card-scanline p-6 hover:border-green-500 group">
+              <ScanlineBar />
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 03</div>
               <h3 className="text-xl text-green-500 font-mono mb-2 group-hover:text-green-300">Interest</h3>
               <p className="text-sm text-slate-400 font-mono">Competitive Programming</p>
             </div>
           </div>
         </section>
-
-        <SectionDivider />
 
         {/* EDUCATION Section */}
         <section ref={el => sectionRefs.current['education'] = el} className={`section-reveal ${visibleSections.has('education') ? 'visible' : ''} mb-32`}>
@@ -362,11 +479,14 @@ export default function Portfolio() {
                <span className="text-green-500 font-mono font-bold">E</span>
              </div>
             <h2 className="text-3xl font-bold text-slate-100">EDUCATION_LOG</h2>
+            <span className="status-dot" />
+            <span className="text-xs font-mono text-green-500/50">ONLINE</span>
           </div>
 
           <div className="space-y-6">
             {portfolioData.education.map((edu, idx) => (
-              <div key={idx} className="card-schematic p-8 relative overflow-hidden">
+              <div key={idx} className="card-schematic card-scanline p-8 relative overflow-hidden">
+                <ScanlineBar />
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <Cpu size={100} />
                 </div>
@@ -386,6 +506,8 @@ export default function Portfolio() {
            <div className="flex items-center gap-4 mb-8">
              <BriefcaseIcon />
              <h2 className="text-3xl font-bold text-slate-100">WORK_HISTORY</h2>
+             <span className="status-dot" />
+             <span className="text-xs font-mono text-green-500/50">ONLINE</span>
            </div>
 
            <div className="border-l-2 border-slate-800 ml-4 space-y-12">
@@ -393,7 +515,8 @@ export default function Portfolio() {
                <div key={idx} className="relative pl-8">
                  <div className="absolute -left-[9px] top-0 w-4 h-4 bg-slate-900 border-2 border-green-500 rounded-full"></div>
                  
-                 <div className="card-schematic p-8">
+                 <div className="card-schematic card-scanline p-8">
+                   <ScanlineBar />
                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                      <h3 className="text-xl font-bold text-slate-100">{exp.role}</h3>
                      <span className="font-mono text-xs px-2 py-1 bg-slate-800 text-green-400 rounded">
@@ -410,28 +533,33 @@ export default function Portfolio() {
            </div>
         </section>
 
-        <SectionDivider />
-
         {/* SKILLS Section */}
         <section ref={el => sectionRefs.current['skills'] = el} className={`section-reveal ${visibleSections.has('skills') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
             <Zap className="w-8 h-8 text-yellow-500" />
             <h2 className="text-3xl font-bold text-slate-100">TECHNICAL_COMPETENCIES</h2>
+            <span className="status-dot" />
+            <span className="text-xs font-mono text-green-500/50">ONLINE</span>
           </div>
           
-          <div className="card-schematic p-10">
+          <div className="card-schematic card-scanline p-10">
+            <ScanlineBar />
             <div className="flex flex-wrap gap-4 justify-center">
-              {portfolioData.skills.map((skill, idx) => (
-                <div key={idx} className="skill-badge px-6 py-3 text-sm font-medium tracking-wide">
-                  {skill.toUpperCase()}
-                </div>
-              ))}
+              {portfolioData.skills.map((skill, idx) => {
+                const SkillIcon = skillIconMap[skill];
+                return (
+                  <div key={idx} className="skill-badge px-6 py-3 text-sm font-medium tracking-wide flex items-center gap-2">
+                    {SkillIcon && <SkillIcon className="w-4 h-4" />}
+                    {skill.toUpperCase()}
+                  </div>
+                );
+              })}
             </div>
             
             <div className="mt-8 pt-8 border-t border-slate-700/50 flex justify-between text-xs font-mono text-slate-500">
-              <span>MEMORY_USAGE: 45%</span>
-              <span>CPU_LOAD: 12%</span>
-              <span>UPTIME: 99.9%</span>
+              <span>MEMORY_USAGE: <AnimatedCounter target={45} suffix="%" /></span>
+              <span>CPU_LOAD: <AnimatedCounter target={12} suffix="%" /></span>
+              <span>UPTIME: <AnimatedCounter target={99.9} suffix="%" decimals={1} /></span>
             </div>
           </div>
         </section>
@@ -441,6 +569,8 @@ export default function Portfolio() {
           <div className="flex items-center gap-4 mb-8">
             <Grid className="w-8 h-8 text-green-500" />
             <h2 className="text-3xl font-bold text-slate-100">PROJECT_MANIFEST</h2>
+            <span className="status-dot" />
+            <span className="text-xs font-mono text-green-500/50">ONLINE</span>
           </div>
 
           <div className="space-y-4">
@@ -455,27 +585,29 @@ export default function Portfolio() {
           </div>
         </section>
 
-        <SectionDivider />
-
         {/* CONTACT Section */}
         <section ref={el => sectionRefs.current['contact'] = el} className={`section-reveal ${visibleSections.has('contact') ? 'visible' : ''} mb-20`}>
-          <div className="card-schematic p-10 md:p-14 text-center">
+          <div className="card-schematic card-scanline p-10 md:p-14 text-center">
+            <ScanlineBar />
             <h2 className="text-4xl font-bold text-slate-100 mb-8">INITIATE_COMMUNICATION</h2>
             
             <div className="flex flex-col md:flex-row gap-6 justify-center">
-              <a href={`mailto:${portfolioData.contact.email}`} className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+              <a href={`mailto:${portfolioData.contact.email}`} className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+                <ScanlineBar />
                 <Mail className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">EMAIL_PROTOCOL</span>
                 <span className="text-sm text-slate-300">Send Message</span>
               </a>
               
-              <a href={portfolioData.contact.github} target="_blank" className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+              <a href={portfolioData.contact.github} target="_blank" className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+                <ScanlineBar />
                 <Github className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">GIT_REPO</span>
                 <span className="text-sm text-slate-300">View Source</span>
               </a>
               
-              <a href={portfolioData.contact.linkedin} target="_blank" className="group card-schematic p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+              <a href={portfolioData.contact.linkedin} target="_blank" className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+                <ScanlineBar />
                 <Linkedin className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">LINKEDIN</span>
                 <span className="text-sm text-slate-300">Connect</span>
