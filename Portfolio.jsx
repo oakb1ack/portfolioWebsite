@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+﻿import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ChevronDown, Mail, Github, Linkedin, Cpu, Terminal, Zap, ExternalLink, Grid, ArrowUp, FileCode2, BarChart3, Braces, CircuitBoard, Layers, Ruler, GitBranch, Bot, FileText } from 'lucide-react';
 import Taskbar from './Taskbar.jsx';
+import headshot from './assets/headshot.png';
 
 // Portfolio Data
 const portfolioData = {
@@ -11,13 +12,18 @@ const portfolioData = {
   },
   about: {
     content:
-      "I'm a Computer Science and Electrical Engineering student at UTA driven by curiosity at the intersection of both fields. Currently conducting undergraduate research in nanophotonics, developing Python-based simulation frameworks to model optical phenomena and analyze experimental data. I'm exploring how machine learning can be applied to my research—from pattern recognition in optical datasets to predictive modeling of photonic structures. My work bridges theory and practice, translating complex mathematical models into efficient computational tools. I'm passionate about building robust engineering tooling, contributing to meaningful research, and crafting elegant solutions that combine hardware knowledge with software expertise. Always eager to collaborate and learn—feel free to reach out.",
+      "I'm a Computer Science and Electrical Engineering student at UTA driven by curiosity at the intersection of both fields. Currently conducting undergraduate research in nanophotonics, developing Python-based simulation frameworks to model optical phenomena and analyze experimental data. I'm exploring how machine learning can be applied to my researchâ€”from pattern recognition in optical datasets to predictive modeling of photonic structures. My work bridges theory and practice, translating complex mathematical models into efficient computational tools. I'm passionate about building robust engineering tooling, contributing to meaningful research, and crafting elegant solutions that combine hardware knowledge with software expertise. Always eager to collaborate and learnâ€”feel free to reach out.",
   },
   education: [
     {
       degree: 'Bachelor of Science in Computer Science & Electrical Engineering',
       school: 'University of Texas at Arlington',
       year: '2029',
+      gpa: '4.0',
+      focus: 'Optics and Electronics',
+      extracurriculars: ['Society of Asian Scientists and Engineers', 'Association for Computing Machinery', 'Institute of Electrical and Electronics Engineers', 'Freshman Leaders on Campus'],
+      coursework: ['Circuits Analysis One', 'Electrical Engineering Practicum', 'Introduction to Electrical Engineering', 'Intermediate Programming in C'],
+      honors: ["Freshman Distinction Roll", 'Maverick Academic Scholarship'],
     },
   ],
   experience: [
@@ -105,6 +111,9 @@ const projectIconMap = {
   bot: Bot,
   fileText: FileText,
 };
+
+const THEME_STORAGE_KEY = 'portfolio_theme_mode';
+const VALID_THEME_MODES = new Set(['cs-dark', 'ee-light']);
 
 // Floating Binary Particles Component
 const BinaryParticles = () => {
@@ -224,14 +233,14 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
       {/* Card Header */}
       <button
         onClick={onToggle}
-        className="w-full px-8 py-6 flex items-center justify-between transition-colors focus-visible:outline-2 focus-visible:outline-green-500"
+        className="w-full px-8 py-6 flex items-center justify-between transition-colors focus-visible:outline-2 focus-visible:outline-amber-400"
         aria-expanded={isExpanded}
       >
         <div className="flex-1 text-left">
           <div className="flex items-center gap-3 mb-2">
-            {ProjectIcon && <ProjectIcon className="w-6 h-6 text-green-500 flex-shrink-0" />}
-            <h3 className="text-xl md:text-2xl font-mono text-green-500 hover-scanline relative overflow-hidden">{project.name}</h3>
-            <span className="px-2 py-1 text-xs border border-green-500/30 text-green-400 bg-green-500/10 font-mono">
+            {ProjectIcon && <ProjectIcon className="w-6 h-6 text-amber-400 flex-shrink-0" />}
+            <h3 className="text-xl md:text-2xl font-mono text-amber-400 hover-scanline relative overflow-hidden">{project.name}</h3>
+            <span className="px-2 py-1 text-xs border border-amber-400/30 text-amber-300 bg-amber-400/10 font-mono">
               STATUS::{project.status.toUpperCase()}
             </span>
           </div>
@@ -247,7 +256,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
           </div>
         </div>
         <ChevronDown
-          className={`w-5 h-5 text-green-500 transition-transform duration-300 ${
+          className={`w-5 h-5 text-amber-400 transition-transform duration-300 ${
             isExpanded ? 'rotate-180' : ''
           }`}
         />
@@ -256,17 +265,17 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
       {/* Expandable Content */}
       <div className={`project-expand-grid ${isExpanded ? 'open' : ''}`}>
         <div className="project-expand-inner border-t border-slate-700 px-8 py-8 bg-slate-900/50">
-          <div className="font-mono text-slate-300 mb-6 text-sm leading-relaxed border-l-2 border-green-500/50 pl-4">
+          <div className="font-mono text-slate-300 mb-6 text-sm leading-relaxed border-l-2 border-amber-400/50 pl-4">
             {project.longDescription}
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div>
-              <h4 className="text-sm font-mono text-green-400 mb-3 uppercase tracking-wider">System Features</h4>
+              <h4 className="text-sm font-mono text-amber-300 mb-3 uppercase tracking-wider">System Features</h4>
               <ul className="space-y-2">
                 {project.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm text-slate-400 font-mono">
-                    <span className="text-green-500 mt-1">▹</span>
+                    <span className="text-amber-400 mt-1">â–¹</span>
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -274,7 +283,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
             </div>
 
             <div>
-              <h4 className="text-sm font-mono text-green-400 mb-3 uppercase tracking-wider">Tech Stack</h4>
+              <h4 className="text-sm font-mono text-amber-300 mb-3 uppercase tracking-wider">Tech Stack</h4>
               <div className="flex flex-wrap gap-2">
                 {project.technologies.map((tech, idx) => (
                   <span
@@ -292,7 +301,7 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
             href={project.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-2 border border-green-500 text-green-400 hover:bg-green-500/10 hover:text-green-300 transition-all font-mono text-sm group"
+            className="inline-flex items-center gap-2 px-6 py-2 border border-amber-400 text-amber-300 hover:bg-amber-400/10 hover:text-amber-200 transition-all font-mono text-sm group"
           >
             <Github className="w-4 h-4" />
             <span>SOURCE_CODE</span>
@@ -304,20 +313,101 @@ const ProjectCard = ({ project, isExpanded, onToggle }) => {
   );
 };
 
+const EducationCard = ({ edu, idx, isExpanded, onToggle }) => {
+  const panelId = `education-panel-${idx}`;
+  return (
+    <div className={`card-schematic card-scanline relative overflow-hidden education-card ${isExpanded ? 'is-open' : ''}`}>
+      <ScanlineBar />
+      <button
+        onClick={onToggle}
+        className="education-toggle w-full px-8 py-6 text-left transition-all"
+        aria-expanded={isExpanded}
+        aria-controls={panelId}
+      >
+        <div className="flex items-center justify-between gap-6">
+          <div className="min-w-0">
+            <div className="flex items-center gap-3 mb-2">
+              <span className={`education-led ${isExpanded ? 'active' : ''}`} aria-hidden="true" />
+              <h3 className="text-2xl text-slate-100 font-bold leading-tight">{edu.degree}</h3>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-sm font-mono text-slate-400">
+              <span className="text-amber-400">{edu.school}</span>
+              <span>|</span>
+              <span>Class of {edu.year}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 shrink-0">
+            <div className="opacity-20">
+              <Cpu size={38} />
+            </div>
+            <ChevronDown className={`w-5 h-5 text-amber-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+          </div>
+        </div>
+      </button>
+
+      <div id={panelId} className={`education-expand-grid ${isExpanded ? 'open' : ''}`}>
+        <div className="education-expand-inner border-t border-slate-700 px-8 py-6 bg-slate-900/50">
+          <div className="grid gap-2 text-xs md:text-sm font-mono text-slate-300">
+            <div className="education-meta-row">
+              <span className="education-meta-label">GPA</span>
+              <span className="education-meta-value">{edu.gpa}</span>
+            </div>
+            <div className="education-meta-row">
+              <span className="education-meta-label">Focus</span>
+              <span className="education-meta-value">{edu.focus}</span>
+            </div>
+            <div className="education-meta-row">
+              <span className="education-meta-label">Extracurriculars</span>
+              <span className="education-meta-value">{edu.extracurriculars?.join(', ')}</span>
+            </div>
+          </div>
+
+          <div className="education-tag-block mt-5">
+            <div className="education-meta-label">Coursework</div>
+            <div className="education-tag-wrap mt-2">
+              {(edu.coursework?.length ? edu.coursework : ['None listed']).map((item, i) => (
+                <span key={i} className="education-tag">{item}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="education-tag-block mt-4">
+            <div className="education-meta-label">Honors</div>
+            <div className="education-tag-wrap mt-2">
+              {(edu.honors?.length ? edu.honors : ['None listed']).map((item, i) => (
+                <span key={i} className="education-tag">{item}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Simple Briefcase Icon substitute for Lucide import
 const BriefcaseIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500 w-8 h-8">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-400 w-8 h-8">
     <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
   </svg>
 );
 
 export default function Portfolio() {
+  const [themeMode, setThemeMode] = useState(() => {
+    if (typeof window === 'undefined') return 'cs-dark';
+
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (storedTheme && VALID_THEME_MODES.has(storedTheme)) return storedTheme;
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'cs-dark' : 'ee-light';
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
+  const [expandedEducation, setExpandedEducation] = useState(null);
   const [expandedProject, setExpandedProject] = useState(null);
   const sectionRefs = useRef({});
 
@@ -357,6 +447,15 @@ export default function Portfolio() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode;
+    window.localStorage.setItem(THEME_STORAGE_KEY, themeMode);
+  }, [themeMode]);
+
+  const toggleThemeMode = () => {
+    setThemeMode(prev => (prev === 'cs-dark' ? 'ee-light' : 'cs-dark'));
+  };
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
@@ -383,7 +482,11 @@ export default function Portfolio() {
       {/* PCB Circuit Board Background */}
       <div className="pcb-background" />
 
-      <Taskbar sectionRefs={sectionRefs.current} />
+      <Taskbar
+        sectionRefs={sectionRefs.current}
+        themeMode={themeMode}
+        onToggleThemeMode={toggleThemeMode}
+      />
 
       <div id="scroll-progress" className="scroll-progress transform scale-x-0 origin-left" />
 
@@ -395,36 +498,47 @@ export default function Portfolio() {
         
         {/* HEADER Section */}
         <header ref={el => sectionRefs.current['header'] = el} className="min-h-[80vh] flex flex-col justify-center mb-24 relative">
-          <div className="terminal-window max-w-3xl w-full mx-auto section-reveal visible">
-            <div className="terminal-header">
-              <div className="terminal-dot dot-red"></div>
-              <div className="terminal-dot dot-yellow"></div>
-              <div className="terminal-dot dot-green"></div>
-              <span className="ml-4 text-xs text-slate-400">user@portfolio:~</span>
-            </div>
-            <div className="p-8 md:p-12">
-              <h1 className="text-4xl md:text-6xl font-bold text-slate-100 mb-4 hover-scanline relative overflow-hidden">
-                {portfolioData.header.name}
-              </h1>
-              <h2 className="text-xl md:text-2xl text-green-500 font-mono mb-8">
-                &lt;{portfolioData.header.title} /&gt;
-              </h2>
-              
-              <div className="font-mono text-sm md:text-base text-slate-400 leading-relaxed border-l-2 border-slate-700 pl-4 mb-8">
-                 <span className="text-green-400">const</span> bio = <span className="text-green-400">"</span>
-                 <TypingEffect text={portfolioData.header.bio} speed={30} />
-                 <span className="text-green-400">"</span>;
-              </div>
-              
-              {/* Debug: Show raw text */}
-              <div className="text-xs text-slate-600 mt-4 hidden">Raw: {portfolioData.header.bio}</div>
+          <div className="hero-grid section-reveal visible">
+            <aside className="headshot-shell order-1 md:order-2">
+              <figure className="headshot-card">
+                <img
+                  src={headshot}
+                  alt="Portrait of Ali Alfridawi"
+                  className="headshot-image"
+                  loading="eager"
+                  decoding="async"
+                />
+              </figure>
+            </aside>
 
-              <div className="flex flex-wrap gap-4">
-                <div className="px-4 py-2 border border-green-500/30 bg-green-500/10 text-green-400 font-mono text-sm">
-                  :: UTA Freshman
+            <div className="terminal-window order-2 md:order-1 w-full">
+              <div className="terminal-header">
+                <div className="terminal-dot dot-red"></div>
+                <div className="terminal-dot dot-yellow"></div>
+                <div className="terminal-dot dot-amber"></div>
+                <span className="ml-4 text-xs text-slate-400">user@portfolio:~</span>
+              </div>
+              <div className="p-8 md:p-12">
+                <h1 className="text-4xl md:text-6xl font-bold text-slate-100 mb-4 hover-scanline relative overflow-hidden">
+                  {portfolioData.header.name}
+                </h1>
+                <h2 className="text-xl md:text-2xl text-amber-400 font-mono mb-8">
+                  &lt;{portfolioData.header.title} /&gt;
+                </h2>
+
+                <div className="font-mono text-sm md:text-base text-slate-400 leading-relaxed border-l-2 border-slate-700 pl-4 mb-8">
+                  <span className="text-amber-300">const</span> bio = <span className="text-amber-300">"</span>
+                  <TypingEffect text={portfolioData.header.bio} speed={30} />
+                  <span className="text-amber-300">"</span>;
                 </div>
-                <div className="px-4 py-2 border border-green-500/30 bg-green-500/10 text-green-400 font-mono text-sm">
-                  :: Research Assistant
+
+                <div className="flex flex-wrap gap-4">
+                  <div className="px-4 py-2 border border-amber-400/30 bg-amber-400/10 text-amber-300 font-mono text-sm">
+                    :: UTA Freshman
+                  </div>
+                  <div className="px-4 py-2 border border-amber-400/30 bg-amber-400/10 text-amber-300 font-mono text-sm">
+                    :: Research Assistant
+                  </div>
                 </div>
               </div>
             </div>
@@ -434,10 +548,10 @@ export default function Portfolio() {
         {/* ABOUT Section */}
         <section ref={el => sectionRefs.current['about'] = el} className={`section-reveal ${visibleSections.has('about') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
-             <Terminal className="w-8 h-8 text-green-500" />
+             <Terminal className="w-8 h-8 text-amber-400" />
              <h2 className="text-3xl font-bold text-slate-100">SYSTEM_OVERVIEW</h2>
              <span className="status-dot" />
-             <span className="text-xs font-mono text-green-500/50">ONLINE</span>
+             <span className="text-xs font-mono text-amber-400/50">ONLINE</span>
           </div>
           
           <div className="card-schematic card-scanline p-8 md:p-12">
@@ -451,22 +565,22 @@ export default function Portfolio() {
         {/* INFO GRID (Hobbies/Focus/Interest) */}
         <section ref={el => sectionRefs.current['bio'] = el} className={`section-reveal ${visibleSections.has('bio') ? 'visible' : ''} mb-32`}>
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="card-schematic card-scanline p-6 hover:border-green-500 group">
+            <div className="card-schematic card-scanline p-6 hover:border-amber-400 group">
               <ScanlineBar />
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 01</div>
-              <h3 className="text-xl text-green-400 font-mono mb-2 group-hover:text-green-300">Hobbies</h3>
+              <h3 className="text-xl text-amber-300 font-mono mb-2 group-hover:text-amber-200">Hobbies</h3>
               <p className="text-sm text-slate-400 font-mono">Card Games & Working Out</p>
             </div>
-            <div className="card-schematic card-scanline p-6 hover:border-green-500 group">
+            <div className="card-schematic card-scanline p-6 hover:border-amber-400 group">
               <ScanlineBar />
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 02</div>
-              <h3 className="text-xl text-green-500 font-mono mb-2 group-hover:text-green-300">Focus</h3>
+              <h3 className="text-xl text-amber-400 font-mono mb-2 group-hover:text-amber-200">Focus</h3>
               <p className="text-sm text-slate-400 font-mono">Photonics & Electronics</p>
             </div>
-            <div className="card-schematic card-scanline p-6 hover:border-green-500 group">
+            <div className="card-schematic card-scanline p-6 hover:border-amber-400 group">
               <ScanlineBar />
               <div className="text-xs font-mono text-slate-500 mb-2">MODULE: 03</div>
-              <h3 className="text-xl text-green-500 font-mono mb-2 group-hover:text-green-300">Interest</h3>
+              <h3 className="text-xl text-amber-400 font-mono mb-2 group-hover:text-amber-200">Interest</h3>
               <p className="text-sm text-slate-400 font-mono">Competitive Programming</p>
             </div>
           </div>
@@ -475,28 +589,23 @@ export default function Portfolio() {
         {/* EDUCATION Section */}
         <section ref={el => sectionRefs.current['education'] = el} className={`section-reveal ${visibleSections.has('education') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
-             <div className="w-8 h-8 border border-green-500 flex items-center justify-center">
-               <span className="text-green-500 font-mono font-bold">E</span>
+             <div className="w-8 h-8 border border-amber-400 flex items-center justify-center">
+               <span className="text-amber-400 font-mono font-bold">E</span>
              </div>
             <h2 className="text-3xl font-bold text-slate-100">EDUCATION_LOG</h2>
             <span className="status-dot" />
-            <span className="text-xs font-mono text-green-500/50">ONLINE</span>
+            <span className="text-xs font-mono text-amber-400/50">ONLINE</span>
           </div>
 
           <div className="space-y-6">
             {portfolioData.education.map((edu, idx) => (
-              <div key={idx} className="card-schematic card-scanline p-8 relative overflow-hidden">
-                <ScanlineBar />
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                  <Cpu size={100} />
-                </div>
-                <h3 className="text-2xl text-slate-100 font-bold mb-2">{edu.degree}</h3>
-                <div className="flex flex-wrap items-center gap-4 text-sm font-mono text-slate-400">
-                  <span className="text-green-500">{edu.school}</span>
-                  <span>|</span>
-                  <span>Class of {edu.year}</span>
-                </div>
-              </div>
+              <EducationCard
+                key={`${edu.school}-${edu.year}-${idx}`}
+                edu={edu}
+                idx={idx}
+                isExpanded={expandedEducation === idx}
+                onToggle={() => setExpandedEducation(expandedEducation === idx ? null : idx)}
+              />
             ))}
           </div>
         </section>
@@ -507,23 +616,23 @@ export default function Portfolio() {
              <BriefcaseIcon />
              <h2 className="text-3xl font-bold text-slate-100">WORK_HISTORY</h2>
              <span className="status-dot" />
-             <span className="text-xs font-mono text-green-500/50">ONLINE</span>
+             <span className="text-xs font-mono text-amber-400/50">ONLINE</span>
            </div>
 
-           <div className="border-l-2 border-slate-800 ml-4 space-y-12">
+           <div className="border-l-2 border-slate-700 ml-4 space-y-12">
              {portfolioData.experience.map((exp, idx) => (
                <div key={idx} className="relative pl-8">
-                 <div className="absolute -left-[9px] top-0 w-4 h-4 bg-slate-900 border-2 border-green-500 rounded-full"></div>
+                 <div className="absolute -left-[9px] top-0 w-4 h-4 bg-slate-900 border-2 border-amber-400 rounded-full"></div>
                  
                  <div className="card-schematic card-scanline p-8">
                    <ScanlineBar />
                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                      <h3 className="text-xl font-bold text-slate-100">{exp.role}</h3>
-                     <span className="font-mono text-xs px-2 py-1 bg-slate-800 text-green-400 rounded">
+                     <span className="font-mono text-xs px-2 py-1 bg-slate-800 text-amber-300 rounded">
                        {exp.date}
                      </span>
                    </div>
-                   <div className="text-green-400 font-mono text-sm mb-4">{exp.company}</div>
+                   <div className="text-amber-300 font-mono text-sm mb-4">{exp.company}</div>
                    <p className="text-slate-400 leading-relaxed font-mono text-sm">
                      {exp.description}
                    </p>
@@ -539,7 +648,7 @@ export default function Portfolio() {
             <Zap className="w-8 h-8 text-yellow-500" />
             <h2 className="text-3xl font-bold text-slate-100">TECHNICAL_COMPETENCIES</h2>
             <span className="status-dot" />
-            <span className="text-xs font-mono text-green-500/50">ONLINE</span>
+            <span className="text-xs font-mono text-amber-400/50">ONLINE</span>
           </div>
           
           <div className="card-schematic card-scanline p-10">
@@ -567,10 +676,10 @@ export default function Portfolio() {
         {/* PROJECTS Section */}
         <section ref={el => sectionRefs.current['projects'] = el} className={`section-reveal ${visibleSections.has('projects') ? 'visible' : ''} mb-32`}>
           <div className="flex items-center gap-4 mb-8">
-            <Grid className="w-8 h-8 text-green-500" />
+            <Grid className="w-8 h-8 text-amber-400" />
             <h2 className="text-3xl font-bold text-slate-100">PROJECT_MANIFEST</h2>
             <span className="status-dot" />
-            <span className="text-xs font-mono text-green-500/50">ONLINE</span>
+            <span className="text-xs font-mono text-amber-400/50">ONLINE</span>
           </div>
 
           <div className="space-y-4">
@@ -592,23 +701,23 @@ export default function Portfolio() {
             <h2 className="text-4xl font-bold text-slate-100 mb-8">INITIATE_COMMUNICATION</h2>
             
             <div className="flex flex-col md:flex-row gap-6 justify-center">
-              <a href={`mailto:${portfolioData.contact.email}`} className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+              <a href={`mailto:${portfolioData.contact.email}`} className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-amber-400 min-w-[200px]">
                 <ScanlineBar />
-                <Mail className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
+                <Mail className="w-8 h-8 text-slate-400 group-hover:text-amber-400 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">EMAIL_PROTOCOL</span>
                 <span className="text-sm text-slate-300">Send Message</span>
               </a>
               
-              <a href={portfolioData.contact.github} target="_blank" className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+              <a href={portfolioData.contact.github} target="_blank" className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-amber-400 min-w-[200px]">
                 <ScanlineBar />
-                <Github className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
+                <Github className="w-8 h-8 text-slate-400 group-hover:text-amber-400 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">GIT_REPO</span>
                 <span className="text-sm text-slate-300">View Source</span>
               </a>
               
-              <a href={portfolioData.contact.linkedin} target="_blank" className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-green-500 min-w-[200px]">
+              <a href={portfolioData.contact.linkedin} target="_blank" className="group card-schematic card-scanline p-6 flex flex-col items-center gap-3 hover:border-amber-400 min-w-[200px]">
                 <ScanlineBar />
-                <Linkedin className="w-8 h-8 text-slate-400 group-hover:text-green-500 transition-colors" />
+                <Linkedin className="w-8 h-8 text-slate-400 group-hover:text-amber-400 transition-colors" />
                 <span className="font-mono text-xs text-slate-500">LINKEDIN</span>
                 <span className="text-sm text-slate-300">Connect</span>
               </a>
@@ -626,3 +735,4 @@ export default function Portfolio() {
     </div>
   );
 }
+

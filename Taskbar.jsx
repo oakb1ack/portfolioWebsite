@@ -1,5 +1,5 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
-import { Home, FileText, BookOpen, Briefcase, Code, SquareCheckBig, Mail, Terminal, Cpu, Zap } from 'lucide-react';
+import { Home, BookOpen, Briefcase, Code, Mail, Terminal, Cpu, Zap, Sun, Moon } from 'lucide-react';
 
 // Taskbar Navigation Item
 const TaskbarItem = ({ icon: Icon, label, sectionRef, isActive, onClick }) => {
@@ -16,18 +16,18 @@ const TaskbarItem = ({ icon: Icon, label, sectionRef, isActive, onClick }) => {
       <Icon className="w-6 h-6 transition-all duration-300 ease-out group-hover:w-7 group-hover:h-7" />
 
       {/* Expanding Label */}
-      <span className="taskbar-label absolute left-full ml-4 px-3 py-2 bg-black/80 border border-green-500 text-green-500 text-sm font-mono opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition-opacity duration-300 shadow-[0_0_10px_rgba(34,197,94,0.2)]">
+      <span className="taskbar-label absolute left-full ml-4 px-3 py-2 bg-black/80 border border-amber-400 text-amber-400 text-sm font-mono opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition-opacity duration-300 shadow-[0_0_10px_rgba(255,176,64,0.2)]">
         {label}
       </span>
 
       {/* Glow Effect on Hover */}
-      <div className="absolute inset-0 bg-green-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10" />
+      <div className="absolute inset-0 bg-amber-400 opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10" />
     </button>
   );
 };
 
 // Main Taskbar Component
-export default function Taskbar({ sectionRefs }) {
+export default function Taskbar({ sectionRefs, themeMode, onToggleThemeMode }) {
   const [activeSection, setActiveSection] = useState('header');
   const [isVisible, setIsVisible] = useState(true);
   const taskbarRef = useRef(null);
@@ -84,7 +84,7 @@ export default function Taskbar({ sectionRefs }) {
   return (
     <nav
       ref={taskbarRef}
-      className="taskbar fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 p-3 backdrop-blur-lg bg-black/60 border-r border-green-500/50 rounded-r-sm transition-all duration-300 ease-out shadow-[5px_0_20px_rgba(0,0,0,0.5)]"
+      className="taskbar fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 p-3 backdrop-blur-lg bg-black/60 border-r border-amber-400/50 rounded-r-sm transition-all duration-300 ease-out shadow-[5px_0_20px_rgba(0,0,0,0.5)]"
       aria-label="Section Navigation"
     >
       <TaskbarItem
@@ -143,6 +143,23 @@ export default function Taskbar({ sectionRefs }) {
         isActive={activeSection === 'contact'}
         onClick={() => handleScroll('contact')}
       />
+      <button
+        onClick={onToggleThemeMode}
+        className="taskbar-item theme-toggle-item group relative flex items-center justify-center p-4 transition-all duration-300 ease-out"
+        aria-label={themeMode === 'cs-dark' ? 'Switch to EE light mode' : 'Switch to CS dark mode'}
+        aria-pressed={themeMode === 'ee-light'}
+        title={themeMode === 'cs-dark' ? 'Switch: EE Light' : 'Switch: CS Dark'}
+      >
+        {themeMode === 'cs-dark' ? (
+          <Sun className="w-6 h-6 transition-all duration-300 ease-out group-hover:w-7 group-hover:h-7" />
+        ) : (
+          <Moon className="w-6 h-6 transition-all duration-300 ease-out group-hover:w-7 group-hover:h-7" />
+        )}
+        <span className="taskbar-label absolute left-full ml-4 px-3 py-2 bg-black/80 border border-amber-400 text-amber-400 text-sm font-mono opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap transition-opacity duration-300 shadow-[0_0_10px_rgba(255,176,64,0.2)]">
+          {themeMode === 'cs-dark' ? 'Switch: EE Light' : 'Switch: CS Dark'}
+        </span>
+        <div className="absolute inset-0 bg-amber-400 opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10" />
+      </button>
     </nav>
   );
 }
