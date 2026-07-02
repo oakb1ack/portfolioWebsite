@@ -66,7 +66,7 @@ portfolioWebsite/
 ├── index.html            # HTML entry point
 ├── main.jsx              # React app entry point
 ├── Portfolio.jsx         # Main portfolio component with all sections
-├── Taskbar.jsx           # Navigation sidebar component
+├── Navbar.jsx            # Top navigation bar component
 ├── index.css             # Custom styles, animations, and theme variables
 ├── tailwind.config.js    # Tailwind CSS configuration
 ├── postcss.config.js     # PostCSS configuration
