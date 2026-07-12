@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon, Menu, X } from 'lucide-react';
-
-const NAV_LINKS = [
-  { id: 'about',      label: 'About'      },
-  { id: 'education',  label: 'Education'  },
-  { id: 'experience', label: 'Experience' },
-  { id: 'skills',     label: 'Skills'     },
-  { id: 'projects',   label: 'Projects'   },
-];
+import { navigationLinks } from '../data/navigation.js';
 
 export default function Navbar({ sectionRefs, themeMode, onToggleThemeMode }) {
   const [activeSection, setActiveSection] = useState('header');
@@ -62,7 +55,7 @@ export default function Navbar({ sectionRefs, themeMode, onToggleThemeMode }) {
 
         {/* Desktop nav links */}
         <nav className="navbar__links" aria-label="Site sections">
-          {NAV_LINKS.map(({ id, label }) => (
+          {navigationLinks.map(({ id, label }) => (
             <button
               key={id}
               onClick={() => goTo(id)}
@@ -104,7 +97,7 @@ export default function Navbar({ sectionRefs, themeMode, onToggleThemeMode }) {
       {/* Mobile drawer */}
       {mobileOpen && (
         <nav className="navbar__mobile-menu" aria-label="Mobile navigation">
-          {NAV_LINKS.map(({ id, label }) => (
+          {navigationLinks.map(({ id, label }) => (
             <button
               key={id}
               onClick={() => goTo(id)}
