@@ -1,0 +1,56 @@
+@if (project; as selectedProject) {
+  <article class="case-study">
+    <a class="back-link" routerLink="/projects">← Back to projects</a>
+
+    <header class="case-study-header">
+      <app-project-meta
+        [status]="selectedProject.status"
+        [availability]="selectedProject.availability"
+      />
+      <h1>{{ selectedProject.title }}</h1>
+      <p class="summary">{{ selectedProject.summary }}</p>
+      <p class="outcome">{{ selectedProject.outcome }}</p>
+    </header>
+
+    <figure class="project-hero">
+      <div class="browser-bar" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <img [src]="selectedProject.image.src" [alt]="selectedProject.image.alt" />
+    </figure>
+
+    <dl class="project-facts">
+      <div>
+        <dt>Role</dt>
+        <dd>{{ selectedProject.role }}</dd>
+      </div>
+      <div>
+        <dt>Tools</dt>
+        <dd>{{ selectedProject.technologies.join(' · ') }}</dd>
+      </div>
+    </dl>
+
+    <div class="case-study-body">
+      @for (section of selectedProject.sections; track section.heading) {
+        <app-project-section [section]="section" />
+      }
+    </div>
+
+    @if (selectedProject.links.length > 0) {
+      <nav class="project-links" aria-label="Project links">
+        <h2>Explore further</h2>
+        @for (link of selectedProject.links; track link.url) {
+          <a [href]="link.url" target="_blank" rel="noreferrer">{{ link.label }} ↗</a>
+        }
+      </nav>
+    }
+  </article>
+} @else {
+  <section class="not-found">
+    <p class="eyebrow">Project unavailable</p>
+    <h1>This case study is not published.</h1>
+    <a routerLink="/projects">Return to projects</a>
+  </section>
+}
