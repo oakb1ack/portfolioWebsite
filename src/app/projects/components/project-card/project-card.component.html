@@ -1,0 +1,25 @@
+<a class="project-card" [routerLink]="['/projects', project().slug]">
+  <div class="project-preview">
+    <div class="browser-bar" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="preview-viewport">
+      <img [src]="project().image.src" [alt]="project().image.alt" />
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="card-title">
+      <h2>{{ project().title }}</h2>
+      <span class="card-arrow" aria-hidden="true">↗</span>
+    </div>
+    <p class="summary">{{ project().summary }}</p>
+    <ul class="technology-list" aria-label="Technologies">
+      @for (technology of project().technologies; track technology) {
+        <li>{{ technology }}</li>
+      }
+    </ul>
+  </div>
+</a>
