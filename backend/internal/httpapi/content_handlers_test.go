@@ -13,13 +13,13 @@ import (
 
 type publicStub struct{}
 
-func (publicStub) ListProjects(context.Context, Page) ([]content.Project, int64, error) {
+func (publicStub) ListProjects(context.Context, Page, PublicFilters) ([]content.Project, int64, error) {
 	return []content.Project{{Content: content.Content{ID: "1", Title: "Visible", Slug: "visible", BodyMarkdown: "secret", BodyHTML: "<p>safe</p>", Status: content.StatusPublished}}}, 1, nil
 }
 func (publicStub) GetProject(context.Context, string) (content.Project, error) {
 	return content.Project{}, ErrNotFound
 }
-func (publicStub) ListPosts(context.Context, Page) ([]content.BlogPost, int64, error) {
+func (publicStub) ListPosts(context.Context, Page, PublicFilters) ([]content.BlogPost, int64, error) {
 	return nil, 0, nil
 }
 func (publicStub) GetPost(context.Context, string) (content.BlogPost, error) {

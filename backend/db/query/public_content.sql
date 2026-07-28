@@ -16,13 +16,57 @@ SELECT p.id, p.title, p.slug, p.summary, p.role, p.technologies, p.outcome,
 FROM projects p
 WHERE p.content_status IN ('scheduled', 'published') AND p.availability = 'public'
   AND p.publish_at <= now()
+  AND (
+    COALESCE(cardinality(sqlc.arg(tag_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.project_id = p.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY(sqlc.arg(tag_slugs)::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality(sqlc.arg(category_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.project_id = p.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY(sqlc.arg(category_slugs)::text[])
+    )
+  )
 ORDER BY p.featured DESC, p.sort_order, p.publish_at DESC, p.created_at DESC
 LIMIT sqlc.arg(limit_count)::int OFFSET sqlc.arg(offset_count)::int;
 
 -- name: CountPublicProjects :one
-SELECT count(*)::bigint FROM projects
-WHERE content_status IN ('scheduled', 'published') AND availability = 'public'
-  AND publish_at <= now();
+SELECT count(*)::bigint FROM projects p
+WHERE p.content_status IN ('scheduled', 'published') AND p.availability = 'public'
+  AND p.publish_at <= now()
+  AND (
+    COALESCE(cardinality(sqlc.arg(tag_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.project_id = p.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY(sqlc.arg(tag_slugs)::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality(sqlc.arg(category_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.project_id = p.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY(sqlc.arg(category_slugs)::text[])
+    )
+  );
 
 -- name: GetPublicProjectBySlug :one
 SELECT p.id, p.title, p.slug, p.summary, p.role, p.technologies, p.outcome,
@@ -54,12 +98,56 @@ SELECT b.id, b.title, b.slug, b.excerpt, b.publish_at,
                  WHERE pc.post_id = b.id AND t.kind = 'category'), ARRAY[]::text[])::text[] AS categories
 FROM blog_posts b
 WHERE b.content_status IN ('scheduled', 'published') AND b.publish_at <= now()
+  AND (
+    COALESCE(cardinality(sqlc.arg(tag_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.post_id = b.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY(sqlc.arg(tag_slugs)::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality(sqlc.arg(category_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.post_id = b.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY(sqlc.arg(category_slugs)::text[])
+    )
+  )
 ORDER BY b.publish_at DESC, b.created_at DESC
 LIMIT sqlc.arg(limit_count)::int OFFSET sqlc.arg(offset_count)::int;
 
 -- name: CountPublicPosts :one
-SELECT count(*)::bigint FROM blog_posts
-WHERE content_status IN ('scheduled', 'published') AND publish_at <= now();
+SELECT count(*)::bigint FROM blog_posts b
+WHERE b.content_status IN ('scheduled', 'published') AND b.publish_at <= now()
+  AND (
+    COALESCE(cardinality(sqlc.arg(tag_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.post_id = b.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY(sqlc.arg(tag_slugs)::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality(sqlc.arg(category_slugs)::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.post_id = b.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY(sqlc.arg(category_slugs)::text[])
+    )
+  );
 
 -- name: GetPublicPostBySlug :one
 SELECT b.id, b.title, b.slug, b.excerpt, b.body_html, b.publish_at,

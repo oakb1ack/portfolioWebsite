@@ -12,25 +12,79 @@ import (
 )
 
 const countPublicPosts = `-- name: CountPublicPosts :one
-SELECT count(*)::bigint FROM blog_posts
-WHERE content_status IN ('scheduled', 'published') AND publish_at <= now()
+SELECT count(*)::bigint FROM blog_posts b
+WHERE b.content_status IN ('scheduled', 'published') AND b.publish_at <= now()
+  AND (
+    COALESCE(cardinality($1::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.post_id = b.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY($1::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality($2::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.post_id = b.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY($2::text[])
+    )
+  )
 `
 
-func (q *Queries) CountPublicPosts(ctx context.Context) (int64, error) {
-	row := q.db.QueryRow(ctx, countPublicPosts)
+type CountPublicPostsParams struct {
+	TagSlugs      []string `json:"tag_slugs"`
+	CategorySlugs []string `json:"category_slugs"`
+}
+
+func (q *Queries) CountPublicPosts(ctx context.Context, arg CountPublicPostsParams) (int64, error) {
+	row := q.db.QueryRow(ctx, countPublicPosts, arg.TagSlugs, arg.CategorySlugs)
 	var column_1 int64
 	err := row.Scan(&column_1)
 	return column_1, err
 }
 
 const countPublicProjects = `-- name: CountPublicProjects :one
-SELECT count(*)::bigint FROM projects
-WHERE content_status IN ('scheduled', 'published') AND availability = 'public'
-  AND publish_at <= now()
+SELECT count(*)::bigint FROM projects p
+WHERE p.content_status IN ('scheduled', 'published') AND p.availability = 'public'
+  AND p.publish_at <= now()
+  AND (
+    COALESCE(cardinality($1::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.project_id = p.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY($1::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality($2::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.project_id = p.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY($2::text[])
+    )
+  )
 `
 
-func (q *Queries) CountPublicProjects(ctx context.Context) (int64, error) {
-	row := q.db.QueryRow(ctx, countPublicProjects)
+type CountPublicProjectsParams struct {
+	TagSlugs      []string `json:"tag_slugs"`
+	CategorySlugs []string `json:"category_slugs"`
+}
+
+func (q *Queries) CountPublicProjects(ctx context.Context, arg CountPublicProjectsParams) (int64, error) {
+	row := q.db.QueryRow(ctx, countPublicProjects, arg.TagSlugs, arg.CategorySlugs)
 	var column_1 int64
 	err := row.Scan(&column_1)
 	return column_1, err
@@ -272,13 +326,37 @@ SELECT b.id, b.title, b.slug, b.excerpt, b.publish_at,
                  WHERE pc.post_id = b.id AND t.kind = 'category'), ARRAY[]::text[])::text[] AS categories
 FROM blog_posts b
 WHERE b.content_status IN ('scheduled', 'published') AND b.publish_at <= now()
+  AND (
+    COALESCE(cardinality($1::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.post_id = b.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY($1::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality($2::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM post_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.post_id = b.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY($2::text[])
+    )
+  )
 ORDER BY b.publish_at DESC, b.created_at DESC
-LIMIT $2::int OFFSET $1::int
+LIMIT $4::int OFFSET $3::int
 `
 
 type ListPublicPostsParams struct {
-	OffsetCount int32 `json:"offset_count"`
-	LimitCount  int32 `json:"limit_count"`
+	TagSlugs      []string `json:"tag_slugs"`
+	CategorySlugs []string `json:"category_slugs"`
+	OffsetCount   int32    `json:"offset_count"`
+	LimitCount    int32    `json:"limit_count"`
 }
 
 type ListPublicPostsRow struct {
@@ -298,7 +376,12 @@ type ListPublicPostsRow struct {
 }
 
 func (q *Queries) ListPublicPosts(ctx context.Context, arg ListPublicPostsParams) ([]ListPublicPostsRow, error) {
-	rows, err := q.db.Query(ctx, listPublicPosts, arg.OffsetCount, arg.LimitCount)
+	rows, err := q.db.Query(ctx, listPublicPosts,
+		arg.TagSlugs,
+		arg.CategorySlugs,
+		arg.OffsetCount,
+		arg.LimitCount,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -349,13 +432,37 @@ SELECT p.id, p.title, p.slug, p.summary, p.role, p.technologies, p.outcome,
 FROM projects p
 WHERE p.content_status IN ('scheduled', 'published') AND p.availability = 'public'
   AND p.publish_at <= now()
+  AND (
+    COALESCE(cardinality($1::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_tags filter_pt
+      JOIN taxonomy_terms filter_t ON filter_t.id = filter_pt.term_id
+      WHERE filter_pt.project_id = p.id
+        AND filter_t.kind = 'tag'
+        AND filter_t.slug = ANY($1::text[])
+    )
+  )
+  AND (
+    COALESCE(cardinality($2::text[]), 0) = 0
+    OR EXISTS (
+      SELECT 1
+      FROM project_categories filter_pc
+      JOIN taxonomy_terms filter_c ON filter_c.id = filter_pc.term_id
+      WHERE filter_pc.project_id = p.id
+        AND filter_c.kind = 'category'
+        AND filter_c.slug = ANY($2::text[])
+    )
+  )
 ORDER BY p.featured DESC, p.sort_order, p.publish_at DESC, p.created_at DESC
-LIMIT $2::int OFFSET $1::int
+LIMIT $4::int OFFSET $3::int
 `
 
 type ListPublicProjectsParams struct {
-	OffsetCount int32 `json:"offset_count"`
-	LimitCount  int32 `json:"limit_count"`
+	TagSlugs      []string `json:"tag_slugs"`
+	CategorySlugs []string `json:"category_slugs"`
+	OffsetCount   int32    `json:"offset_count"`
+	LimitCount    int32    `json:"limit_count"`
 }
 
 type ListPublicProjectsRow struct {
@@ -381,7 +488,12 @@ type ListPublicProjectsRow struct {
 }
 
 func (q *Queries) ListPublicProjects(ctx context.Context, arg ListPublicProjectsParams) ([]ListPublicProjectsRow, error) {
-	rows, err := q.db.Query(ctx, listPublicProjects, arg.OffsetCount, arg.LimitCount)
+	rows, err := q.db.Query(ctx, listPublicProjects,
+		arg.TagSlugs,
+		arg.CategorySlugs,
+		arg.OffsetCount,
+		arg.LimitCount,
+	)
 	if err != nil {
 		return nil, err
 	}

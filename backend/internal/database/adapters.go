@@ -188,12 +188,19 @@ func transitionPublishAt(oldStatus content.Status, oldPublish, oldPublished, old
 	return next.PublishAt, nil
 }
 
-func (a *Adapters) ListProjects(ctx context.Context, p httpapi.Page) ([]content.Project, int64, error) {
-	rows, e := a.Queries.ListPublicProjects(ctx, db.ListPublicProjectsParams{OffsetCount: int32(p.Offset), LimitCount: int32(p.Limit)})
+func (a *Adapters) ListProjects(ctx context.Context, p httpapi.Page, filters httpapi.PublicFilters) ([]content.Project, int64, error) {
+	filterParams := db.CountPublicProjectsParams{
+		TagSlugs:      nonNilStrings(filters.Tags),
+		CategorySlugs: nonNilStrings(filters.Categories),
+	}
+	rows, e := a.Queries.ListPublicProjects(ctx, db.ListPublicProjectsParams{
+		TagSlugs: filterParams.TagSlugs, CategorySlugs: filterParams.CategorySlugs,
+		OffsetCount: int32(p.Offset), LimitCount: int32(p.Limit),
+	})
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
-	n, e := a.Queries.CountPublicProjects(ctx)
+	n, e := a.Queries.CountPublicProjects(ctx, filterParams)
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
@@ -214,12 +221,19 @@ func (a *Adapters) GetProject(ctx context.Context, slug string) (content.Project
 	}
 	return publicProjectDetail(r)
 }
-func (a *Adapters) ListPosts(ctx context.Context, p httpapi.Page) ([]content.BlogPost, int64, error) {
-	rows, e := a.Queries.ListPublicPosts(ctx, db.ListPublicPostsParams{OffsetCount: int32(p.Offset), LimitCount: int32(p.Limit)})
+func (a *Adapters) ListPosts(ctx context.Context, p httpapi.Page, filters httpapi.PublicFilters) ([]content.BlogPost, int64, error) {
+	filterParams := db.CountPublicPostsParams{
+		TagSlugs:      nonNilStrings(filters.Tags),
+		CategorySlugs: nonNilStrings(filters.Categories),
+	}
+	rows, e := a.Queries.ListPublicPosts(ctx, db.ListPublicPostsParams{
+		TagSlugs: filterParams.TagSlugs, CategorySlugs: filterParams.CategorySlugs,
+		OffsetCount: int32(p.Offset), LimitCount: int32(p.Limit),
+	})
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
-	n, e := a.Queries.CountPublicPosts(ctx)
+	n, e := a.Queries.CountPublicPosts(ctx, filterParams)
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}

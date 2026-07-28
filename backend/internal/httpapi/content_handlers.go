@@ -87,8 +87,13 @@ func publicProjects(d RouteDependencies) http.HandlerFunc {
 			unavailable(w, r)
 			return
 		}
+		filters, err := publicFilters(r)
+		if err != nil {
+			invalidPublicFilters(w, r, err)
+			return
+		}
 		pagination := page(r)
-		x, n, e := d.Public.ListProjects(r.Context(), pagination)
+		x, n, e := d.Public.ListProjects(r.Context(), pagination, filters)
 		if e != nil {
 			server(w, r)
 			return
@@ -124,8 +129,13 @@ func publicPosts(d RouteDependencies) http.HandlerFunc {
 			unavailable(w, r)
 			return
 		}
+		filters, err := publicFilters(r)
+		if err != nil {
+			invalidPublicFilters(w, r, err)
+			return
+		}
 		pagination := page(r)
-		x, n, e := d.Public.ListPosts(r.Context(), pagination)
+		x, n, e := d.Public.ListPosts(r.Context(), pagination, filters)
 		if e != nil {
 			server(w, r)
 			return
@@ -225,6 +235,9 @@ func server(w http.ResponseWriter, r *http.Request) {
 }
 func notFound(w http.ResponseWriter, r *http.Request) {
 	writeProblem(w, r, 404, "Not Found", "The requested resource does not exist.")
+}
+func invalidPublicFilters(w http.ResponseWriter, r *http.Request, err error) {
+	writeProblem(w, r, http.StatusBadRequest, "Bad Request", err.Error()+".")
 }
 func parseStatus(raw string) content.Status {
 	s := content.Status(strings.TrimSpace(raw))

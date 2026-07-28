@@ -35,9 +35,9 @@ type PageResult[T any] struct {
 
 // PublicStore is intentionally expressed in domain models, not sqlc rows.
 type PublicStore interface {
-	ListProjects(context.Context, Page) ([]content.Project, int64, error)
+	ListProjects(context.Context, Page, PublicFilters) ([]content.Project, int64, error)
 	GetProject(context.Context, string) (content.Project, error)
-	ListPosts(context.Context, Page) ([]content.BlogPost, int64, error)
+	ListPosts(context.Context, Page, PublicFilters) ([]content.BlogPost, int64, error)
 	GetPost(context.Context, string) (content.BlogPost, error)
 	GetProfile(context.Context) (content.Profile, error)
 	ListContactLinks(context.Context) ([]content.ContactLink, error)
