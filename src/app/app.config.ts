@@ -5,9 +5,5 @@ import { provideAdminApi } from './admin/admin.providers';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
-    provideAdminApi(),
-  ],
+  providers: [provideBrowserGlobalErrorListeners(), provideRouter(routes), provideAdminApi()],
 };

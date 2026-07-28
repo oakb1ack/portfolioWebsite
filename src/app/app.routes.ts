@@ -3,8 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./home/home.component').then((module) => module.HomeComponent),
+    loadComponent: () => import('./home/home.component').then((module) => module.HomeComponent),
   },
   {
     path: 'projects',
@@ -27,8 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    loadChildren: () =>
-      import('./admin/admin.routes').then((module) => module.ADMIN_ROUTES),
+    loadChildren: () => import('./admin/admin.routes').then((module) => module.ADMIN_ROUTES),
   },
   { path: '**', redirectTo: '' },
 ];

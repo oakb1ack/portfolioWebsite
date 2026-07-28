@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  ViewChild,
-  signal,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, signal } from '@angular/core';
 import {
   GlobalWorkerOptions,
   getDocument,

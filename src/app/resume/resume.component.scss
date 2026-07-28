@@ -54,7 +54,9 @@ h1 {
   justify-content: space-between;
   padding: 0.9rem 1rem;
   text-decoration: none;
-  transition: background 180ms ease, transform 180ms ease;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
 }
 
 .download-button:hover,
