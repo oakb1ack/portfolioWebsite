@@ -101,6 +101,58 @@ func TestPostgresContentLifecycle(t *testing.T) {
 		t.Fatalf("public project Markdown/HTML boundary is incorrect: %#v", public.Content)
 	}
 
+	secondProjectInput := projectInput
+	secondProjectInput.Title = "Second integration project"
+	secondProjectInput.Slug = "second-integration-project-" + suffix
+	secondProjectInput.CategoryIDs = nil
+	secondProjectInput.ExpectedUpdatedAt = nil
+	secondProject, err := adapters.CreateProject(ctx, uuidString(user.ID), secondProjectInput, content.StatusPublished)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = adapters.DeleteProject(context.Background(), secondProject.ID, uuidString(user.ID)) })
+
+	tagFilter := httpapi.PublicFilters{Tags: []string{"missing-" + suffix, tag.Slug}}
+	firstPage, projectTotal, err := adapters.ListProjects(ctx, httpapi.Page{Limit: 1}, tagFilter)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if projectTotal != 2 || len(firstPage) != 1 {
+		t.Fatalf("filtered project first page count = %d/%d, want 1/2", len(firstPage), projectTotal)
+	}
+	secondPage, secondPageTotal, err := adapters.ListProjects(ctx, httpapi.Page{Limit: 1, Offset: 1}, tagFilter)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if secondPageTotal != 2 || len(secondPage) != 1 || secondPage[0].ID == firstPage[0].ID {
+		t.Fatalf("filtered project second page = %#v total %d", secondPage, secondPageTotal)
+	}
+	repeatedFirstPage, _, err := adapters.ListProjects(ctx, httpapi.Page{Limit: 1}, tagFilter)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(repeatedFirstPage) != 1 || repeatedFirstPage[0].ID != firstPage[0].ID {
+		t.Fatalf("filtered project ordering changed: %#v then %#v", firstPage, repeatedFirstPage)
+	}
+	projectsInBothKinds, bothKindsTotal, err := adapters.ListProjects(ctx, httpapi.Page{Limit: 10}, httpapi.PublicFilters{
+		Tags: []string{tag.Slug}, Categories: []string{category.Slug},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if bothKindsTotal != 1 || len(projectsInBothKinds) != 1 || projectsInBothKinds[0].ID != project.ID {
+		t.Fatalf("combined project filters = %#v total %d", projectsInBothKinds, bothKindsTotal)
+	}
+	noProjects, noProjectsTotal, err := adapters.ListProjects(ctx, httpapi.Page{Limit: 10}, httpapi.PublicFilters{
+		Tags: []string{"missing-" + suffix},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if noProjectsTotal != 0 || len(noProjects) != 0 {
+		t.Fatalf("unknown project filter = %#v total %d", noProjects, noProjectsTotal)
+	}
+
 	projectInput.Title = "Stale overwrite"
 	projectInput.ExpectedUpdatedAt = &project.UpdatedAt
 	if _, err := adapters.UpdateProject(ctx, project.ID, uuidString(user.ID), projectInput, content.StatusPublished); !errors.Is(err, httpapi.ErrConflict) {
@@ -120,5 +172,35 @@ func TestPostgresContentLifecycle(t *testing.T) {
 	t.Cleanup(func() { _ = adapters.DeletePost(context.Background(), post.ID, uuidString(user.ID)) })
 	if _, err := adapters.GetPost(ctx, post.Slug); !errors.Is(err, httpapi.ErrNotFound) {
 		t.Fatalf("future post public lookup error = %v, want not found", err)
+	}
+
+	publishedPostInput := postInput
+	publishedPostInput.Title = "Published integration post"
+	publishedPostInput.Slug = "published-integration-post-" + suffix
+	publishedPostInput.Summary = "Published content is filterable."
+	publishedPostInput.PublishAt = nil
+	publishedPost, err := adapters.CreatePost(ctx, uuidString(user.ID), publishedPostInput, content.StatusPublished)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = adapters.DeletePost(context.Background(), publishedPost.ID, uuidString(user.ID)) })
+
+	filteredPosts, postTotal, err := adapters.ListPosts(ctx, httpapi.Page{Limit: 1}, httpapi.PublicFilters{
+		Tags: []string{"missing-" + suffix, tag.Slug}, Categories: []string{category.Slug},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if postTotal != 1 || len(filteredPosts) != 1 || filteredPosts[0].ID != publishedPost.ID {
+		t.Fatalf("filtered posts = %#v total %d", filteredPosts, postTotal)
+	}
+	noPosts, noPostsTotal, err := adapters.ListPosts(ctx, httpapi.Page{Limit: 10}, httpapi.PublicFilters{
+		Categories: []string{"missing-" + suffix},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if noPostsTotal != 0 || len(noPosts) != 0 {
+		t.Fatalf("unknown post filter = %#v total %d", noPosts, noPostsTotal)
 	}
 }
