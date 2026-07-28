@@ -1,7 +1,17 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { catchError, EMPTY, finalize, startWith, Subject, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  finalize,
+  map,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   MediaUrlService,
   ProjectsApiService,
@@ -28,19 +38,20 @@ export class ProjectDetailComponent {
   protected readonly isNotFound = signal(false);
 
   constructor(protected readonly mediaUrls: MediaUrlService) {
-    this.retryRequest
+    combineLatest([
+      this.route.paramMap.pipe(map((params) => params.get('slug') ?? '')),
+      this.retryRequest.pipe(startWith(undefined)),
+    ])
       .pipe(
-        startWith(undefined),
-        tap(() => {
+        switchMap(([slug]) => {
           this.isLoading.set(true);
           this.error.set(undefined);
           this.isNotFound.set(false);
-        }),
-        switchMap(() =>
-          this.api.get(this.route.snapshot.paramMap.get('slug') ?? '').pipe(
+          this.project.set(undefined);
+
+          return this.api.get(slug).pipe(
             tap((project) => this.project.set(project)),
             catchError((error: unknown) => {
-              this.project.set(undefined);
               this.isNotFound.set(error instanceof PublicApiError && error.status === 404);
               this.error.set(
                 'This case study could not be loaded. Check your connection and try again.',
@@ -48,8 +59,8 @@ export class ProjectDetailComponent {
               return EMPTY;
             }),
             finalize(() => this.isLoading.set(false)),
-          ),
-        ),
+          );
+        }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();

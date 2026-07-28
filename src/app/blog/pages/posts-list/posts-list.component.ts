@@ -48,11 +48,12 @@ export class PostsListComponent {
         tap((query) => {
           this.activeTag.set(query.tag);
           this.activeCategory.set(query.category);
+        }),
+        switchMap((query) => {
           this.isLoading.set(true);
           this.error.set(undefined);
-        }),
-        switchMap((query) =>
-          this.api.list(query).pipe(
+
+          return this.api.list(query).pipe(
             tap((page) => this.page.set(page)),
             catchError((error: unknown) => {
               this.page.set(undefined);
@@ -60,8 +61,8 @@ export class PostsListComponent {
               return EMPTY;
             }),
             finalize(() => this.isLoading.set(false)),
-          ),
-        ),
+          );
+        }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();

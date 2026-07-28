@@ -43,23 +43,22 @@ export class PostDetailComponent {
       this.retryRequest.pipe(startWith(undefined)),
     ])
       .pipe(
-        tap(() => {
+        switchMap(([slug]) => {
           this.isLoading.set(true);
           this.error.set(undefined);
           this.isNotFound.set(false);
-        }),
-        switchMap(([slug]) =>
-          this.api.get(slug).pipe(
+          this.post.set(undefined);
+
+          return this.api.get(slug).pipe(
             tap((post) => this.post.set(post)),
             catchError((error: unknown) => {
-              this.post.set(undefined);
               this.isNotFound.set(error instanceof PublicApiError && error.status === 404);
               this.error.set('This post could not be loaded. Check your connection and try again.');
               return EMPTY;
             }),
             finalize(() => this.isLoading.set(false)),
-          ),
-        ),
+          );
+        }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe();
