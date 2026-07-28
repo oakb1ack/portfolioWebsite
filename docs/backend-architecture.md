@@ -87,10 +87,16 @@ All routes are under `/api/v1`.
 - `GET /healthz`
 - `GET /readyz`
 
-Public list responses are paginated. Taxonomy is included in each content
-response; query-level taxonomy filtering is reserved for the next frontend
-integration slice. Draft Markdown, internal storage keys, admin IDs, and
-lifecycle metadata are not public response fields.
+Public list responses are paginated. `GET /projects` and `GET /posts` accept
+`tag` and `category` filters as repeated parameters, comma-separated slug
+lists, or both. Values within one kind use OR semantics; when both kinds are
+present, the tag and category clauses use AND semantics. Filtering happens
+before pagination, so `total` is the filtered count. Each kind accepts at most
+20 valid lowercase slugs; malformed input receives `400 Bad Request`.
+
+Taxonomy is also included in each content response. Draft Markdown, internal
+storage keys, admin IDs, and lifecycle metadata are not public response
+fields.
 
 ## Admin API shape
 
