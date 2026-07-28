@@ -124,7 +124,7 @@ dd {
   max-width: 680px;
 }
 
-.case-study-body :is(h2, h3) {
+:host ::ng-deep .case-study-body :is(h2, h3) {
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 500;
@@ -133,11 +133,11 @@ dd {
   margin: 3rem 0 1rem;
 }
 
-.case-study-body h2 {
+:host ::ng-deep .case-study-body h2 {
   font-size: clamp(1.8rem, 3vw, 2.5rem);
 }
 
-.case-study-body :is(a) {
+:host ::ng-deep .case-study-body :is(a) {
   color: var(--accent-dark);
   text-underline-offset: 0.25rem;
 }
