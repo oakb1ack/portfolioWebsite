@@ -20,6 +20,12 @@ type contactLinkAdminStub struct {
 	link content.ContactLink
 }
 
+type profileAdminStub struct {
+	ContentAdminStore
+	input   content.ProfileInput
+	profile content.Profile
+}
+
 func (s contactLinkAdminStub) ListContactLinksAdmin(context.Context) ([]content.ContactLink, error) {
 	return []content.ContactLink{s.link}, nil
 }
@@ -39,6 +45,15 @@ func (s contactLinkAdminStub) UpdateContactLink(
 	content.ContactLinkInput,
 ) (content.ContactLink, error) {
 	return s.link, nil
+}
+
+func (s *profileAdminStub) UpdateProfile(
+	_ context.Context,
+	_ string,
+	input content.ProfileInput,
+) (content.Profile, error) {
+	s.input = input
+	return s.profile, nil
 }
 
 func TestAdminContactLinkResponsesUseAPIFieldNames(t *testing.T) {
@@ -190,5 +205,53 @@ func TestAdminContentDTOsUseArraysForEmptyCollections(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestUpdateProfileAllowsFirstRunWithoutExpectedTimestamp(t *testing.T) {
+	updatedAt := time.Date(2026, time.July, 27, 13, 0, 0, 0, time.UTC)
+	store := &profileAdminStub{profile: content.Profile{
+		ID:          "profile",
+		Name:        "Site Owner",
+		Headline:    "Engineer",
+		BioMarkdown: "Biography",
+		BioHTML:     "<p>Biography</p>",
+		UpdatedAt:   updatedAt,
+	}}
+	handler := updateProfile(RouteDependencies{
+		Admin:        store,
+		MaxJSONBytes: 1 << 20,
+	})
+	request := httptest.NewRequest(http.MethodPut, "/admin/profile", strings.NewReader(`{
+		"name":"Site Owner",
+		"headline":"Engineer",
+		"education":"",
+		"current_role":"",
+		"statement":"",
+		"bio_markdown":"Biography",
+		"resume_media_id":null
+	}`))
+	request = request.WithContext(context.WithValue(
+		request.Context(),
+		sessionContextKey,
+		auth.Session{AdminID: "admin-id"},
+	))
+	response := httptest.NewRecorder()
+
+	handler.ServeHTTP(response, request)
+
+	if response.Code != http.StatusOK {
+		t.Fatalf("status/body = %d/%s", response.Code, response.Body.String())
+	}
+	if store.input.ExpectedUpdatedAt != nil {
+		t.Fatalf("expected_updated_at = %v, want nil for first-run upsert", store.input.ExpectedUpdatedAt)
+	}
+	var got map[string]any
+	if err := json.Unmarshal(response.Body.Bytes(), &got); err != nil {
+		t.Fatal(err)
+	}
+	if got["current_role"] != "" || got["bio_markdown"] != "Biography" ||
+		got["updated_at"] != updatedAt.Format(time.RFC3339) {
+		t.Fatalf("response = %#v", got)
 	}
 }
