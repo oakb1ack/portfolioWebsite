@@ -1,0 +1,59 @@
+<section class="contact-page" aria-labelledby="contact-title">
+  <h1 class = "contact-heading">Contact</h1>
+  <nav class="contact-deck" aria-label="Ways to contact Ali Alfridawi">
+    @for (link of contactLinks; track link.label) {
+      @if (link.kind === 'external') {
+        <a
+          class="contact-action"
+          [href]="link.url"
+          target="_blank"
+          rel="noreferrer"
+          [attr.aria-label]="link.label + ' (opens in a new tab)'"
+        >
+          <span class="contact-icon" aria-hidden="true">
+            @switch (link.label) {
+              @case ('GitHub') {
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path
+                    d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.18-3.37-1.18-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.54 1.04 1.54 1.04.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.54 9.54 0 0 1 12 6.8c.85 0 1.7.11 2.5.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.91.68 1.84v2.73c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+                  />
+                </svg>
+              }
+              @case ('LinkedIn') {
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path
+                    d="M5.45 3.5a1.95 1.95 0 1 1 0 3.9 1.95 1.95 0 0 1 0-3.9ZM3.8 8.9h3.3V20H3.8V8.9Zm5.38 0h3.17v1.52h.05c.44-.84 1.52-1.73 3.13-1.73 3.35 0 3.97 2.2 3.97 5.06V20h-3.3v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95V20H8.88V8.9h.3Z"
+                  />
+                </svg>
+              }
+            }
+          </span>
+          <span class="contact-label">{{ link.label }}</span>
+          <span class="external-mark" aria-hidden="true">↗</span>
+        </a>
+      } @else {
+        <button
+          class="contact-action contact-action-button"
+          type="button"
+          [class.is-copied]="isEmailCopied()"
+          aria-describedby="email-copy-status"
+          (click)="copyEmailAddress()"
+        >
+          <span class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M3.5 5.5h17v13h-17v-13Zm.9 1.5L12 12.35 19.6 7H4.4Zm14.6 10V8.43L12 13.3 5.1 8.43V17h13.9Z" />
+            </svg>
+          </span>
+          <span class="contact-label">Email</span>
+          @if (isEmailCopied()) {
+            <span class="copy-feedback" aria-hidden="true">Copied</span>
+          }
+        </button>
+      }
+    }
+  </nav>
+
+  <p id="email-copy-status" class="screen-reader-status" aria-live="polite" role="status">
+    {{ emailCopyMessage() }}
+  </p>
+</section>
