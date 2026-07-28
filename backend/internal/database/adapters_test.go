@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"reflect"
 	"testing"
 	"time"
 
@@ -64,5 +65,31 @@ func TestBytes32DoesNotAliasInput(t *testing.T) {
 	input[0] = 9
 	if got[0] != 7 {
 		t.Fatal("session hash mapping aliases database input")
+	}
+}
+
+func TestPublicProjectParamsKeepListAndCountFiltersAligned(t *testing.T) {
+	page := httpapi.Page{Limit: 12, Offset: 24}
+	filters := httpapi.PublicFilters{
+		Tags:       []string{"go", "postgres"},
+		Categories: []string{"backend"},
+	}
+
+	list, count := publicProjectParams(page, filters)
+	if list.LimitCount != 12 || list.OffsetCount != 24 {
+		t.Fatalf("pagination = limit %d offset %d", list.LimitCount, list.OffsetCount)
+	}
+	if !reflect.DeepEqual(list.TagSlugs, count.TagSlugs) ||
+		!reflect.DeepEqual(list.CategorySlugs, count.CategorySlugs) {
+		t.Fatalf("list filters %#v/%#v differ from count filters %#v/%#v",
+			list.TagSlugs, list.CategorySlugs, count.TagSlugs, count.CategorySlugs)
+	}
+}
+
+func TestPublicPostParamsNormalizeEmptyFilters(t *testing.T) {
+	list, count := publicPostParams(httpapi.Page{Limit: 20}, httpapi.PublicFilters{})
+	if list.TagSlugs == nil || list.CategorySlugs == nil ||
+		count.TagSlugs == nil || count.CategorySlugs == nil {
+		t.Fatal("empty taxonomy filters must use non-nil PostgreSQL arrays")
 	}
 }

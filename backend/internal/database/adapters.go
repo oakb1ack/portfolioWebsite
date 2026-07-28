@@ -188,19 +188,25 @@ func transitionPublishAt(oldStatus content.Status, oldPublish, oldPublished, old
 	return next.PublishAt, nil
 }
 
-func (a *Adapters) ListProjects(ctx context.Context, p httpapi.Page, filters httpapi.PublicFilters) ([]content.Project, int64, error) {
-	filterParams := db.CountPublicProjectsParams{
+func publicProjectParams(p httpapi.Page, filters httpapi.PublicFilters) (db.ListPublicProjectsParams, db.CountPublicProjectsParams) {
+	count := db.CountPublicProjectsParams{
 		TagSlugs:      nonNilStrings(filters.Tags),
 		CategorySlugs: nonNilStrings(filters.Categories),
 	}
-	rows, e := a.Queries.ListPublicProjects(ctx, db.ListPublicProjectsParams{
-		TagSlugs: filterParams.TagSlugs, CategorySlugs: filterParams.CategorySlugs,
+	list := db.ListPublicProjectsParams{
+		TagSlugs: count.TagSlugs, CategorySlugs: count.CategorySlugs,
 		OffsetCount: int32(p.Offset), LimitCount: int32(p.Limit),
-	})
+	}
+	return list, count
+}
+
+func (a *Adapters) ListProjects(ctx context.Context, p httpapi.Page, filters httpapi.PublicFilters) ([]content.Project, int64, error) {
+	listParams, countParams := publicProjectParams(p, filters)
+	rows, e := a.Queries.ListPublicProjects(ctx, listParams)
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
-	n, e := a.Queries.CountPublicProjects(ctx, filterParams)
+	n, e := a.Queries.CountPublicProjects(ctx, countParams)
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
@@ -221,19 +227,26 @@ func (a *Adapters) GetProject(ctx context.Context, slug string) (content.Project
 	}
 	return publicProjectDetail(r)
 }
-func (a *Adapters) ListPosts(ctx context.Context, p httpapi.Page, filters httpapi.PublicFilters) ([]content.BlogPost, int64, error) {
-	filterParams := db.CountPublicPostsParams{
+
+func publicPostParams(p httpapi.Page, filters httpapi.PublicFilters) (db.ListPublicPostsParams, db.CountPublicPostsParams) {
+	count := db.CountPublicPostsParams{
 		TagSlugs:      nonNilStrings(filters.Tags),
 		CategorySlugs: nonNilStrings(filters.Categories),
 	}
-	rows, e := a.Queries.ListPublicPosts(ctx, db.ListPublicPostsParams{
-		TagSlugs: filterParams.TagSlugs, CategorySlugs: filterParams.CategorySlugs,
+	list := db.ListPublicPostsParams{
+		TagSlugs: count.TagSlugs, CategorySlugs: count.CategorySlugs,
 		OffsetCount: int32(p.Offset), LimitCount: int32(p.Limit),
-	})
+	}
+	return list, count
+}
+
+func (a *Adapters) ListPosts(ctx context.Context, p httpapi.Page, filters httpapi.PublicFilters) ([]content.BlogPost, int64, error) {
+	listParams, countParams := publicPostParams(p, filters)
+	rows, e := a.Queries.ListPublicPosts(ctx, listParams)
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
-	n, e := a.Queries.CountPublicPosts(ctx, filterParams)
+	n, e := a.Queries.CountPublicPosts(ctx, countParams)
 	if e != nil {
 		return nil, 0, mapDBError(e)
 	}
