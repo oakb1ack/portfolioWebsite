@@ -147,3 +147,48 @@ func TestAdminContactLinkResponsesUseAPIFieldNames(t *testing.T) {
 		})
 	}
 }
+
+func TestAdminContentDTOsUseArraysForEmptyCollections(t *testing.T) {
+	tests := []struct {
+		name string
+		dto  any
+		keys []string
+	}{
+		{
+			name: "project",
+			dto:  adminProject(content.Project{}),
+			keys: []string{
+				"tags", "categories", "tag_ids", "category_ids", "technologies", "links",
+			},
+		},
+		{
+			name: "post",
+			dto:  adminPost(content.BlogPost{}),
+			keys: []string{"tags", "categories", "tag_ids", "category_ids"},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			body, err := json.Marshal(test.dto)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var got map[string]any
+			if err := json.Unmarshal(body, &got); err != nil {
+				t.Fatal(err)
+			}
+			for _, key := range test.keys {
+				value, ok := got[key]
+				if !ok {
+					t.Errorf("%q is missing from %s", key, body)
+					continue
+				}
+				items, ok := value.([]any)
+				if !ok || len(items) != 0 {
+					t.Errorf("%q = %#v, want an empty array", key, value)
+				}
+			}
+		})
+	}
+}

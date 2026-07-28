@@ -209,10 +209,10 @@ type ProjectDTO struct {
 	Categories      []string            `json:"categories"`
 	Outcome         string              `json:"outcome"`
 	Role            string              `json:"role"`
-	Technologies    []string            `json:"technologies,omitempty"`
+	Technologies    []string            `json:"technologies"`
 	Stage           ProjectStage        `json:"stage"`
 	Availability    ProjectAvailability `json:"availability"`
-	Links           []ProjectLink       `json:"links,omitempty"`
+	Links           []ProjectLink       `json:"links"`
 	SortOrder       int                 `json:"sort_order"`
 }
 

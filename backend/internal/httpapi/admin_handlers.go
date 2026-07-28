@@ -416,10 +416,10 @@ func writeStoreError(w http.ResponseWriter, r *http.Request, e error) {
 	}
 }
 func adminProject(v content.Project) content.AdminProjectDTO {
-	return content.AdminProjectDTO{ProjectDTO: projectPublic(v), Status: v.Status, BodyMarkdown: v.BodyMarkdown, PublishAt: v.PublishAt, ArchivedAt: v.ArchivedAt, UpdatedAt: v.UpdatedAt, TagIDs: v.TagIDs, CategoryIDs: v.CategoryIDs}
+	return content.AdminProjectDTO{ProjectDTO: projectPublic(v), Status: v.Status, BodyMarkdown: v.BodyMarkdown, PublishAt: v.PublishAt, ArchivedAt: v.ArchivedAt, UpdatedAt: v.UpdatedAt, TagIDs: jsonStrings(v.TagIDs), CategoryIDs: jsonStrings(v.CategoryIDs)}
 }
 func adminPost(v content.BlogPost) content.AdminBlogPostDTO {
-	return content.AdminBlogPostDTO{BlogPostDTO: postPublic(v), Status: v.Status, BodyMarkdown: v.BodyMarkdown, PublishAt: v.PublishAt, ArchivedAt: v.ArchivedAt, UpdatedAt: v.UpdatedAt, ReadingTimeMinutes: v.ReadingTimeMinutes, TagIDs: v.TagIDs, CategoryIDs: v.CategoryIDs}
+	return content.AdminBlogPostDTO{BlogPostDTO: postPublic(v), Status: v.Status, BodyMarkdown: v.BodyMarkdown, PublishAt: v.PublishAt, ArchivedAt: v.ArchivedAt, UpdatedAt: v.UpdatedAt, ReadingTimeMinutes: v.ReadingTimeMinutes, TagIDs: jsonStrings(v.TagIDs), CategoryIDs: jsonStrings(v.CategoryIDs)}
 }
 
 func adminProfileDTO(v content.Profile) content.AdminProfileDTO {

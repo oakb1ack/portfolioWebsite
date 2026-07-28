@@ -213,9 +213,10 @@ func projectPublic(v content.Project) content.ProjectDTO {
 		ID: v.ID, Title: v.Title, Slug: v.Slug, Summary: v.Summary,
 		BodyHTML: v.BodyHTML, PublishedAt: v.PublishedAt,
 		FeaturedMediaID: v.FeaturedMediaID, Featured: v.Featured,
-		Tags: v.Tags, Categories: v.Categories, Outcome: v.Outcome, Role: v.Role,
-		Technologies: v.Technologies, Stage: v.Stage, Availability: v.Availability,
-		Links: v.Links, SortOrder: v.SortOrder,
+		Tags: jsonStrings(v.Tags), Categories: jsonStrings(v.Categories),
+		Outcome: v.Outcome, Role: v.Role, Technologies: jsonStrings(v.Technologies),
+		Stage: v.Stage, Availability: v.Availability, Links: jsonProjectLinks(v.Links),
+		SortOrder: v.SortOrder,
 	}
 }
 func postPublic(v content.BlogPost) content.BlogPostDTO {
@@ -223,9 +224,21 @@ func postPublic(v content.BlogPost) content.BlogPostDTO {
 		ID: v.ID, Title: v.Title, Slug: v.Slug, Summary: v.Summary,
 		BodyHTML: v.BodyHTML, PublishedAt: v.PublishedAt,
 		FeaturedMediaID: v.FeaturedMediaID, Featured: v.Featured,
-		Tags: v.Tags, Categories: v.Categories,
+		Tags: jsonStrings(v.Tags), Categories: jsonStrings(v.Categories),
 		ReadingTimeMinutes: v.ReadingTimeMinutes,
 	}
+}
+func jsonStrings(values []string) []string {
+	if values == nil {
+		return []string{}
+	}
+	return values
+}
+func jsonProjectLinks(values []content.ProjectLink) []content.ProjectLink {
+	if values == nil {
+		return []content.ProjectLink{}
+	}
+	return values
 }
 func unavailable(w http.ResponseWriter, r *http.Request) {
 	writeProblem(w, r, 503, "Service Unavailable", "The content service is unavailable.")
