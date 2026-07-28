@@ -1,0 +1,145 @@
+:host {
+  display: block;
+}
+
+.post,
+.post-state {
+  margin-inline: auto;
+  padding: clamp(3rem, 8vw, 7rem) 0 8rem;
+  width: min(820px, calc(100% - 80px));
+}
+
+.back-link,
+.post-state a,
+.post-state button {
+  color: var(--accent-dark);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.post-state button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin-right: 1.5rem;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.post-header {
+  margin-top: 5rem;
+}
+
+.post-meta {
+  color: var(--accent-dark);
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  gap: 1rem;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 500;
+  letter-spacing: -0.075em;
+  line-height: 0.92;
+  margin: 1.5rem 0 2rem;
+}
+
+.summary {
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.taxonomy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.5rem;
+}
+
+.taxonomy a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  padding: 0.38rem 0.68rem;
+  text-decoration: none;
+}
+
+.post-hero {
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  margin: 4rem 0;
+  overflow: hidden;
+}
+
+.post-hero img {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.post-body {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-top: 4rem;
+}
+
+:host ::ng-deep .post-body :is(h2, h3) {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 3rem 0 1rem;
+}
+
+:host ::ng-deep .post-body h2 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+:host ::ng-deep .post-body :is(a) {
+  color: var(--accent-dark);
+  text-underline-offset: 0.25rem;
+}
+
+:host ::ng-deep .post-body :is(pre, blockquote) {
+  border-left: 2px solid var(--accent);
+  margin: 2rem 0;
+  overflow-x: auto;
+  padding: 1rem 0 1rem 1.5rem;
+}
+
+.post-state h1 {
+  max-width: 680px;
+}
+
+.eyebrow {
+  color: var(--accent-dark);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 800px) {
+  .post,
+  .post-state {
+    width: min(100% - 40px, 600px);
+  }
+
+  .post-header {
+    margin-top: 4rem;
+  }
+}

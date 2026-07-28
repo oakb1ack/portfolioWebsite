@@ -1,0 +1,58 @@
+@if (isLoading()) {
+  <section class="post-state" role="status" aria-live="polite">
+    <p class="eyebrow">Loading post</p>
+    <h1>Opening the article…</h1>
+  </section>
+} @else if (post(); as selectedPost) {
+  <article class="post">
+    <a class="back-link" routerLink="/blog">← Back to writing</a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        @if (selectedPost.published_at) {
+          <time [attr.datetime]="selectedPost.published_at">
+            {{ selectedPost.published_at | date: 'MMMM d, y' }}
+          </time>
+        }
+        <span>{{ selectedPost.reading_time_minutes }} min read</span>
+      </div>
+      <h1>{{ selectedPost.title }}</h1>
+      <p class="summary">{{ selectedPost.summary }}</p>
+
+      @if (selectedPost.categories.length || selectedPost.tags.length) {
+        <nav class="taxonomy" aria-label="Filter writing by topic">
+          @for (category of selectedPost.categories; track category) {
+            <a routerLink="/blog" [queryParams]="{ category }">{{ category }}</a>
+          }
+          @for (tag of selectedPost.tags; track tag) {
+            <a routerLink="/blog" [queryParams]="{ tag }">#{{ tag }}</a>
+          }
+        </nav>
+      }
+    </header>
+
+    @if (selectedPost.featured_media_id; as mediaId) {
+      <figure class="post-hero">
+        <img
+          [src]="mediaUrls.publicUrl(mediaId)"
+          [alt]="'Featured image for ' + selectedPost.title"
+        />
+      </figure>
+    }
+
+    <div class="post-body" [innerHTML]="selectedPost.body_html"></div>
+  </article>
+} @else if (isNotFound()) {
+  <section class="post-state">
+    <p class="eyebrow">Post unavailable</p>
+    <h1>This article is not published.</h1>
+    <a routerLink="/blog">Return to writing</a>
+  </section>
+} @else {
+  <section class="post-state" role="alert">
+    <p class="eyebrow">Unable to load post</p>
+    <h1>{{ error() }}</h1>
+    <button type="button" (click)="retry()">Try again</button>
+    <a routerLink="/blog">Return to writing</a>
+  </section>
+}
