@@ -1,0 +1,67 @@
+<div class="admin-app">
+  <a class="admin-skip-link" href="#admin-main">Skip to main content</a>
+
+  <header class="admin-topbar">
+    <a class="admin-brand" routerLink="/admin" (click)="closeMenu()">
+      <span class="admin-brand__mark" aria-hidden="true">AA</span>
+      <span>
+        <strong>Portfolio</strong>
+        <small>Content studio</small>
+      </span>
+    </a>
+    <button
+      type="button"
+      class="admin-menu-button"
+      aria-label="Toggle admin navigation"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="admin-navigation"
+      (click)="menuOpen.update((open) => !open)"
+    >
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <aside id="admin-navigation" class="admin-sidebar" [class.admin-sidebar--open]="menuOpen()">
+    <nav aria-label="Admin">
+      <a
+        routerLink="/admin"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+        >Overview</a
+      >
+      <a routerLink="/admin/projects" routerLinkActive="active" (click)="closeMenu()">Projects</a>
+      <a routerLink="/admin/posts" routerLinkActive="active" (click)="closeMenu()">Posts</a>
+      <a routerLink="/admin/profile" routerLinkActive="active" (click)="closeMenu()">Profile</a>
+      <a routerLink="/admin/contact-links" routerLinkActive="active" (click)="closeMenu()"
+        >Contact links</a
+      >
+      <a routerLink="/admin/taxonomy" routerLinkActive="active" (click)="closeMenu()">Taxonomy</a>
+      <a routerLink="/admin/media" routerLinkActive="active" (click)="closeMenu()">Media library</a>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <a routerLink="/" class="admin-site-link">View public site ↗</a>
+      <button
+        type="button"
+        class="admin-button admin-button--quiet"
+        [disabled]="signingOut()"
+        (click)="logout()"
+      >
+        {{ signingOut() ? 'Signing out…' : 'Sign out' }}
+      </button>
+    </div>
+  </aside>
+
+  @if (menuOpen()) {
+    <button
+      type="button"
+      class="admin-scrim"
+      aria-label="Close navigation"
+      (click)="closeMenu()"
+    ></button>
+  }
+
+  <main id="admin-main" class="admin-main" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

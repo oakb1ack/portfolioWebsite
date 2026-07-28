@@ -1,0 +1,43 @@
+<main class="login-page">
+  <a routerLink="/" class="login-back">← Back to portfolio</a>
+  <section class="login-card" aria-labelledby="login-title">
+    <div class="login-mark" aria-hidden="true">AA</div>
+    <p class="login-eyebrow">Portfolio content studio</p>
+    <h1 id="login-title">Welcome back</h1>
+    <p class="login-intro">Sign in to manage projects, writing, media, and profile content.</p>
+
+    @if (error()) {
+      <div class="login-error" role="alert">{{ error() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label>
+        <span>Username</span>
+        <input
+          type="text"
+          formControlName="username"
+          autocomplete="username"
+          [attr.aria-invalid]="form.controls.username.invalid && form.controls.username.touched"
+        />
+        @if (form.controls.username.invalid && form.controls.username.touched) {
+          <small>Please enter your username.</small>
+        }
+      </label>
+      <label>
+        <span>Password</span>
+        <input
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <small>Please enter your password.</small>
+        }
+      </label>
+      <button type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Signing in…' : 'Sign in' }}
+      </button>
+    </form>
+  </section>
+</main>
