@@ -1,0 +1,213 @@
+:host {
+  display: block;
+}
+
+.journal-page {
+  margin-inline: auto;
+  padding: clamp(4rem, 10vw, 8rem) 0 8rem;
+  width: min(980px, calc(100% - 80px));
+}
+
+.journal-heading {
+  max-width: 720px;
+}
+
+.eyebrow {
+  align-items: center;
+  color: var(--accent-dark);
+  display: flex;
+  font-size: 0.68rem;
+  font-weight: 700;
+  gap: 0.8rem;
+  letter-spacing: 0.14em;
+  margin: 0 0 2rem;
+  text-transform: uppercase;
+}
+
+.eyebrow-line {
+  background: var(--accent);
+  display: inline-block;
+  height: 1px;
+  width: 34px;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 9vw, 8rem);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.9;
+  margin: 0;
+}
+
+.intro {
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin: 2.2rem 0 0;
+  max-width: 590px;
+}
+
+.active-filters {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 3rem;
+}
+
+.active-filters > span:first-child,
+.post-meta,
+.pagination span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.filter,
+.taxonomy a {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.76rem;
+  padding: 0.35rem 0.7rem;
+}
+
+.active-filters a,
+.request-state button,
+.read-link,
+.pagination a {
+  color: var(--accent-dark);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-underline-offset: 0.25rem;
+}
+
+.post-list {
+  border-top: 1px solid var(--line);
+  margin-top: 5rem;
+}
+
+.post-card {
+  align-items: start;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  padding: 2.5rem 0;
+}
+
+.post-index {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.post-card h2,
+.empty-state h2,
+.request-state h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  margin: 0.9rem 0 0;
+}
+
+.post-card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.post-card h2 a:hover,
+.post-card h2 a:focus-visible {
+  color: var(--accent-dark);
+}
+
+.summary,
+.request-state p,
+.empty-state p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 1rem 0 0;
+}
+
+.taxonomy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.25rem;
+}
+
+.taxonomy a {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-decoration: none;
+}
+
+.read-link {
+  white-space: nowrap;
+}
+
+.request-state,
+.empty-state {
+  border-block: 1px solid var(--line);
+  margin-top: 5rem;
+  padding: 2rem 0;
+}
+
+.request-state button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1rem;
+}
+
+.empty-state {
+  align-items: start;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 2.5rem 1fr;
+}
+
+.empty-state > span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.empty-state h2 {
+  margin-top: 0;
+}
+
+.pagination {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+}
+
+@media (max-width: 800px) {
+  .journal-page {
+    width: min(100% - 40px, 600px);
+  }
+
+  .post-card {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+
+  .read-link {
+    grid-column: 2;
+  }
+}
