@@ -92,6 +92,9 @@ func TestInputValidation(t *testing.T) {
 	if err := (MediaInput{OriginalName: "../secret", MIMEType: "image/png", SizeBytes: 10}).Validate(); err == nil {
 		t.Fatal("expected filename validation error")
 	}
+	if err := (ProfileInput{Name: "Site Owner"}).Validate(); err != nil {
+		t.Fatalf("profile should allow an empty optional headline: %v", err)
+	}
 }
 
 func TestReadingTime(t *testing.T) {

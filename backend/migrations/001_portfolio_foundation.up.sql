@@ -228,7 +228,7 @@ CREATE TABLE profile (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
   CHECK (length(trim(display_name)) BETWEEN 1 AND 160),
-  CHECK (length(trim(headline)) BETWEEN 1 AND 240)
+  CHECK (length(trim(headline)) <= 240)
 );
 
 CREATE TABLE contact_links (
