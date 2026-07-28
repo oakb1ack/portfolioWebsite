@@ -6,6 +6,11 @@
     <h1 id="login-title">Welcome back</h1>
     <p class="login-intro">Sign in to manage projects, writing, media, and profile content.</p>
 
+    @if (sessionExpired()) {
+      <div class="login-notice" role="status">
+        Your session expired. Sign in again to continue where you left off.
+      </div>
+    }
     @if (error()) {
       <div class="login-error" role="alert">{{ error() }}</div>
     }

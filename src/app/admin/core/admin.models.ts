@@ -121,7 +121,7 @@ export type PostInput = Omit<
 > & { expected_updated_at?: string };
 
 export type ProfileInput = Omit<AdminProfile, 'id' | 'bio_html' | 'updated_at'> & {
-  expected_updated_at: string;
+  expected_updated_at?: string;
 };
 
 export type ContactLinkInput = Omit<ContactLink, 'id' | 'updated_at'> & {

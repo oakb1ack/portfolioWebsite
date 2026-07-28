@@ -38,7 +38,10 @@ export const adminHttpInterceptor: HttpInterceptorFn = (request, next) => {
       ) {
         auth.clearLocalSession();
         void router.navigate(['/admin/login'], {
-          queryParams: { returnUrl: router.url.startsWith('/admin') ? router.url : '/admin' },
+          queryParams: {
+            returnUrl: router.url.startsWith('/admin') ? router.url : '/admin',
+            reason: 'expired',
+          },
         });
       }
       return throwError(() => error);

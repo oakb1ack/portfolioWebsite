@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
@@ -33,7 +34,7 @@ import { AdminStateComponent } from '../../shared/admin-state.component';
             (retry)="load()"
           />
         }
-        @if (profile()) {
+        @if (ready()) {
           <form class="admin-card admin-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
             <div class="admin-fields">
               <label class="admin-field admin-field--half">
@@ -89,6 +90,7 @@ export class AdminProfileComponent {
   private readonly fb = inject(FormBuilder).nonNullable;
 
   readonly profile = signal<AdminProfile | null>(null);
+  readonly ready = signal(false);
   readonly loading = signal(true);
   readonly saving = signal(false);
   readonly error = signal<AdminErrorState | null>(null);
@@ -110,11 +112,13 @@ export class AdminProfileComponent {
 
   load(): void {
     this.loading.set(true);
+    this.ready.set(false);
     this.error.set(null);
     this.notice.set(null);
     this.api.getProfile().subscribe({
       next: (profile) => {
         this.profile.set(profile);
+        this.ready.set(true);
         this.form.reset({
           name: profile.name,
           headline: profile.headline,
@@ -127,6 +131,21 @@ export class AdminProfileComponent {
         this.loading.set(false);
       },
       error: (error: unknown) => {
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          this.profile.set(null);
+          this.form.reset({
+            name: '',
+            headline: '',
+            education: '',
+            currentRole: '',
+            statement: '',
+            bioMarkdown: '',
+            resumeMediaId: '',
+          });
+          this.ready.set(true);
+          this.loading.set(false);
+          return;
+        }
         this.error.set(toAdminError(error));
         this.loading.set(false);
       },
@@ -135,7 +154,7 @@ export class AdminProfileComponent {
 
   save(): void {
     const current = this.profile();
-    if (!current || this.form.invalid || this.saving()) {
+    if (!this.ready() || this.form.invalid || this.saving()) {
       this.form.markAllAsTouched();
       return;
     }
@@ -152,7 +171,7 @@ export class AdminProfileComponent {
         statement: value.statement.trim(),
         bio_markdown: value.bioMarkdown,
         resume_media_id: value.resumeMediaId.trim() || null,
-        expected_updated_at: current.updated_at,
+        ...(current ? { expected_updated_at: current.updated_at } : {}),
       })
       .pipe(finalize(() => this.saving.set(false)))
       .subscribe({

@@ -20,6 +20,7 @@ export class AdminLoginComponent implements OnInit {
 
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+  readonly sessionExpired = signal(this.route.snapshot.queryParamMap.get('reason') === 'expired');
   readonly form = new FormGroup({
     username: new FormControl('', {
       nonNullable: true,
@@ -46,6 +47,7 @@ export class AdminLoginComponent implements OnInit {
     }
 
     this.error.set(null);
+    this.sessionExpired.set(false);
     this.submitting.set(true);
     const { username, password } = this.form.getRawValue();
     this.auth
