@@ -105,7 +105,11 @@ func sessionInfo(d RouteDependencies) http.HandlerFunc {
 			return
 		}
 		s, e := d.Auth.FindByTokenHash(r.Context(), auth.HashToken(c.Value))
-		writeJSON(w, 200, map[string]any{"authenticated": e == nil && s.Active(d.Now(), d.Session.IdleTimeout), "expires_at": s.ExpiresAt})
+		if e != nil || !s.Active(d.Now(), d.Session.IdleTimeout) {
+			writeJSON(w, http.StatusOK, map[string]bool{"authenticated": false})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"authenticated": true, "expires_at": s.ExpiresAt})
 	}
 }
 func csrf(d RouteDependencies) http.HandlerFunc {
