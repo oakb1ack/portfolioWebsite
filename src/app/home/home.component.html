@@ -1,14 +1,32 @@
-<section class="landing-page">
-  <div class="landing-intro">
-
-    <h1>{{ profile.name }}</h1>
-
-    <div class="profile-lines" aria-label="Education and current role">
-      <p>{{ profile.education }}</p>
-      <p>{{ profile.role }}</p>
+<section class="landing-page" [attr.aria-busy]="isLoading()">
+  @if (isLoading()) {
+    <div class="landing-intro request-state" role="status" aria-live="polite">
+      <p class="eyebrow"><span class="eyebrow-line"></span> Loading profile</p>
+      <h1>Welcome.</h1>
     </div>
+  } @else if (profile(); as loadedProfile) {
+    <div class="landing-intro">
+      @if (loadedProfile.headline) {
+        <p class="eyebrow"><span class="eyebrow-line"></span>{{ loadedProfile.headline }}</p>
+      }
 
-    <blockquote>{{ profile.statement }}</blockquote>
-  </div>
+      <h1>{{ loadedProfile.name }}</h1>
 
+      <div class="profile-lines" aria-label="Education and current role">
+        <p>{{ loadedProfile.education }}</p>
+        <p>{{ loadedProfile.current_role }}</p>
+      </div>
+
+      @if (loadedProfile.statement) {
+        <blockquote>{{ loadedProfile.statement }}</blockquote>
+      }
+    </div>
+  } @else {
+    <div class="landing-intro request-state" role="alert">
+      <p class="eyebrow"><span class="eyebrow-line"></span> Profile unavailable</p>
+      <h1>Welcome.</h1>
+      <p class="request-message">{{ error() }}</p>
+      <button type="button" (click)="retry()">Try again</button>
+    </div>
+  }
 </section>

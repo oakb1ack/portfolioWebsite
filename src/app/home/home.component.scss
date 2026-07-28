@@ -86,6 +86,25 @@ blockquote::before {
   line-height: 1;
 }
 
+.request-message {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 2rem 0 0;
+  max-width: 34rem;
+}
+
+.request-state button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent-dark);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1rem;
+}
+
 .landing-footer {
   align-items: center;
   bottom: 7vh;
