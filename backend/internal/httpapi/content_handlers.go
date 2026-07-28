@@ -2,6 +2,7 @@ package httpapi
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -36,6 +37,50 @@ func page(r *http.Request) Page {
 	}
 	return Page{l, o}
 }
+
+const maxTaxonomyFilterValues = 20
+
+func publicFilters(r *http.Request) (PublicFilters, error) {
+	tags, err := taxonomyFilterValues(r, "tag")
+	if err != nil {
+		return PublicFilters{}, err
+	}
+	categories, err := taxonomyFilterValues(r, "category")
+	if err != nil {
+		return PublicFilters{}, err
+	}
+	return PublicFilters{Tags: tags, Categories: categories}, nil
+}
+
+func taxonomyFilterValues(r *http.Request, key string) ([]string, error) {
+	rawValues, present := r.URL.Query()[key]
+	if !present {
+		return []string{}, nil
+	}
+
+	values := make([]string, 0, len(rawValues))
+	seen := make(map[string]struct{})
+	valueCount := 0
+	for _, raw := range rawValues {
+		for _, part := range strings.Split(raw, ",") {
+			valueCount++
+			if valueCount > maxTaxonomyFilterValues {
+				return nil, fmt.Errorf("%s accepts at most %d values", key, maxTaxonomyFilterValues)
+			}
+			slug := strings.TrimSpace(part)
+			if err := content.ValidateSlug(slug); err != nil {
+				return nil, fmt.Errorf("%s must contain valid taxonomy slugs", key)
+			}
+			if _, exists := seen[slug]; exists {
+				continue
+			}
+			seen[slug] = struct{}{}
+			values = append(values, slug)
+		}
+	}
+	return values, nil
+}
+
 func publicProjects(d RouteDependencies) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if d.Public == nil {

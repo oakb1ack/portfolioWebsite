@@ -18,6 +18,14 @@ var (
 )
 
 type Page struct{ Limit, Offset int }
+
+// PublicFilters uses OR semantics within each field and AND semantics between
+// fields. Empty slices disable the corresponding taxonomy filter.
+type PublicFilters struct {
+	Tags       []string
+	Categories []string
+}
+
 type PageResult[T any] struct {
 	Items  []T   `json:"items"`
 	Total  int64 `json:"total"`

@@ -48,3 +48,34 @@ func TestPublicPaginationBounds(t *testing.T) {
 		t.Fatalf("body=%s", w.Body.String())
 	}
 }
+
+func TestPublicFiltersParseRepeatedAndCommaSeparatedValues(t *testing.T) {
+	request := httptest.NewRequest(http.MethodGet, "/projects?tag=go,postgres&tag=go&category=backend", nil)
+
+	filters, err := publicFilters(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := strings.Join(filters.Tags, ","); got != "go,postgres" {
+		t.Fatalf("tags = %q", got)
+	}
+	if got := strings.Join(filters.Categories, ","); got != "backend" {
+		t.Fatalf("categories = %q", got)
+	}
+}
+
+func TestPublicFiltersRejectInvalidAndExcessValues(t *testing.T) {
+	t.Run("invalid slug", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/projects?tag=Bad+Slug", nil)
+		if _, err := publicFilters(request); err == nil {
+			t.Fatal("invalid taxonomy slug accepted")
+		}
+	})
+
+	t.Run("too many values", func(t *testing.T) {
+		request := httptest.NewRequest(http.MethodGet, "/projects?tag="+strings.Repeat("a,", maxTaxonomyFilterValues)+"z", nil)
+		if _, err := publicFilters(request); err == nil {
+			t.Fatal("excess taxonomy values accepted")
+		}
+	})
+}
