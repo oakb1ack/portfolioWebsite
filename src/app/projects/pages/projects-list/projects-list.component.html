@@ -3,18 +3,72 @@
     <p class="eyebrow"><span class="eyebrow-line"></span> Selected work</p>
     <h1 id="projects-title">Projects</h1>
     <p class="intro">
-      Technical case studies about the problems I’ve worked on, the decisions I made,
-      and what came out of them.
+      Technical case studies about the problems I’ve worked on, the decisions I made, and what came
+      out of them.
     </p>
   </header>
 
-  @if (projects.length === 0) {
-    <app-project-empty-state />
-  } @else {
-    <div class="project-grid" aria-label="Projects">
-      @for (project of projects; track project.slug) {
-        <app-project-card [project]="project" />
+  @if (activeTag() || activeCategory()) {
+    <div class="active-filters" aria-label="Active project filters">
+      <span>Showing filtered projects</span>
+      @if (activeTag(); as tag) {
+        <span class="filter">Tag: {{ tag }}</span>
       }
+      @if (activeCategory(); as category) {
+        <span class="filter">Category: {{ category }}</span>
+      }
+      <a routerLink="/projects">Clear filters</a>
     </div>
+  }
+
+  @if (isLoading()) {
+    <div class="request-state" role="status" aria-live="polite">
+      <p>Loading projects…</p>
+    </div>
+  } @else if (error(); as errorMessage) {
+    <div class="request-state request-error" role="alert">
+      <h2>Projects are out of reach.</h2>
+      <p>{{ errorMessage }}</p>
+      <button type="button" (click)="retry()">Try again</button>
+    </div>
+  } @else if (page(); as loadedPage) {
+    @if (loadedPage.items.length === 0) {
+      <app-project-empty-state />
+    } @else {
+      <div class="project-grid" aria-label="Projects">
+        @for (project of loadedPage.items; track project.id) {
+          <app-project-card [project]="project" />
+        }
+      </div>
+
+      @if (
+        loadedPage.offset > 0 || loadedPage.offset + loadedPage.items.length < loadedPage.total
+      ) {
+        <nav class="pagination" aria-label="Project pages">
+          @if (loadedPage.offset > 0) {
+            <a
+              routerLink="/projects"
+              [queryParams]="{ offset: previousOffset(loadedPage) || null }"
+              queryParamsHandling="merge"
+            >
+              ← Previous
+            </a>
+          }
+          <span>
+            {{ loadedPage.offset + 1 }}–{{ loadedPage.offset + loadedPage.items.length }} of
+            {{ loadedPage.total }}
+          </span>
+          @if (loadedPage.offset + loadedPage.items.length < loadedPage.total) {
+            <a
+              routerLink="/projects"
+              [queryParams]="{ offset: nextOffset(loadedPage) }"
+              queryParamsHandling="merge"
+            >
+              Next →
+            </a>
+          }
+        </nav>
+      }
+    }
   }
 </section>

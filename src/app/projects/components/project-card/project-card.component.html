@@ -6,7 +6,13 @@
       <span></span>
     </div>
     <div class="preview-viewport">
-      <img [src]="project().image.src" [alt]="project().image.alt" />
+      @if (project().featured_media_id; as mediaId) {
+        <img [src]="mediaUrls.publicUrl(mediaId)" [alt]="'Preview of ' + project().title" />
+      } @else {
+        <span class="project-monogram" aria-hidden="true">
+          {{ project().title.charAt(0) }}
+        </span>
+      }
     </div>
   </div>
 
@@ -16,10 +22,12 @@
       <span class="card-arrow" aria-hidden="true">↗</span>
     </div>
     <p class="summary">{{ project().summary }}</p>
-    <ul class="technology-list" aria-label="Technologies">
-      @for (technology of project().technologies; track technology) {
-        <li>{{ technology }}</li>
-      }
-    </ul>
+    @if (project().technologies?.length) {
+      <ul class="technology-list" aria-label="Technologies">
+        @for (technology of project().technologies; track technology) {
+          <li>{{ technology }}</li>
+        }
+      </ul>
+    }
   </div>
 </a>

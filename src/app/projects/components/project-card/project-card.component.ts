@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MediaUrlService } from '../../../core/public-api';
 import { Project } from '../../models/project.model';
 
 @Component({
@@ -10,4 +11,6 @@ import { Project } from '../../models/project.model';
 })
 export class ProjectCardComponent {
   readonly project = input.required<Project>();
+
+  constructor(protected readonly mediaUrls: MediaUrlService) {}
 }
