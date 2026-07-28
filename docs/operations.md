@@ -6,6 +6,10 @@ This deployment is designed for a home server:
 
 PostgreSQL is private to the Compose network. Uploaded media is stored in the host-owned `PORTFOLIO_DATA_ROOT/media` path. The API is the only service that writes media. The admin hostname should be protected by a Cloudflare Access application policy as well as the API's own authenticated, CSRF-protected session. Cloudflare Access is an outer gate; the API must not trust Access headers as authorization.
 
+Caddy returns `404` for `/admin`, `/api/v1/admin`, and `/api/v1/auth` on the
+public hostname. Those routes are available only through `ADMIN_HOST`, so the
+public hostname cannot bypass the Access policy.
+
 ## First setup
 
 1. Install Podman with `podman-compose`, or Docker Engine with the Compose plugin, on the server.

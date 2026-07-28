@@ -7,7 +7,7 @@
 	}
 }
 
-http://{$PUBLIC_HOST}, http://{$ADMIN_HOST} {
+(portfolio_common) {
 	encode zstd gzip
 	header {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
@@ -16,6 +16,22 @@ http://{$PUBLIC_HOST}, http://{$ADMIN_HOST} {
 		Referrer-Policy "strict-origin-when-cross-origin"
 		-Server
 	}
+}
+
+http://{$PUBLIC_HOST} {
+	import portfolio_common
+
+	@admin path /admin /admin/* /api/v1/admin /api/v1/admin/* /api/v1/auth /api/v1/auth/*
+	respond @admin 404
+
+	@api path /api/*
+	reverse_proxy @api api:8080
+
+	reverse_proxy web:8080
+}
+
+http://{$ADMIN_HOST} {
+	import portfolio_common
 
 	@api path /api/*
 	reverse_proxy @api api:8080
