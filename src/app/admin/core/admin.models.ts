@@ -1,5 +1,5 @@
 export type ContentStatus = 'draft' | 'scheduled' | 'published' | 'archived';
-export type TaxonomyKind = 'tags' | 'categories';
+export type TaxonomyKind = 'tag' | 'category';
 
 export interface ApiProblem {
   type?: string;

@@ -1,0 +1,89 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <h1>Media library</h1>
+      <p>Upload images and PDFs, then use their IDs in content and profile fields.</p>
+    </div>
+  </header>
+  @if (notice()) {
+    <app-admin-state [message]="notice()!" tone="success" />
+  }
+  @if (error(); as requestError) {
+    <app-admin-state [message]="requestError.message" tone="error" />
+  }
+  <form
+    class="admin-card admin-form media-upload"
+    [formGroup]="form"
+    (ngSubmit)="upload()"
+    novalidate
+  >
+    <div>
+      <h2>Upload media</h2>
+      <p>JPEG, PNG, WebP, GIF, or PDF. Maximum size: 20 MiB.</p>
+    </div>
+    <label class="admin-field"
+      ><span>File</span
+      ><input
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+        (change)="chooseFile($event)"
+      />
+      @if (file(); as selectedFile) {
+        <small>Selected: {{ selectedFile.name }}</small>
+      }
+    </label>
+    <label class="admin-field"
+      ><span>Alternative text</span><input formControlName="altText" maxlength="500" /><small
+        >Describe meaningful images. Leave empty for decorative images and PDFs.</small
+      ></label
+    >
+    <button type="submit" class="admin-button" [disabled]="uploading()">
+      {{ uploading() ? 'Uploading…' : 'Upload file' }}
+    </button>
+  </form>
+  @if (loading()) {
+    <app-admin-state message="Loading media…" />
+  } @else {
+    <div class="media-grid">
+      @for (asset of media(); track asset.id) {
+        <article class="admin-card media-card">
+          <a class="media-preview" [href]="asset.public_url" target="_blank" rel="noopener">
+            @if (isImage(asset)) {
+              <img [src]="asset.public_url" [alt]="asset.alt_text" loading="lazy" />
+            } @else {
+              <span aria-hidden="true">PDF</span>
+            }
+          </a>
+          <div class="media-card__body">
+            <h2>{{ asset.original_name }}</h2>
+            <p>{{ asset.mime_type }} · {{ formatBytes(asset.size_bytes) }}</p>
+            <label class="admin-field"
+              ><span>Media ID</span><input readonly [value]="asset.id"
+            /></label>
+            @if (asset.alt_text) {
+              <p><strong>Alt:</strong> {{ asset.alt_text }}</p>
+            }
+            <div class="admin-actions">
+              <a
+                class="admin-button admin-button--quiet"
+                [href]="asset.public_url"
+                target="_blank"
+                rel="noopener"
+                >Open</a
+              ><button
+                type="button"
+                class="admin-button admin-button--danger"
+                [disabled]="deletingId() === asset.id"
+                (click)="remove(asset)"
+              >
+                {{ deletingId() === asset.id ? 'Deleting…' : 'Delete' }}
+              </button>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <p class="admin-card admin-empty">No media assets yet.</p>
+      }
+    </div>
+  }
+</section>

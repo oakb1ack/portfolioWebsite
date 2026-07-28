@@ -1,0 +1,119 @@
+<section class="admin-page">
+  <header class="admin-page__header">
+    <div>
+      <h1>Taxonomy</h1>
+      <p>Maintain the tags and categories assigned to projects and posts.</p>
+    </div>
+    <button type="button" class="admin-button" (click)="create()">New {{ kind() }}</button>
+  </header>
+  <div class="admin-toolbar" role="tablist" aria-label="Taxonomy kind">
+    <div class="admin-actions">
+      <button
+        type="button"
+        class="admin-button"
+        [class.admin-button--quiet]="kind() !== 'tag'"
+        role="tab"
+        [attr.aria-selected]="kind() === 'tag'"
+        (click)="selectKind('tag')"
+      >
+        Tags
+      </button>
+      <button
+        type="button"
+        class="admin-button"
+        [class.admin-button--quiet]="kind() !== 'category'"
+        role="tab"
+        [attr.aria-selected]="kind() === 'category'"
+        (click)="selectKind('category')"
+      >
+        Categories
+      </button>
+    </div>
+  </div>
+  @if (notice()) {
+    <app-admin-state [message]="notice()!" tone="success" />
+  }
+  @if (error(); as requestError) {
+    <app-admin-state
+      [message]="requestError.message"
+      tone="error"
+      [retryable]="requestError.kind === 'conflict'"
+      (retry)="load()"
+    />
+  }
+  @if (editorOpen()) {
+    <form class="admin-card admin-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="admin-toolbar">
+        <h2>{{ selected() ? 'Edit' : 'New' }} {{ kind() }}</h2>
+        <button type="button" class="admin-button admin-button--quiet" (click)="close()">
+          Close
+        </button>
+      </div>
+      <div class="admin-fields">
+        <label class="admin-field admin-field--half"
+          ><span>Name</span><input formControlName="name"
+        /></label>
+        <label class="admin-field admin-field--half"
+          ><span>Slug</span><input formControlName="slug"
+        /></label>
+        <label class="admin-field"
+          ><span>Description</span><textarea rows="4" formControlName="description"></textarea>
+        </label>
+      </div>
+      <button type="submit" class="admin-button" [disabled]="saving()">
+        {{ saving() ? 'Saving…' : 'Save term' }}
+      </button>
+    </form>
+  }
+  @if (loading()) {
+    <app-admin-state [message]="'Loading ' + (kind() === 'tag' ? 'tags' : 'categories') + '…'" />
+  } @else {
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Description</th>
+            <th><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (term of terms(); track term.id) {
+            <tr>
+              <td>
+                <strong>{{ term.name }}</strong>
+              </td>
+              <td>{{ term.slug }}</td>
+              <td>{{ term.description || '—' }}</td>
+              <td>
+                <div class="admin-actions">
+                  <button
+                    type="button"
+                    class="admin-button admin-button--quiet"
+                    (click)="edit(term)"
+                  >
+                    Edit</button
+                  ><button
+                    type="button"
+                    class="admin-button admin-button--danger"
+                    [disabled]="deletingId() === term.id"
+                    (click)="remove(term)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="admin-empty">
+                No {{ kind() === 'tag' ? 'tags' : 'categories' }} yet.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
