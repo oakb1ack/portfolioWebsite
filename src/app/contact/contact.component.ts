@@ -16,6 +16,7 @@ export class ContactComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly document = inject(DOCUMENT);
   private readonly emailCopyState = signal<EmailCopyState>('idle');
+  private readonly failedEmailAddress = signal('');
   private readonly retryRequest = new Subject<void>();
   private copyResetTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -28,7 +29,7 @@ export class ContactComponent {
       case 'copied':
         return 'Email address copied to your clipboard.';
       case 'error':
-        return 'Unable to copy the email address. Use the email link instead.';
+        return `Unable to copy the email address. It is ${this.failedEmailAddress()}.`;
       default:
         return '';
     }
@@ -69,7 +70,9 @@ export class ContactComponent {
   }
 
   protected async copyEmailAddress(link: PublicContactLink): Promise<void> {
-    const copied = await this.copyToClipboard(this.emailAddress(link));
+    const address = this.emailAddress(link);
+    const copied = await this.copyToClipboard(address);
+    this.failedEmailAddress.set(copied ? '' : address);
     this.emailCopyState.set(copied ? 'copied' : 'error');
 
     if (copied) {
@@ -86,8 +89,13 @@ export class ContactComponent {
   }
 
   private async copyToClipboard(value: string): Promise<boolean> {
+    const clipboard = this.document.defaultView?.navigator.clipboard;
+    if (!clipboard) {
+      return this.copyWithFallback(value);
+    }
+
     try {
-      await this.document.defaultView?.navigator.clipboard.writeText(value);
+      await clipboard.writeText(value);
       return true;
     } catch {
       return this.copyWithFallback(value);
