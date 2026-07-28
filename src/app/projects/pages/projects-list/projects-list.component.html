@@ -1,0 +1,20 @@
+<section class="projects-page" aria-labelledby="projects-title">
+  <header class="projects-heading">
+    <p class="eyebrow"><span class="eyebrow-line"></span> Selected work</p>
+    <h1 id="projects-title">Projects</h1>
+    <p class="intro">
+      Technical case studies about the problems I’ve worked on, the decisions I made,
+      and what came out of them.
+    </p>
+  </header>
+
+  @if (projects.length === 0) {
+    <app-project-empty-state />
+  } @else {
+    <div class="project-grid" aria-label="Projects">
+      @for (project of projects; track project.slug) {
+        <app-project-card [project]="project" />
+      }
+    </div>
+  }
+</section>
