@@ -1,10 +1,15 @@
-@if (project; as selectedProject) {
+@if (isLoading()) {
+  <section class="not-found" role="status" aria-live="polite">
+    <p class="eyebrow">Loading project</p>
+    <h1>Opening the case study…</h1>
+  </section>
+} @else if (project(); as selectedProject) {
   <article class="case-study">
     <a class="back-link" routerLink="/projects">← Back to projects</a>
 
     <header class="case-study-header">
       <app-project-meta
-        [status]="selectedProject.status"
+        [status]="selectedProject.stage"
         [availability]="selectedProject.availability"
       />
       <h1>{{ selectedProject.title }}</h1>
@@ -12,14 +17,19 @@
       <p class="outcome">{{ selectedProject.outcome }}</p>
     </header>
 
-    <figure class="project-hero">
-      <div class="browser-bar" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <img [src]="selectedProject.image.src" [alt]="selectedProject.image.alt" />
-    </figure>
+    @if (selectedProject.featured_media_id; as mediaId) {
+      <figure class="project-hero">
+        <div class="browser-bar" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <img
+          [src]="mediaUrls.publicUrl(mediaId)"
+          [alt]="'Featured image for ' + selectedProject.title"
+        />
+      </figure>
+    }
 
     <dl class="project-facts">
       <div>
@@ -28,17 +38,13 @@
       </div>
       <div>
         <dt>Tools</dt>
-        <dd>{{ selectedProject.technologies.join(' · ') }}</dd>
+        <dd>{{ selectedProject.technologies?.join(' · ') || 'Not specified' }}</dd>
       </div>
     </dl>
 
-    <div class="case-study-body">
-      @for (section of selectedProject.sections; track section.heading) {
-        <app-project-section [section]="section" />
-      }
-    </div>
+    <div class="case-study-body" [innerHTML]="selectedProject.body_html"></div>
 
-    @if (selectedProject.links.length > 0) {
+    @if (selectedProject.links?.length) {
       <nav class="project-links" aria-label="Project links">
         <h2>Explore further</h2>
         @for (link of selectedProject.links; track link.url) {
@@ -47,10 +53,17 @@
       </nav>
     }
   </article>
-} @else {
+} @else if (isNotFound()) {
   <section class="not-found">
     <p class="eyebrow">Project unavailable</p>
     <h1>This case study is not published.</h1>
+    <a routerLink="/projects">Return to projects</a>
+  </section>
+} @else {
+  <section class="not-found" role="alert">
+    <p class="eyebrow">Unable to load project</p>
+    <h1>{{ error() }}</h1>
+    <button type="button" (click)="retry()">Try again</button>
     <a routerLink="/projects">Return to projects</a>
   </section>
 }

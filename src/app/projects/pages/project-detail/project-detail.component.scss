@@ -10,11 +10,22 @@
 }
 
 .back-link,
-.not-found a {
+.not-found a,
+.not-found button {
   color: var(--accent-dark);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   text-decoration: none;
+}
+
+.not-found button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin-right: 1.5rem;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
 }
 
 .case-study-header {
@@ -108,9 +119,27 @@ dd {
 }
 
 .case-study-body {
-  display: grid;
-  gap: 3.5rem;
+  color: var(--muted);
+  line-height: 1.75;
   max-width: 680px;
+}
+
+.case-study-body :is(h2, h3) {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 3rem 0 1rem;
+}
+
+.case-study-body h2 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.case-study-body :is(a) {
+  color: var(--accent-dark);
+  text-underline-offset: 0.25rem;
 }
 
 .project-links {

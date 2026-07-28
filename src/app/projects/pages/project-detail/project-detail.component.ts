@@ -1,19 +1,61 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ProjectSectionComponent } from '../../components/project-section/project-section.component';
+import { catchError, EMPTY, finalize, startWith, Subject, switchMap, tap } from 'rxjs';
+import {
+  MediaUrlService,
+  ProjectsApiService,
+  PublicApiError,
+  PublicProject,
+} from '../../../core/public-api';
 import { ProjectMetaComponent } from '../../components/project-meta/project-meta.component';
-import { projects } from '../../data/projects.data';
 
 @Component({
   selector: 'app-project-detail',
-  imports: [RouterLink, ProjectMetaComponent, ProjectSectionComponent],
+  imports: [RouterLink, ProjectMetaComponent],
   templateUrl: './project-detail.component.html',
   styleUrl: './project-detail.component.scss',
 })
 export class ProjectDetailComponent {
+  private readonly api = inject(ProjectsApiService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
+  private readonly retryRequest = new Subject<void>();
 
-  protected readonly project = projects.find(
-    (candidate) => candidate.slug === this.route.snapshot.paramMap.get('slug'),
-  );
+  protected readonly project = signal<PublicProject | undefined>(undefined);
+  protected readonly error = signal<string | undefined>(undefined);
+  protected readonly isLoading = signal(true);
+  protected readonly isNotFound = signal(false);
+
+  constructor(protected readonly mediaUrls: MediaUrlService) {
+    this.retryRequest
+      .pipe(
+        startWith(undefined),
+        tap(() => {
+          this.isLoading.set(true);
+          this.error.set(undefined);
+          this.isNotFound.set(false);
+        }),
+        switchMap(() =>
+          this.api.get(this.route.snapshot.paramMap.get('slug') ?? '').pipe(
+            tap((project) => this.project.set(project)),
+            catchError((error: unknown) => {
+              this.project.set(undefined);
+              this.isNotFound.set(error instanceof PublicApiError && error.status === 404);
+              this.error.set(
+                'This case study could not be loaded. Check your connection and try again.',
+              );
+              return EMPTY;
+            }),
+            finalize(() => this.isLoading.set(false)),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
+
+  protected retry(): void {
+    this.retryRequest.next();
+  }
 }
