@@ -277,7 +277,11 @@ func adminLinks(d RouteDependencies) http.HandlerFunc {
 			server(w, r)
 			return
 		}
-		writeJSON(w, 200, v)
+		out := make([]content.AdminContactLinkDTO, 0, len(v))
+		for _, link := range v {
+			out = append(out, adminContactLinkDTO(link))
+		}
+		writeJSON(w, http.StatusOK, out)
 	}
 }
 func createLink(d RouteDependencies) http.HandlerFunc {
@@ -296,7 +300,7 @@ func createLink(d RouteDependencies) http.HandlerFunc {
 			writeStoreError(w, r, e)
 			return
 		}
-		writeJSON(w, 201, v)
+		writeJSON(w, http.StatusCreated, adminContactLinkDTO(v))
 	}
 }
 func updateLink(d RouteDependencies) http.HandlerFunc {
@@ -319,7 +323,7 @@ func updateLink(d RouteDependencies) http.HandlerFunc {
 			writeStoreError(w, r, e)
 			return
 		}
-		writeJSON(w, 200, v)
+		writeJSON(w, http.StatusOK, adminContactLinkDTO(v))
 	}
 }
 func deleteLink(d RouteDependencies) http.HandlerFunc {
@@ -427,6 +431,17 @@ func adminProfileDTO(v content.Profile) content.AdminProfileDTO {
 		},
 		BioMarkdown: v.BioMarkdown,
 		UpdatedAt:   v.UpdatedAt,
+	}
+}
+
+func adminContactLinkDTO(v content.ContactLink) content.AdminContactLinkDTO {
+	return content.AdminContactLinkDTO{
+		ContactLinkDTO: content.ContactLinkDTO{
+			ID: v.ID, Label: v.Label, Kind: v.Kind, URL: v.URL,
+			IconKey: v.IconKey, SortOrder: v.SortOrder,
+		},
+		IsVisible: v.IsVisible,
+		UpdatedAt: v.UpdatedAt,
 	}
 }
 
