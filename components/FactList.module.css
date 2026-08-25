@@ -1,0 +1,33 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: 1px;
+  padding: 1px;
+  margin: var(--space-6) 0;
+  background: var(--color-line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.item {
+  min-width: 0;
+  padding: var(--space-4);
+  background: var(--color-paper-raised);
+}
+
+.item dt {
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-faint);
+  font-size: 0.7rem;
+  font-weight: 740;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.item dd {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  font-weight: 620;
+  line-height: 1.45;
+}
