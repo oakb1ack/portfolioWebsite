@@ -1,0 +1,54 @@
+---
+{
+  "slug": "faultscope",
+  "title": "FaultScope",
+  "summary": "A distributed reliability platform that preserves telemetry through failures and makes delivery safe to retry.",
+  "period": "Independent project",
+  "status": "complete",
+  "featured": true,
+  "featuredOrder": 1,
+  "disciplines": ["systems", "software", "infrastructure"],
+  "technologies":
+    ["Go", "C++20", "PostgreSQL", "OpenTelemetry", "Prometheus", "Toxiproxy", "Docker"],
+  "role": "System architecture and implementation",
+  "outcome": "Benchmarked ingestion at 31,973 samples per second with zero errors across 100,000 samples.",
+  "links":
+    [
+      {
+        "label": "View source on GitHub",
+        "href": "https://github.com/AliAlfridawi/FaultScope"
+      }
+    ],
+  "media": []
+}
+---
+
+## Overview
+
+FaultScope is a distributed reliability platform built around a C++20 telemetry agent, a concurrent Go control plane, and PostgreSQL ingestion. The project focuses on a practical systems question: what happens to telemetry when the network or receiving service is unavailable?
+
+Its delivery path is designed so temporary failures do not silently discard observations and retries do not turn into duplicated database records.
+
+## Telemetry at the edge
+
+The C++20 agent uses bounded queues to place an explicit limit on in-memory work. When telemetry cannot be delivered normally, disk buffering provides a durable path instead of relying only on process memory.
+
+Exponential-backoff retries allow delivery to resume without retrying continuously during an outage. Together, queue bounds, buffering, and backoff make failure behavior a deliberate part of the agent rather than an afterthought.
+
+## Concurrent control plane
+
+The Go control plane receives and coordinates telemetry from agents. The separation between the agent and control plane keeps collection concerns close to the monitored system while centralizing ingestion and operational control.
+
+OpenTelemetry and Prometheus provide the observability vocabulary around that data path. Toxiproxy makes network failure conditions reproducible while exercising the system.
+
+## Duplicate-safe ingestion
+
+Retries are necessary for at-least-once delivery, but they also mean the same telemetry can arrive more than once. FaultScope's PostgreSQL ingestion path is duplicate-safe, allowing an agent to retry without creating an additional record for data the control plane has already accepted.
+
+This gives the system a clear contract: delivery can be attempted until it succeeds, and repeated attempts remain safe at the database boundary.
+
+## Measured result
+
+I benchmarked the ingestion path across 100,000 samples. It processed **31,973 samples per second with zero errors** in that run.
+
+The benchmark complements the failure-oriented design: FaultScope is intended not only to keep data moving at useful throughput, but also to behave predictably when the straightforward delivery path stops working.
