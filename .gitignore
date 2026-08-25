@@ -1,51 +1,38 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
+# dependencies
 /node_modules
-npm-debug.log
-yarn-error.log
 
-# IDEs and editors
+# Next.js build output
+/.next
+/out
+
+# legacy framework cache
+/.angular
+
+# tests
+/coverage
+
+# local environment files
+.env*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# editors and operating systems
 .idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
 .vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/mcp.json
-.history/*
-
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
-
-# Local secrets and backend artifacts
-/.env
-/.env.*
-!/.env.example
-/backups/
-/backend/api
-
-# System files
 .DS_Store
 Thumbs.db
+*.swp
+
+# logs
+*.log
+npm-debug.log*
+
+# Vercel
+.vercel

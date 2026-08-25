@@ -1,11 +1,11 @@
 {
-  "printWidth": 100,
-  "singleQuote": true,
+  "printWidth": 88,
+  "proseWrap": "preserve",
   "overrides": [
     {
-      "files": "*.html",
+      "files": "content/**/*.mdx",
       "options": {
-        "parser": "angular"
+        "trailingComma": "none"
       }
     }
   ]
