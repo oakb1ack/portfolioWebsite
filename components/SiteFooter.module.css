@@ -8,8 +8,6 @@
 }
 
 .inner {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -66,54 +64,6 @@
   border-radius: 0.15rem;
 }
 
-.pond {
-  position: absolute;
-  right: clamp(1rem, 7vw, 7rem);
-  bottom: -1.5rem;
-  width: 8.5rem;
-  height: 3.5rem;
-  background: color-mix(in srgb, var(--color-pond) 75%, transparent);
-  border-radius: 50%;
-  transform: rotate(-4deg);
-}
-
-.lily {
-  position: absolute;
-  top: -0.1rem;
-  right: 0.7rem;
-  width: 2.7rem;
-  height: 1rem;
-  background: var(--color-leaf-200);
-  border-radius: 50%;
-}
-
-.frog {
-  position: absolute;
-  top: -1rem;
-  left: 1.75rem;
-  width: 1.8rem;
-  height: 1.3rem;
-  background: var(--color-leaf-400);
-  border-radius: 55% 55% 45% 45%;
-}
-
-.frog i {
-  position: absolute;
-  top: 0.28rem;
-  width: 0.24rem;
-  height: 0.24rem;
-  background: var(--color-ink);
-  border-radius: 50%;
-}
-
-.frog i:first-child {
-  left: 0.42rem;
-}
-
-.frog i:last-child {
-  right: 0.42rem;
-}
-
 @media (max-width: 40rem) {
   .inner {
     align-items: flex-start;
@@ -122,10 +72,5 @@
 
   .links {
     justify-content: flex-start;
-  }
-
-  .pond {
-    right: -2rem;
-    opacity: 0.65;
   }
 }

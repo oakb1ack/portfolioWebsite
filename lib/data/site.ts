@@ -18,8 +18,7 @@ export const site = {
   email: 'ali.muhsin.alfridawi@gmail.com',
   resumeHref: '/resume.pdf',
   navigation: [
-    { label: 'About', href: '/about' },
-    { label: 'Projects', href: '/projects' },
+    { label: 'Résumé', href: '/resume' },
     { label: 'Experience', href: '/experience' },
     { label: 'Contact', href: '/contact' },
   ] satisfies NavigationItem[],
@@ -39,15 +38,5 @@ export const site = {
 
 export const profile = {
   eyebrow: 'Mathematics + Electrical Engineering',
-  headline: 'Curious about mathematics, electronics, and computing.',
-  introduction:
-    'I’m a double-major student at the University of Texas at Arlington. I explore the ideas that connect mathematical models, physical systems, and reliable software.',
-  shortBio:
-    'My work spans reliability engineering, infrastructure, mathematical research, and software systems. I care about understanding how things behave, then making that behavior observable and dependable.',
-  interests: [
-    'Mathematical modeling',
-    'Reliable and distributed systems',
-    'Electronics and physical computing',
-    'Observability and infrastructure',
-  ],
+  headline: 'Ali Alfridawi',
 } as const;

@@ -8,6 +8,7 @@ export type ButtonLinkProps = {
   children: ReactNode;
   variant?: "primary" | "secondary" | "quiet";
   external?: boolean;
+  download?: string;
   className?: string;
   ariaLabel?: string;
 };
@@ -17,6 +18,7 @@ export function ButtonLink({
   children,
   variant = "primary",
   external = false,
+  download,
   className,
   ariaLabel,
 }: ButtonLinkProps) {
@@ -25,7 +27,7 @@ export function ButtonLink({
     <>
       <span>{children}</span>
       <span className={styles.arrow} aria-hidden="true">
-        {external ? "↗" : "→"}
+        {download ? "↓" : external ? "↗" : "→"}
       </span>
     </>
   );
@@ -45,7 +47,7 @@ export function ButtonLink({
   }
 
   return (
-    <Link className={classes} href={href} aria-label={ariaLabel}>
+    <Link className={classes} href={href} aria-label={ariaLabel} download={download}>
       {content}
     </Link>
   );

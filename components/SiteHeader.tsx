@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { FrogMark } from "./FrogArt";
 import styles from "./SiteHeader.module.css";
 
 export type NavigationItem = {
@@ -35,10 +36,7 @@ export function SiteHeader({
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link className={styles.identity} href={homeHref} aria-label={`${name}, home`}>
-          <span className={styles.mark} aria-hidden="true">
-            <span />
-            <span />
-          </span>
+          <FrogMark className={styles.mark} />
           <span>{name}</span>
         </Link>
 

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { ButtonLink, SectionIntro } from "@/components";
 
 import styles from "./content.module.css";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "The requested page could not be found.",
+};
 
 export default function NotFound() {
   return (

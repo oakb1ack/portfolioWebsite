@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { ButtonLink, SectionIntro } from "@/components";
+import { ButtonLink } from "@/components";
 import { education, experience, leadership, site } from "@/lib/data";
 
-import styles from "../content.module.css";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Experience",
@@ -17,16 +17,21 @@ type Entry = (typeof experience)[number] | (typeof leadership)[number];
 function Timeline({ entries }: { entries: readonly Entry[] }) {
   return (
     <ol className={styles.timeline}>
-      {entries.map((entry) => (
+      {entries.map((entry, index) => (
         <li className={styles.timelineItem} key={`${entry.organization}-${entry.role}`}>
-          <h3>{entry.role}</h3>
-          <p className={styles.timelineMeta}>
-            <span>{entry.organization}</span>
-            <span>{entry.location}</span>
+          <span className={styles.entryNumber} aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <div className={styles.entryBody}>
+            <p className={styles.organization}>{entry.organization}</p>
+            <h3>{entry.role}</h3>
+            <p className={styles.summary}>{entry.summary}</p>
+          </div>
+          <p className={styles.entryMeta}>
             <span>{entry.period}</span>
+            <span>{entry.location}</span>
           </p>
-          <p>{entry.summary}</p>
-          <ul>
+          <ul className={styles.highlights}>
             {entry.highlights.map((highlight) => (
               <li key={highlight}>{highlight}</li>
             ))}
@@ -40,42 +45,64 @@ function Timeline({ entries }: { entries: readonly Entry[] }) {
 export default function ExperiencePage() {
   return (
     <div className={`container ${styles.page}`}>
-      <SectionIntro
-        className={styles.intro}
-        eyebrow="Experience"
-        title="Learning through research and real systems."
-        description="A web-friendly view of my education, engineering experience, research, and leadership. The downloadable résumé remains the canonical record."
-        headingAs="h1"
-        actions={
-          <ButtonLink href={site.resumeHref} external>
+      <header className={styles.hero}>
+        <div className={styles.intro}>
+          <h1>Experience</h1>
+          <p>
+            My work spans software engineering, undergraduate research, and technical
+            leadership.
+          </p>
+        </div>
+        <div className={styles.heroAction}>
+          <ButtonLink
+            href={site.resumeHref}
+            download="Ali-Alfridawi-Resume.pdf"
+            variant="secondary"
+          >
             Download résumé
           </ButtonLink>
-        }
-      />
+        </div>
+      </header>
 
-      <section className={styles.split}>
-        <p className={styles.sectionLabel}>Education</p>
-        <div className={styles.copy}>
+      <section className={styles.section} aria-labelledby="education-heading">
+        <div className={styles.sectionHeading}>
+          <h2 id="education-heading">Education</h2>
+        </div>
+        <div className={styles.educationGrid}>
           {education.map((entry) => (
-            <div key={entry.institution}>
-              <h2>{entry.credential}</h2>
-              <p>{entry.institution}</p>
-              <p className={styles.timelineMeta}>
-                <span>{entry.location}</span>
-                <span>{entry.period}</span>
-              </p>
-            </div>
+            <article className={styles.educationCard} key={entry.institution}>
+              <div>
+                <p className={styles.institution}>{entry.institution}</p>
+                <h3>{entry.credential}</h3>
+              </div>
+              <dl className={styles.educationMeta}>
+                <div>
+                  <dt>Location</dt>
+                  <dd>{entry.location}</dd>
+                </div>
+                <div>
+                  <dt>Graduation</dt>
+                  <dd>{entry.period}</dd>
+                </div>
+              </dl>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className={styles.split}>
-        <p className={styles.sectionLabel}>Experience</p>
+      <section className={styles.section} aria-labelledby="work-heading">
+        <div className={styles.sectionHeading}>
+          <h2 id="work-heading">Work &amp; research</h2>
+          <p>{experience.length} roles</p>
+        </div>
         <Timeline entries={experience} />
       </section>
 
-      <section className={styles.split}>
-        <p className={styles.sectionLabel}>Leadership</p>
+      <section className={styles.section} aria-labelledby="leadership-heading">
+        <div className={styles.sectionHeading}>
+          <h2 id="leadership-heading">Leadership</h2>
+          <p>{leadership.length} roles</p>
+        </div>
         <Timeline entries={leadership} />
       </section>
     </div>

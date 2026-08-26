@@ -23,13 +23,6 @@ export function SiteFooter({
 }: SiteFooterProps) {
   return (
     <footer className={styles.footer}>
-      <div className={styles.pond} aria-hidden="true">
-        <span className={styles.lily} />
-        <span className={styles.frog}>
-          <i />
-          <i />
-        </span>
-      </div>
       <div className={styles.inner}>
         <div>
           <p className={styles.copyright}>

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
-import { SectionIntro } from "@/components";
 import { site } from "@/lib/data";
 
-import styles from "../content.module.css";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -14,27 +13,50 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className={`container ${styles.page}`}>
-      <SectionIntro
-        className={styles.intro}
-        eyebrow="Contact"
-        title="Let’s compare notes."
-        description="If you want to talk about research, engineering, collaboration, or an interesting problem, email is the most direct way to reach me."
-        headingAs="h1"
-      />
-      <section className={styles.split}>
-        <p className={styles.sectionLabel}>Find me</p>
-        <ul className={styles.contactList}>
-          <li>
-            <a href={`mailto:${site.email}`}>
-              <strong>Email</strong>
-              <span>{site.email}</span>
-            </a>
-          </li>
-          {site.profiles.map((profile) => (
+      <header className={styles.hero}>
+        <div className={styles.intro}>
+          <h1>Get in touch.</h1>
+          <p className={styles.lede}>
+            Email is the best way to reach me about research, engineering, or
+            collaboration.
+          </p>
+        </div>
+
+        <a
+          className={styles.emailCard}
+          href={`mailto:${site.email}`}
+          aria-label={`Email ${site.name} at ${site.email}`}
+        >
+          <span className={styles.emailTopline}>
+            <span>Email</span>
+            <span className={styles.cardArrow} aria-hidden="true">
+              ↗
+            </span>
+          </span>
+          <span className={styles.emailPrompt}>Send an email</span>
+          <span className={styles.emailAddress}>{site.email}</span>
+        </a>
+      </header>
+
+      <section className={styles.elsewhere} aria-labelledby="elsewhere-heading">
+        <div className={styles.sectionIntro}>
+          <h2 id="elsewhere-heading">Other profiles.</h2>
+        </div>
+
+        <ul className={styles.profileGrid}>
+          {site.profiles.map((profile, index) => (
             <li key={profile.label}>
               <a href={profile.href} target="_blank" rel="noreferrer">
-                <strong>{profile.label}</strong>
-                <span>{profile.handle} ↗</span>
+                <span className={styles.profileNumber} aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className={styles.profileCopy}>
+                  <strong>{profile.label}</strong>
+                  <span>{profile.handle}</span>
+                </span>
+                <span className={styles.profileArrow} aria-hidden="true">
+                  ↗
+                </span>
               </a>
             </li>
           ))}
