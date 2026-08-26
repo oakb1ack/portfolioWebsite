@@ -1,12 +1,4 @@
 {
   "printWidth": 88,
-  "proseWrap": "preserve",
-  "overrides": [
-    {
-      "files": "content/**/*.mdx",
-      "options": {
-        "trailingComma": "none"
-      }
-    }
-  ]
+  "proseWrap": "preserve"
 }

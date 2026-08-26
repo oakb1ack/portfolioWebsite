@@ -5,15 +5,8 @@
 /.next
 /out
 
-# legacy framework cache
-/.angular
-
-# tests
-/coverage
-
 # local environment files
 .env*
-!.env.example
 
 # TypeScript
 *.tsbuildinfo
@@ -22,10 +15,6 @@ next-env.d.ts
 # editors and operating systems
 .idea/
 .vscode/*
-!.vscode/extensions.json
-!.vscode/launch.json
-!.vscode/settings.json
-!.vscode/tasks.json
 .DS_Store
 Thumbs.db
 *.swp

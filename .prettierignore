@@ -1,7 +1,4 @@
-.angular
 .next
-coverage
 node_modules
 out
 package-lock.json
-public/downloads/*.pdf

@@ -1,9 +1,9 @@
-export interface NavigationItem {
+interface NavigationItem {
   label: string;
   href: string;
 }
 
-export interface ExternalProfile {
+interface ExternalProfile {
   label: string;
   href: string;
   handle: string;
@@ -19,7 +19,6 @@ export const site = {
   resumeHref: '/resume.pdf',
   navigation: [
     { label: 'Résumé', href: '/resume' },
-    { label: 'Experience', href: '/experience' },
     { label: 'Contact', href: '/contact' },
   ] satisfies NavigationItem[],
   profiles: [

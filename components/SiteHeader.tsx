@@ -3,35 +3,26 @@ import Link from "next/link";
 import { FrogMark } from "./FrogArt";
 import styles from "./SiteHeader.module.css";
 
-export type NavigationItem = {
+type NavigationItem = {
   href: string;
   label: string;
-  current?: boolean;
 };
 
-export type SiteHeaderProps = {
+type SiteHeaderProps = {
   items: readonly NavigationItem[];
   homeHref?: string;
-  name?: string;
+  name: string;
 };
 
 function NavigationLink({ item }: { item: NavigationItem }) {
   return (
-    <Link
-      className={styles.navLink}
-      href={item.href}
-      aria-current={item.current ? "page" : undefined}
-    >
+    <Link className={styles.navLink} href={item.href}>
       {item.label}
     </Link>
   );
 }
 
-export function SiteHeader({
-  items,
-  homeHref = "/",
-  name = "Ali Alfridawi",
-}: SiteHeaderProps) {
+export function SiteHeader({ items, homeHref = "/", name }: SiteHeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -48,7 +39,7 @@ export function SiteHeader({
 
         <details className={styles.mobileNav}>
           <summary className={styles.menuButton}>
-            <span className={styles.menuLabel}>Menu</span>
+            <span>Menu</span>
             <span className={styles.menuIcon} aria-hidden="true" />
           </summary>
           <nav className={styles.mobilePanel} aria-label="Mobile navigation">

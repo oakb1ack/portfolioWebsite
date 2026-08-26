@@ -60,22 +60,6 @@
   gap: var(--space-3);
 }
 
-.center {
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-}
-
-.center .copy,
-.center .title,
-.center .description {
-  margin-inline: auto;
-}
-
-.center .eyebrow {
-  justify-content: center;
-}
-
 @media (max-width: 45rem) {
   .intro {
     align-items: flex-start;

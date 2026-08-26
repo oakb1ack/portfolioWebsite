@@ -3,22 +3,6 @@
   margin-inline: auto;
 }
 
-.readingWidth {
-  width: min(100%, var(--reading-width));
-}
-
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 .skipLink {
   position: fixed;
   z-index: 100;

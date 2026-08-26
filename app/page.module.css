@@ -1,28 +1,180 @@
 .hero {
-  padding-block: clamp(5rem, 11vw, 9rem) clamp(4rem, 9vw, 7rem);
   overflow: hidden;
+  padding-block: clamp(3.5rem, 7vw, 6.5rem) clamp(4rem, 8vw, 7rem);
+  background:
+    linear-gradient(90deg, rgb(251 252 247 / 30%), rgb(220 236 240 / 22%)),
+    var(--color-paper);
+  border-bottom: 1px solid var(--color-line);
 }
 
-.heroCopy {
-  max-width: 52rem;
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.82fr) minmax(28rem, 1.18fr);
+  gap: clamp(3rem, 7vw, 7rem);
+  align-items: center;
 }
 
 .eyebrow {
   margin: 0 0 var(--space-4);
   color: var(--color-leaf-700);
   font-family: var(--font-mono);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .hero h1 {
-  max-width: 13ch;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 9vw, 7.7rem);
+  font-size: clamp(4rem, 8vw, 7.5rem);
   font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 0.94;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+}
+
+.lede {
+  max-width: 35rem;
+  margin: var(--space-5) 0 0;
+  color: var(--color-ink-soft);
+  font-size: clamp(1.08rem, 1.6vw, 1.3rem);
+  line-height: 1.58;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.heroFacts {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--space-5);
+  padding-top: var(--space-5);
+  margin: var(--space-6) 0 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.heroFacts dt {
+  margin-bottom: 0.2rem;
+  color: var(--color-ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroFacts dd {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.artwork {
+  position: relative;
+  margin: 0;
+}
+
+.artworkIndex {
+  position: absolute;
+  top: 0;
+  left: -2.15rem;
+  color: var(--color-ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.artworkFrame {
+  padding: clamp(0.55rem, 1vw, 0.85rem);
+  background: #e6e2d8;
+  border: 1px solid rgb(32 52 43 / 22%);
+  box-shadow: 0 24px 60px rgb(32 52 43 / 12%);
+}
+
+.artworkImage {
+  width: 100%;
+  height: auto;
+}
+
+.artwork figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-top: var(--space-3);
+  color: var(--color-ink-faint);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+.artwork figcaption cite {
+  color: var(--color-ink-soft);
+  font-style: normal;
+}
+
+.artwork figcaption a {
+  flex: none;
+  text-underline-offset: 0.18rem;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.artwork figcaption a:hover {
+  color: var(--color-leaf-700);
+}
+
+@media (max-width: 64rem) {
+  .heroGrid {
+    grid-template-columns: minmax(18rem, 0.8fr) minmax(24rem, 1.2fr);
+    gap: var(--space-6);
+  }
+
+  .artworkIndex {
+    display: none;
+  }
+}
+
+@media (max-width: 48rem) {
+  .hero {
+    padding-top: var(--space-7);
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.8rem, 18vw, 6.4rem);
+  }
+
+  .heroFacts {
+    margin-top: var(--space-5);
+  }
+
+  .artwork {
+    margin-top: var(--space-4);
+  }
+
+  .artwork figcaption {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 28rem) {
+  .heroFacts {
+    grid-template-columns: 1fr;
+  }
+
+  .artworkFrame {
+    margin-inline: calc(-1 * var(--page-gutter));
+    border-inline: 0;
+  }
 }

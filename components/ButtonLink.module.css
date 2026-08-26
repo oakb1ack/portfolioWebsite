@@ -49,17 +49,6 @@
   border-color: var(--color-leaf-400);
 }
 
-.quiet {
-  min-height: auto;
-  padding: 0.35rem 0;
-  color: var(--color-leaf-700);
-  border-radius: 0;
-}
-
-.quiet:hover {
-  color: var(--color-ink);
-}
-
 .arrow {
   display: inline-block;
   transition: transform var(--duration-fast) var(--ease-out);

@@ -17,7 +17,6 @@ export default function NotFound() {
         eyebrow="404 · off the lily pad"
         title="This page wandered out of the pond."
         description="The link may be old, or the page may have moved. The homepage is a good place to find your footing again."
-        headingAs="h1"
         actions={<ButtonLink href="/">Return home</ButtonLink>}
       />
     </div>

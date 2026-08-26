@@ -67,13 +67,11 @@
   transition: transform var(--duration-normal) var(--ease-out);
 }
 
-.navLink:hover,
-.navLink[aria-current="page"] {
+.navLink:hover {
   color: var(--color-ink);
 }
 
-.navLink:hover::after,
-.navLink[aria-current="page"]::after {
+.navLink:hover::after {
   transform: scaleX(1);
   transform-origin: left;
 }

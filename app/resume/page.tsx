@@ -21,7 +21,6 @@ export default function ResumePage() {
       <SectionIntro
         className={contentStyles.intro}
         title="Resume"
-        headingAs="h1"
         actions={
           <ButtonLink href={site.resumeHref} download={downloadName}>
             Download résumé

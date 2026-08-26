@@ -13,19 +13,11 @@
   --color-leaf-400: #79ad72;
   --color-leaf-600: #3e7550;
   --color-leaf-700: #315f43;
-  --color-pond: #dcecf0;
-  --color-clay: #ead8ca;
   --color-line: #dce5da;
   --color-focus: #286a48;
 
-  --font-sans: var(--font-body, "Avenir Next", Avenir, "Segoe UI", sans-serif);
-  --font-display: var(
-    --font-heading,
-    Iowan Old Style,
-    Baskerville,
-    "Times New Roman",
-    serif
-  );
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --font-display: Iowan Old Style, Baskerville, "Times New Roman", serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
   --space-1: 0.25rem;
@@ -44,7 +36,6 @@
   --shadow-soft: 0 18px 50px rgb(40 72 51 / 8%);
 
   --content-width: 72rem;
-  --reading-width: 45rem;
   --page-gutter: clamp(1.1rem, 4vw, 2.5rem);
 
   --duration-fast: 150ms;
