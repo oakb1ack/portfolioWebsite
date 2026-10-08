@@ -183,6 +183,7 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
 }
 .menu-item.selected .menu-pointer { opacity: 1; }
 .menu-item:hover { color: #f9e365; }
+.menu-item:focus { outline: none; }
 .menu-item:active { transform: translateX(6px); }
 .menu-caption {
   margin: 8px 0 0;
