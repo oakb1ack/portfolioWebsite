@@ -64,7 +64,7 @@ export default function App() {
             </span>
             <span className="title-surname" aria-hidden="true">Alfridawi</span>
           </h1>
-          <p className="occupation">Mathematics &amp; Electrical Engineering</p>
+          <p className="occupation">EE &amp; Math @ UTA</p>
         </div>
         <nav ref={menu} className="menu" aria-label="Portfolio menu" onKeyDown={moveSelection}>
           {chapters.map((item, index) => (
