@@ -77,8 +77,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visibl
     linear-gradient(0deg, #020706d9, transparent 33%, #01050426 78%, #0005),
     radial-gradient(ellipse at 65% 43%, transparent 15%, #0007 100%);
 }
-.screen-header { position: absolute; top: 20px; right: 4.5%; z-index: 4; }
-.version { font-family: var(--font-menu); font-weight: 800; color: #92998c; font-size: 15px; }
 .main-menu { position: relative; min-height: max(680px, 100svh); z-index: 3; }
 .title-lockup {
   position: absolute;
@@ -360,8 +358,6 @@ kbd { font: inherit; border: 1px solid #8e998c55; padding: 1px 4px; }
     padding: 36px max(24px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
   }
   .main-menu { grid-row: 1; min-height: 0; padding: 0 10px; }
-  .screen-header { top: 16px; right: 7%; }
-  .version { font-size: 12px; }
   .title-lockup { position: relative; top: auto; left: auto; width: 100%; }
   .title-emblem { font-size: clamp(120px, 36vw, 170px); }
   .title-surname { font-size: clamp(32px, 9vw, 42px); }

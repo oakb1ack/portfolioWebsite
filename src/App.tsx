@@ -51,9 +51,6 @@ export default function App() {
     <div className="title-screen">
       <ArtworkBackground />
       <div className="screen-shade" aria-hidden="true" />
-      <header className="screen-header">
-        <span className="version">V0.1</span>
-      </header>
       <main className="main-menu">
         <div className="title-lockup">
           <h1 aria-label={site.name}>
