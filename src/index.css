@@ -169,17 +169,6 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   transition: color .15s, transform .15s;
   isolation: isolate;
 }
-.menu-item::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 12% -28px 5% -12px;
-  background: linear-gradient(90deg, #cab64b18, #cab64b00);
-  clip-path: polygon(2% 8%, 100% 0, 96% 91%, 0 100%);
-  opacity: 0;
-  transition: opacity .15s;
-}
-.menu-item.selected::after { opacity: 1; }
 .menu-pointer {
   position: absolute;
   right: calc(100% + 14px);
