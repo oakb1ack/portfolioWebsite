@@ -1,27 +1,24 @@
-# dependencies
-/node_modules
+# Dependencies
+node_modules/
 
-# Next.js build output
-/.next
-/out
+# Build output
+dist/
 
-# local environment files
+# Local environment files
 .env*
+!.env.example
 
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
+# Vercel
+.vercel/
 
-# editors and operating systems
+# Editors and operating systems
 .idea/
 .vscode/*
 .DS_Store
 Thumbs.db
 *.swp
 
-# logs
+# Logs and TypeScript build metadata
 *.log
 npm-debug.log*
-
-# Vercel
-.vercel
+*.tsbuildinfo
