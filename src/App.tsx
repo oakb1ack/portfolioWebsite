@@ -77,7 +77,6 @@ export default function App() {
       </main>
       <footer className="screen-footer">
         <div className="footer-tools">
-          <a className="creator-mark" href="#" aria-label={`${site.name}, home`} onClick={() => setChapter(null)}>Ali<span>Alfridawi</span></a>
           {site.profiles.map(profile => <a className="utility-link" key={profile.label} href={profile.href} target="_blank" rel="noreferrer" aria-label={profile.label} title={profile.label}><UtilityIcon name={profile.label} /></a>)}
           <a className="utility-link" href={`mailto:${site.email}`} aria-label="Email Ali" title="Email Ali"><UtilityIcon name="email" /></a>
           <MusicPlayer />
