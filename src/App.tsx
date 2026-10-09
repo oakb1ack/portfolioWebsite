@@ -4,6 +4,7 @@ import { ArtworkBackground } from './components/ArtworkBackground';
 import { MusicPlayer } from './components/MusicPlayer';
 import { UtilityIcon } from './components/UtilityIcon';
 import { CrimsonBranch, DialogueDetails } from './components/DialogueDetails';
+import { ExperiencePage } from './components/ExperiencePage';
 import { site } from './data/site';
 import { music } from './data/music';
 
@@ -13,41 +14,50 @@ const chapters = [
   { id: 'blog', label: 'Blog', caption: 'Notes from the journey', eyebrow: '03 / The notebook', title: 'Notes and ideas.' },
   { id: 'contact', label: 'Contact', caption: 'Send a message from the surface', eyebrow: '04 / The connection', title: 'Reach the surface.' },
 ] as const;
-type Chapter = (typeof chapters)[number]['id'];
+type Chapter = Exclude<(typeof chapters)[number]['id'], 'about' | 'experience'>;
+type Page = 'home' | 'about' | 'experience';
+
+function currentPage(): Page {
+  const path = window.location.pathname.replace(/\/$/, '');
+  return path === '/about' ? 'about' : path === '/experience' ? 'experience' : 'home';
+}
 
 export default function App() {
-  const [isAbout, setIsAbout] = useState(() => window.location.pathname.replace(/\/$/, '') === '/about');
+  const [page, setPage] = useState<Page>(currentPage);
+  const isAbout = page === 'about';
+  const isExperience = page === 'experience';
+  const isContentPage = page !== 'home';
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [selected, setSelected] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const menu = useRef<HTMLElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
-  const aboutHeading = useRef<HTMLHeadingElement>(null);
-  const previousAbout = useRef(isAbout);
+  const pageHeading = useRef<HTMLHeadingElement>(null);
+  const previousPage = useRef(page);
   const activeChapter = chapters.find(item => item.id === chapter);
 
   useEffect(() => {
     const syncRoute = () => {
       setChapter(null);
-      setIsAbout(window.location.pathname.replace(/\/$/, '') === '/about');
+      setPage(currentPage());
     };
     window.addEventListener('popstate', syncRoute);
     return () => window.removeEventListener('popstate', syncRoute);
   }, []);
 
   useEffect(() => {
-    document.title = isAbout ? `About — ${site.name}` : site.name;
-    if (isAbout) aboutHeading.current?.focus({ preventScroll: true });
-    else if (previousAbout.current) menu.current?.querySelector<HTMLAnchorElement>('a[href="/about"]')?.focus({ preventScroll: true });
-    previousAbout.current = isAbout;
-  }, [isAbout]);
+    document.title = page === 'home' ? site.name : `${page === 'about' ? 'About' : 'Experience'} — ${site.name}`;
+    if (page !== 'home') pageHeading.current?.focus({ preventScroll: true });
+    else if (previousPage.current !== 'home') menu.current?.querySelector<HTMLAnchorElement>(`a[href="/${previousPage.current}"]`)?.focus({ preventScroll: true });
+    previousPage.current = page;
+  }, [page]);
 
   function navigate(event: MouseEvent<HTMLAnchorElement>, href: string) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     window.history.pushState(null, '', href);
     setChapter(null);
-    setIsAbout(href === '/about');
+    setPage(href === '/about' ? 'about' : href === '/experience' ? 'experience' : 'home');
     window.scrollTo(0, 0);
   }
 
@@ -77,8 +87,8 @@ export default function App() {
   }
 
   return (
-    <div className={`title-screen${isAbout ? ' about-screen' : ''}`}>
-      <ArtworkBackground compactControls={isAbout} />
+    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}`}>
+      <ArtworkBackground compactControls={isContentPage} />
       <div className="screen-shade" aria-hidden="true" />
       {isAbout ? (
         <main className="about-page" key="about">
@@ -89,7 +99,7 @@ export default function App() {
           <article className="about-dialogue" aria-labelledby="about-name">
             <header className="about-speaker">
               <CrimsonBranch />
-              <h1 id="about-name" ref={aboutHeading} tabIndex={-1}>{site.name}</h1>
+              <h1 id="about-name" ref={pageHeading} tabIndex={-1}>{site.name}</h1>
               <p>Mathematics &amp; Electrical Engineering</p>
             </header>
             <div className="about-dialogue-body">
@@ -103,7 +113,7 @@ export default function App() {
             </div>
           </article>
         </main>
-      ) : <main className="main-menu page-enter" key="home">
+      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : <main className="main-menu page-enter" key="home">
         <div className="title-lockup">
           <h1 aria-label={site.name}>
             <span className="title-emblem" aria-hidden="true">
@@ -117,7 +127,7 @@ export default function App() {
         </div>
         <nav ref={menu} className="menu" aria-label="Portfolio menu" onKeyDown={moveSelection}>
           {chapters.map((item, index) => (
-            item.id === 'about' ? <a key={item.id} href="/about" className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, '/about')}>
+            item.id === 'about' || item.id === 'experience' ? <a key={item.id} href={`/${item.id}`} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, `/${item.id}`)}>
               <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
             </a> : <button key={item.id} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={() => setChapter(item.id)}>
               <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
@@ -140,7 +150,6 @@ export default function App() {
           <p className="eyebrow">{activeChapter?.eyebrow}</p>
           <h2 id="chapter-title">{activeChapter?.title}</h2>
           <div className="chapter-rule" />
-          {chapter === 'experience' && <><p>A record of my work, learning, and contributions. Details coming soon.</p><a className="text-link" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé <span>↗</span></a></>}
           {chapter === 'blog' && <p>Thoughts on mathematics, engineering, and the things I’m learning. First posts coming soon.</p>}
           {chapter === 'contact' && <><p>Have an interesting problem, an idea, or just something to share? I’d like to hear it.</p><a className="email-link" href={`mailto:${site.email}`}>{site.email} ↗</a><div className="profile-links">{site.profiles.map(profile => <a className="text-link" href={profile.href} key={profile.label} target="_blank" rel="noreferrer">{profile.label} ↗</a>)}</div></>}
           <span className="dialog-ornament" aria-hidden="true">◆</span>
