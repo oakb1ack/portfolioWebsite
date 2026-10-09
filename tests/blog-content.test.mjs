@@ -85,3 +85,15 @@ test('production HTML contains article content and sharing metadata before JavaS
   const js = (await Promise.all(assets.filter(file => file.endsWith('.js')).map(file => readFile(new URL(`../dist/assets/${file}`, import.meta.url), 'utf8')))).join('\n');
   assert.doesNotMatch(js, /remarkParse|rehypeHighlight|function compilePost/);
 });
+
+test('build generates a readable general 404 and crawler instructions', async () => {
+  const missing = await readFile(new URL('../dist/404.html', import.meta.url), 'utf8');
+  const robots = await readFile(new URL('../dist/robots.txt', import.meta.url), 'utf8');
+  const sitemap = await readFile(new URL('../dist/sitemap.xml', import.meta.url), 'utf8');
+  assert.match(missing, /<h1[^>]*>A missing page\.<\/h1>/);
+  assert.match(missing, /href="\/"/);
+  assert.match(missing, /<meta name="robots" content="noindex, nofollow">/);
+  assert.match(robots, /^User-agent: \*\nAllow: \/\n\nSitemap: https?:\/\/[^\s]+\/sitemap.xml\n$/);
+  const origin = robots.match(/Sitemap: (https?:\/\/[^\s]+)\/sitemap.xml/)[1];
+  assert.ok(sitemap.includes(`<loc>${origin}/</loc>`));
+});

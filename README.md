@@ -1,14 +1,14 @@
 # Ali Alfridawi — Portfolio
 
-A Hades-inspired portfolio built with React, TypeScript, Vite, and Tailwind CSS. The title-screen menu links to About, Experience, and Blog pages and opens a Contact panel; résumé links open in a new tab. It deploys as a static site on Vercel.
+A Hades-inspired portfolio built with React, TypeScript, Vite, and Tailwind CSS. The title-screen menu links to About, Experience, and Blog pages; résumé links open in a new tab, and email is available on About and in the footer. It deploys as a static site on Vercel.
 
 The interface follows the original Hades main menu’s layout: a fractured white title above a widely spaced menu, yellow selected entries, a lower-left utility strip, and a framed lower-right artwork switch. Alegreya Sans SC and Alegreya SC are served locally, with their SIL Open Font License files in `public/fonts/`. The portfolio title and content sit over illustrated Hades backgrounds by Jane Bak at Studio Grackle and Joanne Tran at Supergiant Games, with credits updated for each slide.
 
-The background cycles through eleven Hades backgrounds: four finished Studio Grackle scenes, four background studies, and Tartarus, Asphodel, and Elysium by Joanne Tran, with manual switching through “Next artwork.” Optimized WebP images prioritize the opening background and prepare the next background one at a time, rather than fetching the whole gallery at startup. Backgrounds stay still until the visitor chooses another image; there is no automatic rotation or ambient ember animation. Reduced-motion preferences disable the transition between images. The layout adapts to phone, tablet, and short desktop screens. Menu captions are visible on desktop; utility controls use vector icons with 44px minimum touch heights on mobile.
+The background cycles through seven Hades backgrounds: four finished Studio Grackle scenes and Tartarus, Asphodel, and Elysium by Joanne Tran, with manual switching through “Next artwork.” Optimized WebP images prioritize the opening background and prepare the next background one at a time, rather than fetching the whole gallery at startup. Backgrounds stay still until the visitor chooses another image; there is no automatic rotation or ambient ember animation. Reduced-motion preferences disable the transition between images. The layout adapts to phone, tablet, and short desktop screens. Menu captions are visible on desktop; utility controls use vector icons with 44px minimum touch heights on mobile.
 
 Kevin MacLeod’s ambient track “Long Note Two” attempts to start automatically on a loop at 25% volume. If the browser blocks audible autoplay, playback retries on the first click or keyboard interaction; the music note in the bottom utility strip also provides an explicit Play/Pause control. The single music control toggles playback at 25% volume, and track credits remain at the bottom of the page. An explicit music pause cancels automatic startup. The MP3 is hosted locally and fetched when playback is attempted. Reuse details are in [MUSIC.md](public/music/MUSIC.md).
 
-Use Tab to focus the menu, arrow keys to move between entries, Enter to select, and Escape to close a panel. Mouse and touch navigation are also supported.
+Use Tab to focus the menu, arrow keys to move between entries, and Enter to select. Mouse and touch navigation are also supported.
 
 ## Requirements
 
@@ -36,7 +36,7 @@ The production site is written to `dist/`.
 
 ## Deploy to Vercel
 
-Import this repository into Vercel. Vercel detects Vite automatically; the build command is `npm run build` and the output directory is `dist`. `vercel.json` serves generated files first, returns a 404 reading page for missing blog articles, and includes the SPA fallback for the other client-side paths.
+Import this repository into Vercel. `vercel.json` explicitly selects Vite, installs with `npm ci`, builds with `npm run build`, and serves `dist`. Legacy `/resume/` links permanently redirect to `/resume.pdf`, and `/contact/` redirects to `/about`. Generated files are served first, About and Experience use the app shell, and missing pages return HTTP 404 with a readable recovery page. The build generates `robots.txt` with the configured sitemap origin.
 
 ## Write and publish a blog post
 
@@ -85,7 +85,7 @@ Development browser tests start Vite on port 5178 and check module loading and d
 
 ```text
 src/
-  App.tsx          Title menu and native dialog panels
+  App.tsx          Title menu and page navigation
   components/
     ArtworkBackground.tsx  Manual artwork switching and source credits
     MusicPlayer.tsx        Audio playback, volume, and music credits

@@ -6,24 +6,20 @@ import { UtilityIcon } from './components/UtilityIcon';
 import { CrimsonBranch, DialogueDetails } from './components/DialogueDetails';
 import { ExperiencePage } from './components/ExperiencePage';
 import { BlogPage } from './components/BlogPage';
+import { NotFoundPage } from './components/NotFoundPage';
 import { posts, siteOrigin } from 'virtual:blog-posts';
 import { updatePageMetadata } from './data/pageMetadata';
 import { site } from './data/site';
 import { music } from './data/music';
+import { normalizedPath, pageFor } from './data/routes';
 
 const chapters = [
   { id: 'about', label: 'About', caption: 'Meet the mortal behind the work' },
   { id: 'experience', label: 'Experience', caption: 'A record of the journey so far' },
   { id: 'blog', label: 'Blog', caption: 'Notes from the journey' },
 ] as const;
-type Page = 'home' | 'about' | 'experience' | 'blog';
-
 function currentPath() {
-  return window.location.pathname.replace(/\/+$/, '') || '/';
-}
-
-function pageFor(path: string): Page {
-  return path === '/about' ? 'about' : path === '/experience' ? 'experience' : path === '/blog' || path.startsWith('/blog/') ? 'blog' : 'home';
+  return normalizedPath(window.location.pathname);
 }
 
 export default function App() {
@@ -32,6 +28,7 @@ export default function App() {
   const isAbout = page === 'about';
   const isExperience = page === 'experience';
   const isBlog = page === 'blog';
+  const isMissing = page === 'not-found';
   const isContentPage = page !== 'home';
   const [selected, setSelected] = useState(0);
   const menu = useRef<HTMLElement>(null);
@@ -57,7 +54,7 @@ export default function App() {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     window.history.pushState(null, '', href);
-    setPath(href.replace(/\/+$/, '') || '/');
+    setPath(normalizedPath(href));
     window.scrollTo(0, 0);
   }
 
@@ -77,7 +74,7 @@ export default function App() {
   }
 
   return (
-    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog ? ' blog-screen' : ''}`}>
+    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog || isMissing ? ' blog-screen' : ''}`}>
       <ArtworkBackground compactControls={isContentPage} />
       <div className="screen-shade" aria-hidden="true" />
       {isAbout ? (
@@ -103,7 +100,7 @@ export default function App() {
             </div>
           </article>
         </main>
-      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : isBlog ? <BlogPage posts={posts} slug={path === '/blog' ? undefined : path.slice('/blog/'.length)} headingRef={pageHeading} onNavigate={navigate} /> : <main className="main-menu page-enter" key="home">
+      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : isBlog ? <BlogPage posts={posts} slug={path === '/blog' ? undefined : path.slice('/blog/'.length)} headingRef={pageHeading} onNavigate={navigate} /> : isMissing ? <NotFoundPage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : <main className="main-menu page-enter" key="home">
         <div className="title-lockup">
           <h1 aria-label={site.name}>
             <span className="title-emblem" aria-hidden="true">

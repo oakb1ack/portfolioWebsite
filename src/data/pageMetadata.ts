@@ -1,16 +1,19 @@
 import type { BlogPost } from './blog.ts';
 import { site } from './site.ts';
+import { normalizedPath, pageFor } from './routes.ts';
 
 export function pageMetadata(pathname: string, posts: BlogPost[], origin: string = site.url) {
-  const path = pathname.replace(/\/+$/, '') || '/';
+  const path = normalizedPath(pathname);
   const slug = path.startsWith('/blog/') ? path.slice('/blog/'.length) : undefined;
   const post = posts.find(item => item.slug === slug);
   const isBlog = path === '/blog';
-  const missing = slug !== undefined && !post;
-  const label = post?.title ?? (missing ? 'Article not found' : isBlog ? 'Blog' : path === '/about' ? 'About' : path === '/experience' ? 'Experience' : undefined);
+  const missingArticle = slug !== undefined && !post;
+  const missingPage = pageFor(path) === 'not-found';
+  const missing = missingArticle || missingPage;
+  const label = post?.title ?? (missingPage ? 'Page not found' : missingArticle ? 'Article not found' : isBlog ? 'Blog' : path === '/about' ? 'About' : path === '/experience' ? 'Experience' : undefined);
   return {
     title: label ? `${label} — ${site.name}` : site.name,
-    description: post?.description ?? (missing ? 'This article could not be found. Browse the notebook for more notes.' : isBlog ? 'Notes on mathematics, engineering, and things learned along the way by Ali Alfridawi.' : site.description),
+    description: post?.description ?? (missingPage ? 'This page could not be found. Return to the portfolio to continue.' : missingArticle ? 'This article could not be found. Browse the notebook for more notes.' : isBlog ? 'Notes on mathematics, engineering, and things learned along the way by Ali Alfridawi.' : site.description),
     canonical: `${origin}${path === '/' ? '/' : path}`,
     type: post ? 'article' : 'website',
     robots: missing || post?.draft ? 'noindex, nofollow' : 'index, follow',
