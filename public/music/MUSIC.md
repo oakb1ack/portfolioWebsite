@@ -12,4 +12,4 @@ https://creativecommons.org/licenses/by/3.0/
 - Downloaded: October 8, 2026
 - Local asset: long-note-two.mp3
 
-The MP3 is unmodified. Playback loops at 25% volume, with a single play/pause control. Playback is attempted automatically and retries on the first visitor interaction if the browser blocks audible autoplay; `preload="none"` avoids preloading before playback is attempted. The website includes credits and license links in the footer. Retain those credits when reusing the track.
+The MP3 is unmodified. Playback starts only when the visitor presses Play and loops at 25% volume, with a single play/pause control. Page loads, clicks elsewhere, and keyboard navigation do not start music; `preload="none"` avoids preloading before playback is requested. The website includes credits and license links in the footer. Retain those credits when reusing the track.
