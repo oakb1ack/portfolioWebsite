@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { artworks } from '../data/artwork';
 
-export function ArtworkBackground() {
+export function ArtworkBackground({ compactControls = false }: { compactControls?: boolean }) {
   const [active, setActive] = useState(0);
   const [loaded, setLoaded] = useState<number[]>([]);
   const [requested, setRequested] = useState<number[]>([0]);
@@ -67,10 +67,13 @@ export function ArtworkBackground() {
         ))}
       </div>
       <aside
-        className="artwork-controls"
+        className={`artwork-controls${compactControls ? ' artwork-controls-compact' : ''}`}
         aria-label="Background artwork"
       >
-        <button className="next-artwork" onClick={nextArtwork} disabled={loaded.length < 2} aria-label="Show next background artwork" title={`Current artwork: ${artwork.title}`}><span className="next-artwork-label">Next artwork <span className="artwork-arrow" aria-hidden="true">→</span></span><span className="artwork-title">{artwork.title}</span></button>
+        {compactControls ? <div className="scene-control-row">
+          <span className="scene-title">{artwork.title.replace('Hades · ', '')}</span>
+          <button className="change-scene" onClick={nextArtwork} disabled={loaded.length < 2} aria-label="Show next background artwork">Change scene <span aria-hidden="true">→</span></button>
+        </div> : <button className="next-artwork" onClick={nextArtwork} disabled={loaded.length < 2} aria-label="Show next background artwork" title={`Current artwork: ${artwork.title}`}><span className="next-artwork-label">Next artwork <span className="artwork-arrow" aria-hidden="true">→</span></span><span className="artwork-title">{artwork.title}</span></button>}
         <a className="artwork-credit" href={artwork.source} target="_blank" rel="noreferrer">{artwork.credit} ↗</a>
       </aside>
     </>

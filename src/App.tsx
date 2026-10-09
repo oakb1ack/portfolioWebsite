@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
 import { ArtworkBackground } from './components/ArtworkBackground';
 import { MusicPlayer } from './components/MusicPlayer';
 import { UtilityIcon } from './components/UtilityIcon';
+import { CrimsonBranch, DialogueDetails } from './components/DialogueDetails';
 import { site } from './data/site';
 import { music } from './data/music';
 
@@ -15,12 +16,40 @@ const chapters = [
 type Chapter = (typeof chapters)[number]['id'];
 
 export default function App() {
+  const [isAbout, setIsAbout] = useState(() => window.location.pathname.replace(/\/$/, '') === '/about');
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [selected, setSelected] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const menu = useRef<HTMLElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
+  const aboutHeading = useRef<HTMLHeadingElement>(null);
+  const previousAbout = useRef(isAbout);
   const activeChapter = chapters.find(item => item.id === chapter);
+
+  useEffect(() => {
+    const syncRoute = () => {
+      setChapter(null);
+      setIsAbout(window.location.pathname.replace(/\/$/, '') === '/about');
+    };
+    window.addEventListener('popstate', syncRoute);
+    return () => window.removeEventListener('popstate', syncRoute);
+  }, []);
+
+  useEffect(() => {
+    document.title = isAbout ? `About — ${site.name}` : site.name;
+    if (isAbout) aboutHeading.current?.focus({ preventScroll: true });
+    else if (previousAbout.current) menu.current?.querySelector<HTMLAnchorElement>('a[href="/about"]')?.focus({ preventScroll: true });
+    previousAbout.current = isAbout;
+  }, [isAbout]);
+
+  function navigate(event: MouseEvent<HTMLAnchorElement>, href: string) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    window.history.pushState(null, '', href);
+    setChapter(null);
+    setIsAbout(href === '/about');
+    window.scrollTo(0, 0);
+  }
 
   useEffect(() => {
     if (chapter) {
@@ -48,10 +77,33 @@ export default function App() {
   }
 
   return (
-    <div className="title-screen">
-      <ArtworkBackground />
+    <div className={`title-screen${isAbout ? ' about-screen' : ''}`}>
+      <ArtworkBackground compactControls={isAbout} />
       <div className="screen-shade" aria-hidden="true" />
-      <main className="main-menu">
+      {isAbout ? (
+        <main className="about-page" key="about">
+          <div className="about-navigation">
+            <a className="back-button" href="/" onClick={event => navigate(event, '/')}>← Return to the house</a>
+            <span className="about-page-label">About</span>
+          </div>
+          <article className="about-dialogue" aria-labelledby="about-name">
+            <header className="about-speaker">
+              <CrimsonBranch />
+              <h1 id="about-name" ref={aboutHeading} tabIndex={-1}>{site.name}</h1>
+              <p>Mathematics &amp; Electrical Engineering</p>
+            </header>
+            <div className="about-dialogue-body">
+              <DialogueDetails />
+              <p className="about-intro">I’m Ali. I study mathematics and electrical engineering at the University of Texas at Arlington.</p>
+              <p>I’m interested in how mathematical models connect to physical systems, and in building reliable software around those ideas.</p>
+              <div className="about-dialogue-actions">
+                <a className="about-resume" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé <span aria-hidden="true">↗</span></a>
+                <a className="about-hello" href={`mailto:${site.email}`}>Say hello <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+          </article>
+        </main>
+      ) : <main className="main-menu page-enter" key="home">
         <div className="title-lockup">
           <h1 aria-label={site.name}>
             <span className="title-emblem" aria-hidden="true">
@@ -65,13 +117,15 @@ export default function App() {
         </div>
         <nav ref={menu} className="menu" aria-label="Portfolio menu" onKeyDown={moveSelection}>
           {chapters.map((item, index) => (
-            <button key={item.id} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={() => setChapter(item.id)}>
+            item.id === 'about' ? <a key={item.id} href="/about" className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, '/about')}>
+              <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
+            </a> : <button key={item.id} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={() => setChapter(item.id)}>
               <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
             </button>
           ))}
           <p className="menu-caption" aria-live="polite">{chapters[selected].caption}</p>
         </nav>
-      </main>
+      </main>}
       <footer className="screen-footer">
         <div className="footer-tools">
           {site.profiles.map(profile => <a className="utility-link" key={profile.label} href={profile.href} target="_blank" rel="noreferrer" aria-label={profile.label} title={profile.label}><UtilityIcon name={profile.label} /></a>)}
@@ -86,7 +140,6 @@ export default function App() {
           <p className="eyebrow">{activeChapter?.eyebrow}</p>
           <h2 id="chapter-title">{activeChapter?.title}</h2>
           <div className="chapter-rule" />
-          {chapter === 'about' && <><p>I’m {site.name}, a mathematics and electrical engineering student at the University of Texas at Arlington.</p><p>{site.description}</p><a className="text-link" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé <span>↗</span></a></>}
           {chapter === 'experience' && <><p>A record of my work, learning, and contributions. Details coming soon.</p><a className="text-link" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé <span>↗</span></a></>}
           {chapter === 'blog' && <p>Thoughts on mathematics, engineering, and the things I’m learning. First posts coming soon.</p>}
           {chapter === 'contact' && <><p>Have an interesting problem, an idea, or just something to share? I’d like to hear it.</p><a className="email-link" href={`mailto:${site.email}`}>{site.email} ↗</a><div className="profile-links">{site.profiles.map(profile => <a className="text-link" href={profile.href} key={profile.label} target="_blank" rel="noreferrer">{profile.label} ↗</a>)}</div></>}
