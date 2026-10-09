@@ -16,6 +16,7 @@ export function ExperiencePage({ headingRef, onReturn }: {
             <CrimsonBranch />
             <h1 id="experience-heading" ref={headingRef} tabIndex={-1}>Experience</h1>
           </div>
+          <p className="experience-intro">From lab infrastructure to mathematical modeling, my work connects engineering, research, and student communities.</p>
           <CodexDivider />
         </header>
         <ul className="experience-list">
@@ -32,6 +33,9 @@ export function ExperiencePage({ headingRef, onReturn }: {
                   <h3 className="experience-role">{experience.role}</h3>
                   {experience.organization && <p className="experience-organization">{experience.organization}</p>}
                   <p className="experience-description">{experience.description}</p>
+                  {experience.focus && <ul className="experience-focus" aria-label="Areas of focus">
+                    {experience.focus.map(area => <li key={area}>{area}</li>)}
+                  </ul>}
                 </div>
               </article>
             </li>
