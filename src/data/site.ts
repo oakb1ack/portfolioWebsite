@@ -1,4 +1,5 @@
 export const site = {
+  url: 'https://alialfridawi.dev',
   name: 'Ali Alfridawi',
   title: 'Mathematics + Electrical Engineering',
   description:

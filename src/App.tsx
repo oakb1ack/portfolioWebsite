@@ -5,6 +5,9 @@ import { MusicPlayer } from './components/MusicPlayer';
 import { UtilityIcon } from './components/UtilityIcon';
 import { CrimsonBranch, DialogueDetails } from './components/DialogueDetails';
 import { ExperiencePage } from './components/ExperiencePage';
+import { BlogPage } from './components/BlogPage';
+import { posts, siteOrigin } from 'virtual:blog-posts';
+import { updatePageMetadata } from './data/pageMetadata';
 import { site } from './data/site';
 import { music } from './data/music';
 
@@ -14,18 +17,23 @@ const chapters = [
   { id: 'blog', label: 'Blog', caption: 'Notes from the journey', eyebrow: '03 / The notebook', title: 'Notes and ideas.' },
   { id: 'contact', label: 'Contact', caption: 'Send a message from the surface', eyebrow: '04 / The connection', title: 'Reach the surface.' },
 ] as const;
-type Chapter = Exclude<(typeof chapters)[number]['id'], 'about' | 'experience'>;
-type Page = 'home' | 'about' | 'experience';
+type Chapter = 'contact';
+type Page = 'home' | 'about' | 'experience' | 'blog';
 
-function currentPage(): Page {
-  const path = window.location.pathname.replace(/\/$/, '');
-  return path === '/about' ? 'about' : path === '/experience' ? 'experience' : 'home';
+function currentPath() {
+  return window.location.pathname.replace(/\/+$/, '') || '/';
+}
+
+function pageFor(path: string): Page {
+  return path === '/about' ? 'about' : path === '/experience' ? 'experience' : path === '/blog' || path.startsWith('/blog/') ? 'blog' : 'home';
 }
 
 export default function App() {
-  const [page, setPage] = useState<Page>(currentPage);
+  const [path, setPath] = useState(currentPath);
+  const page = pageFor(path);
   const isAbout = page === 'about';
   const isExperience = page === 'experience';
+  const isBlog = page === 'blog';
   const isContentPage = page !== 'home';
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [selected, setSelected] = useState(0);
@@ -39,25 +47,25 @@ export default function App() {
   useEffect(() => {
     const syncRoute = () => {
       setChapter(null);
-      setPage(currentPage());
+      setPath(currentPath());
     };
     window.addEventListener('popstate', syncRoute);
     return () => window.removeEventListener('popstate', syncRoute);
   }, []);
 
   useEffect(() => {
-    document.title = page === 'home' ? site.name : `${page === 'about' ? 'About' : 'Experience'} — ${site.name}`;
+    updatePageMetadata(path, posts, siteOrigin);
     if (page !== 'home') pageHeading.current?.focus({ preventScroll: true });
     else if (previousPage.current !== 'home') menu.current?.querySelector<HTMLAnchorElement>(`a[href="/${previousPage.current}"]`)?.focus({ preventScroll: true });
     previousPage.current = page;
-  }, [page]);
+  }, [page, path]);
 
   function navigate(event: MouseEvent<HTMLAnchorElement>, href: string) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     window.history.pushState(null, '', href);
     setChapter(null);
-    setPage(href === '/about' ? 'about' : href === '/experience' ? 'experience' : 'home');
+    setPath(href.replace(/\/+$/, '') || '/');
     window.scrollTo(0, 0);
   }
 
@@ -87,7 +95,7 @@ export default function App() {
   }
 
   return (
-    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}`}>
+    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog ? ' blog-screen' : ''}`}>
       <ArtworkBackground compactControls={isContentPage} />
       <div className="screen-shade" aria-hidden="true" />
       {isAbout ? (
@@ -113,7 +121,7 @@ export default function App() {
             </div>
           </article>
         </main>
-      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : <main className="main-menu page-enter" key="home">
+      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : isBlog ? <BlogPage posts={posts} slug={path === '/blog' ? undefined : path.slice('/blog/'.length)} headingRef={pageHeading} onNavigate={navigate} /> : <main className="main-menu page-enter" key="home">
         <div className="title-lockup">
           <h1 aria-label={site.name}>
             <span className="title-emblem" aria-hidden="true">
@@ -127,7 +135,7 @@ export default function App() {
         </div>
         <nav ref={menu} className="menu" aria-label="Portfolio menu" onKeyDown={moveSelection}>
           {chapters.map((item, index) => (
-            item.id === 'about' || item.id === 'experience' ? <a key={item.id} href={`/${item.id}`} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, `/${item.id}`)}>
+            item.id !== 'contact' ? <a key={item.id} href={`/${item.id}`} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, `/${item.id}`)}>
               <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
             </a> : <button key={item.id} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={() => setChapter(item.id)}>
               <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
@@ -150,7 +158,6 @@ export default function App() {
           <p className="eyebrow">{activeChapter?.eyebrow}</p>
           <h2 id="chapter-title">{activeChapter?.title}</h2>
           <div className="chapter-rule" />
-          {chapter === 'blog' && <p>Thoughts on mathematics, engineering, and the things I’m learning. First posts coming soon.</p>}
           {chapter === 'contact' && <><p>Have an interesting problem, an idea, or just something to share? I’d like to hear it.</p><a className="email-link" href={`mailto:${site.email}`}>{site.email} ↗</a><div className="profile-links">{site.profiles.map(profile => <a className="text-link" href={profile.href} key={profile.label} target="_blank" rel="noreferrer">{profile.label} ↗</a>)}</div></>}
           <span className="dialog-ornament" aria-hidden="true">◆</span>
         </div>

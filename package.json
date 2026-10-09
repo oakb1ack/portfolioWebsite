@@ -7,22 +7,43 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -p tsconfig.json",
-    "check": "npm run typecheck && npm run build"
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.tools.json",
+    "check": "npm run typecheck && npm run build && npm run test:blog",
+    "test:blog": "node --test tests/blog-content.test.mjs",
+    "test:e2e": "playwright test",
+    "test:dev": "playwright test --config playwright.dev.config.ts"
   },
   "dependencies": {
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "katex": "^0.19.0",
+    "rehype-highlight": "^7.0.2",
+    "rehype-katex": "^7.0.1",
+    "rehype-sanitize": "^6.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "vite": "^8.3.4"
+    "unified": "^11.0.5",
+    "vite": "^8.3.4",
+    "yaml": "^2.9.1"
   },
-  "engines": { "node": "^20.19.0 || >=22.12.0" },
+  "overrides": {
+    "katex": "$katex"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
   "packageManager": "npm@11.16.0"
 }
