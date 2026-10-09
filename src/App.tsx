@@ -93,6 +93,22 @@ export default function App() {
               <DialogueDetails />
               <p className="about-intro">I’m Ali. I study mathematics and electrical engineering at the University of Texas at Arlington.</p>
               <p>I’m interested in how mathematical models connect to physical systems, and in building reliable software around those ideas.</p>
+              <section className="about-currently" aria-labelledby="about-currently-title">
+                <div className="about-currently-heading">
+                  <h2 id="about-currently-title">Currently</h2>
+                  <span>Updated <time dateTime="2026-10">October 2026</time></span>
+                </div>
+                <dl className="about-currently-list">
+                  <div>
+                    <dt>Working on</dt>
+                    <dd>Personal projects</dd>
+                  </div>
+                  <div>
+                    <dt>Watching</dt>
+                    <dd>Vinland Saga</dd>
+                  </div>
+                </dl>
+              </section>
               <div className="about-dialogue-actions">
                 <a className="about-resume" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé <span aria-hidden="true">↗</span></a>
                 <a className="about-hello" href={`mailto:${site.email}`}>Say hello <span aria-hidden="true">↗</span></a>
