@@ -54,12 +54,5 @@ export const artworks = [
     position: '65% center',
     source: 'https://joannetran.artstation.com/projects/Ga6gXd',
   },
-  ...['The underworld', 'Ruined temple', 'Lava arena', 'Palace stairway'].map((scene, index) => ({
-    title: `Hades · ${scene} study`,
-    credit: grackleCredit,
-    src: `/art/hades-grackle-rough-${String(index + 1).padStart(2, '0')}.webp`,
-    position: index === 3 ? '72% center' : '65% center',
-    source,
-  })),
 ] as const;
 
