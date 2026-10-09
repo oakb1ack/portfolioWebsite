@@ -23,8 +23,9 @@ export function MusicPlayer() {
     }
 
     function startOnInteraction(event: Event) {
+      // Client-side navigation prevents the link default but still permits playback.
       // Music controls handle their own intent, including an explicit pause.
-      if (!event.isTrusted || event.defaultPrevented ||
+      if (!event.isTrusted ||
         (event.target instanceof Element && event.target.closest('.music-player'))) return;
       if (event instanceof KeyboardEvent && (event.ctrlKey || event.altKey || event.metaKey)) return;
       removeInteractionListeners();
