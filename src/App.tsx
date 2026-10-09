@@ -110,8 +110,8 @@ export default function App() {
                 </dl>
               </section>
               <div className="about-dialogue-actions">
-                <a className="about-resume" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé <span aria-hidden="true">↗</span></a>
-                <a className="about-hello" href={`mailto:${site.email}`}>Say hello <span aria-hidden="true">↗</span></a>
+                <a className="about-resume" href={site.resumeHref} target="_blank" rel="noreferrer">Read my résumé</a>
+                <a className="about-hello" href={`mailto:${site.email}`}>Say hello</a>
               </div>
             </div>
           </article>
