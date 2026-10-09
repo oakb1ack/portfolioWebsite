@@ -12,12 +12,10 @@ import { site } from './data/site';
 import { music } from './data/music';
 
 const chapters = [
-  { id: 'about', label: 'About', caption: 'Meet the mortal behind the work', eyebrow: '01 / The person', title: 'A curious mortal.' },
-  { id: 'experience', label: 'Experience', caption: 'A record of the journey so far', eyebrow: '02 / The journey', title: 'Experience.' },
-  { id: 'blog', label: 'Blog', caption: 'Notes from the journey', eyebrow: '03 / The notebook', title: 'Notes and ideas.' },
-  { id: 'contact', label: 'Contact', caption: 'Send a message from the surface', eyebrow: '04 / The connection', title: 'Reach the surface.' },
+  { id: 'about', label: 'About', caption: 'Meet the mortal behind the work' },
+  { id: 'experience', label: 'Experience', caption: 'A record of the journey so far' },
+  { id: 'blog', label: 'Blog', caption: 'Notes from the journey' },
 ] as const;
-type Chapter = 'contact';
 type Page = 'home' | 'about' | 'experience' | 'blog';
 
 function currentPath() {
@@ -35,18 +33,13 @@ export default function App() {
   const isExperience = page === 'experience';
   const isBlog = page === 'blog';
   const isContentPage = page !== 'home';
-  const [chapter, setChapter] = useState<Chapter | null>(null);
   const [selected, setSelected] = useState(0);
-  const dialog = useRef<HTMLDialogElement>(null);
   const menu = useRef<HTMLElement>(null);
-  const lastTrigger = useRef<HTMLElement | null>(null);
   const pageHeading = useRef<HTMLHeadingElement>(null);
   const previousPage = useRef(page);
-  const activeChapter = chapters.find(item => item.id === chapter);
 
   useEffect(() => {
     const syncRoute = () => {
-      setChapter(null);
       setPath(currentPath());
     };
     window.addEventListener('popstate', syncRoute);
@@ -64,33 +57,22 @@ export default function App() {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     window.history.pushState(null, '', href);
-    setChapter(null);
     setPath(href.replace(/\/+$/, '') || '/');
     window.scrollTo(0, 0);
   }
 
-  useEffect(() => {
-    if (chapter) {
-      lastTrigger.current = document.activeElement as HTMLElement;
-      dialog.current?.showModal();
-    } else if (dialog.current?.open) {
-      dialog.current.close();
-      lastTrigger.current?.focus();
-    }
-  }, [chapter]);
-
   function moveSelection(event: KeyboardEvent<HTMLElement>) {
-    const buttons = menu.current?.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>('.menu-item');
-    if (!buttons) return;
-    const current = Array.from(buttons).indexOf(document.activeElement as HTMLButtonElement);
+    const links = menu.current?.querySelectorAll<HTMLAnchorElement>('.menu-item');
+    if (!links) return;
+    const current = Array.from(links).indexOf(document.activeElement as HTMLAnchorElement);
     let next: number;
-    if (event.key === 'ArrowDown') next = (current + 1) % buttons.length;
-    else if (event.key === 'ArrowUp') next = (current - 1 + buttons.length) % buttons.length;
+    if (event.key === 'ArrowDown') next = (current + 1) % links.length;
+    else if (event.key === 'ArrowUp') next = (current - 1 + links.length) % links.length;
     else if (event.key === 'Home') next = 0;
-    else if (event.key === 'End') next = buttons.length - 1;
+    else if (event.key === 'End') next = links.length - 1;
     else return;
     event.preventDefault();
-    buttons[next].focus();
+    links[next].focus();
     setSelected(next);
   }
 
@@ -135,11 +117,9 @@ export default function App() {
         </div>
         <nav ref={menu} className="menu" aria-label="Portfolio menu" onKeyDown={moveSelection}>
           {chapters.map((item, index) => (
-            item.id !== 'contact' ? <a key={item.id} href={`/${item.id}`} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, `/${item.id}`)}>
+            <a key={item.id} href={`/${item.id}`} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={event => navigate(event, `/${item.id}`)}>
               <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
-            </a> : <button key={item.id} className={`menu-item ${selected === index ? 'selected' : ''}`} onMouseEnter={() => setSelected(index)} onFocus={() => setSelected(index)} onClick={() => setChapter(item.id)}>
-              <span className="menu-pointer" aria-hidden="true">»</span><span>{item.label}</span>
-            </button>
+            </a>
           ))}
           <p className="menu-caption" aria-live="polite">{chapters[selected].caption}</p>
         </nav>
@@ -152,16 +132,6 @@ export default function App() {
         </div>
       </footer>
       <p className="screen-credits">Music: <a href={music.source} target="_blank" rel="noreferrer">{music.title} — {music.artist} (incompetech.com)</a> · <a href={music.licenseUrl} target="_blank" rel="noreferrer">{music.license}</a></p>
-      <dialog ref={dialog} className="chapter-dialog" aria-labelledby="chapter-title" onCancel={() => setChapter(null)} onClose={() => setChapter(null)} onClick={event => { if (event.target === event.currentTarget) setChapter(null); }}>
-        <div className="chapter-inner">
-          <button autoFocus className="back-button" onClick={() => setChapter(null)}>← Return to the house <kbd>Esc</kbd></button>
-          <p className="eyebrow">{activeChapter?.eyebrow}</p>
-          <h2 id="chapter-title">{activeChapter?.title}</h2>
-          <div className="chapter-rule" />
-          {chapter === 'contact' && <><p>Have an interesting problem, an idea, or just something to share? I’d like to hear it.</p><a className="email-link" href={`mailto:${site.email}`}>{site.email} ↗</a><div className="profile-links">{site.profiles.map(profile => <a className="text-link" href={profile.href} key={profile.label} target="_blank" rel="noreferrer">{profile.label} ↗</a>)}</div></>}
-          <span className="dialog-ornament" aria-hidden="true">◆</span>
-        </div>
-      </dialog>
     </div>
   );
 }

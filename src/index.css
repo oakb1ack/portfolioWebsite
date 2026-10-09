@@ -244,7 +244,6 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
 .music-toggle[aria-pressed="true"] { color: #e6d97b; }
 .utility-link svg { width: 23px; height: 23px; }
 .music-toggle:hover { color: #f9e365; }
-kbd { font: inherit; border: 1px solid #8e998c55; padding: 1px 4px; }
 .screen-credits {
   z-index: 4;
   position: absolute;
@@ -324,37 +323,13 @@ kbd { font: inherit; border: 1px solid #8e998c55; padding: 1px 4px; }
 .artwork-credit:hover { color: #f8e485; }
 
 
-.chapter-dialog {
-  margin: auto;
-  color: #dedfd2;
-  background: linear-gradient(135deg, #1b241b, #0c140f);
-  border: 3px solid #9d8957;
-  outline: 1px solid #c2ad7044;
-  outline-offset: 5px;
-  max-width: 660px;
-  width: calc(100% - 40px);
-  max-height: 85svh;
-  padding: 0;
-  box-shadow: 0 30px 120px #0009;
-}
-.chapter-dialog::backdrop { background: #020b10cc; backdrop-filter: blur(5px); }
-.chapter-inner { padding: 35px 44px 58px; border: 1px solid #ab925355; margin: 8px; position: relative; }
 .back-button { display: flex; gap: 20px; align-items: center; padding: 0; background: none; border: 0; font-family: var(--font-menu); font-weight: 800; font-size: 19px; color: #bfc6b4; margin-bottom: 32px; }
-.back-button kbd { font-family: "DM Sans", sans-serif; font-weight: 400; font-size: 9px; padding: 1px 5px; }
 .eyebrow { font-size: 9px; text-transform: uppercase; letter-spacing: .2em; color: #c6b571; line-height: 1.8; }
-.chapter-dialog h2 { font-family: var(--font-menu); font-size: clamp(32px, 4vw, 44px); font-weight: 800; margin: 14px 0 22px; color: #ecdf9f; line-height: 1.2; }
-.chapter-rule { height: 1px; background: linear-gradient(90deg, #b89b5c77, transparent); margin-bottom: 25px; }
-.chapter-inner > p:not(.eyebrow) { font-size: 14px; line-height: 1.9; color: #bdc4b7; margin: 16px 0; }
-.text-link { display: inline-flex; gap: 15px; font-size: 12px; color: #e8d586; margin-top: 25px; border-bottom: 1px solid #c8a86b55; padding-bottom: 7px; }
-.text-link:hover, .email-link:hover { color: #ffdf9f; }
 .diamond { color: #ba9a61; font-size: 12px; }
-.dialog-ornament { position: absolute; bottom: 20px; left: calc(50% - 5px); font-size: 9px; color: #b5985d; }
 .project-placeholder { display: flex; align-items: center; gap: 18px; border: 1px solid #91a58b30; padding: 22px; margin-top: 25px; }
 .project-placeholder h3 { font-family: var(--font-menu); font-weight: 800; font-size: 22px; margin: 0 0 8px; }
 .project-placeholder p { font-size: 11px; color: #91a198; margin: 0; }
 .status { text-transform: uppercase; letter-spacing: .1em; font-size: 8px; color: #be9d62; margin-left: auto; }
-.email-link { display: block; font-size: clamp(12px, 2.5vw, 17px); color: #e0c891; overflow-wrap: anywhere; margin-top: 27px; }
-.profile-links { display: flex; gap: 28px; }
 
 .page-enter, .about-page { animation: chapter-enter .45s ease-out both; }
 @keyframes chapter-enter {
@@ -508,7 +483,6 @@ kbd { font: inherit; border: 1px solid #8e998c55; padding: 1px 4px; }
   .utility-link svg { width: 21px; height: 21px; }
   .screen-credits { position: relative; grid-row: 4; left: auto; right: auto; bottom: auto; max-width: 400px; font-size: 9px; line-height: 1.8; }
   .music-error { position: fixed; bottom: max(110px, env(safe-area-inset-bottom)); left: 24px; right: 24px; width: auto; max-height: calc(100svh - 150px); overflow-y: auto; }
-  .chapter-inner { padding: 25px 22px 48px; }
   .back-button { font-size: 17px; gap: 12px; }
   .project-placeholder { padding: 18px 12px; gap: 12px; }
   .status { font-size: 7px; max-width: 60px; }

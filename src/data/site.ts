@@ -7,7 +7,7 @@ export const site = {
   email: 'ali.muhsin.alfridawi@gmail.com',
   resumeHref: '/resume.pdf',
   profiles: [
-    { label: 'GitHub', href: 'https://github.com/AliAlfridawi' },
+    { label: 'GitHub', href: 'https://github.com/oakb1ack' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/alialfridawi/' },
   ],
 } as const;
