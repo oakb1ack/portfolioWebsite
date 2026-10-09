@@ -1,7 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
+  "framework": "vite",
   "installCommand": "npm ci",
   "buildCommand": "npm run build",
-  "outputDirectory": null
+  "outputDirectory": "dist",
+  "routes": [
+    { "src": "/resume/?", "status": 308, "headers": { "Location": "/resume.pdf" } },
+    { "src": "/contact/?", "status": 308, "headers": { "Location": "/about" } },
+    { "src": "/404(?:\\.html)?/?", "dest": "/404.html", "status": 404 },
+    { "src": "/blog/404(?:/index\\.html)?/?", "dest": "/blog/404/index.html", "status": 404 },
+    { "handle": "filesystem" },
+    { "src": "/(?:about|experience)/?", "dest": "/index.html" },
+    { "src": "/blog(?:/.*)?", "dest": "/blog/404/index.html", "status": 404 },
+    { "src": "/.*", "dest": "/404.html", "status": 404 }
+  ]
 }

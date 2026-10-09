@@ -1,0 +1,29 @@
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --cursor-default: url('/cursors/obsidian.svg') 4 3, default;
+    --cursor-interactive: url('/cursors/obsidian-hover.svg') 4 3, pointer;
+  }
+
+  body { cursor: var(--cursor-default); }
+
+  :where(p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, pre, code, figcaption, th, td, label, .blog-paper, [contenteditable="true"], input, textarea) {
+    cursor: text;
+  }
+
+  :root :is(a[href], button, summary, [role="button"], input[type="button"], input[type="submit"], input[type="reset"], input[type="checkbox"], input[type="radio"], select),
+  :root :is(a[href], button, summary, [role="button"]) * {
+    cursor: var(--cursor-interactive);
+  }
+
+  :root :is(button:disabled, input:disabled, select:disabled, textarea:disabled, [aria-disabled="true"]),
+  :root :is(button:disabled, [aria-disabled="true"]) * {
+    cursor: var(--cursor-default);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :root[data-cursor-pressed] {
+    --cursor-default: url('/cursors/obsidian-pressed.svg') 4 3, default;
+    --cursor-interactive: url('/cursors/obsidian-pressed.svg') 4 3, pointer;
+  }
+}
