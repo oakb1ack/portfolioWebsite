@@ -34,15 +34,22 @@ export default function App() {
   const menu = useRef<HTMLElement>(null);
   const pageHeading = useRef<HTMLHeadingElement>(null);
   const previousPage = useRef(page);
+  const previousPhase = useRef(phase);
 
   useEffect(() => {
     updatePageMetadata(path, posts, siteOrigin);
   }, [path]);
 
   useEffect(() => {
+    const wasTransitioning = previousPhase.current !== 'idle';
+    previousPhase.current = phase;
     if (phase !== 'idle') return;
     if (page !== 'home') pageHeading.current?.focus({ preventScroll: true });
-    else if (previousPage.current !== 'home') menu.current?.querySelector<HTMLAnchorElement>(`a[href="/${previousPage.current}"]`)?.focus({ preventScroll: true });
+    else if (previousPage.current !== 'home' || wasTransitioning) {
+      const previousLink = menu.current?.querySelector<HTMLAnchorElement>(`a[href="/${previousPage.current}"]`);
+      const selectedLink = menu.current?.querySelector<HTMLAnchorElement>('.menu-item.selected');
+      (previousLink ?? selectedLink)?.focus({ preventScroll: true });
+    }
     previousPage.current = page;
   }, [page, path, phase]);
 

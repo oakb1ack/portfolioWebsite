@@ -25,9 +25,12 @@ export function useChapterNavigation() {
     const source = target.current;
     target.current = next;
     setDestination(next);
+    const element = curtain.current;
+    // Capture the rendered position before stopping an interrupted wipe.
+    const interruptedTransform = animation.current && element
+      ? window.getComputedStyle(element).transform : null;
     animation.current?.stop();
     animation.current = null;
-    const element = curtain.current;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const commit = () => {
       flushSync(() => setPath(next));
@@ -44,14 +47,14 @@ export function useChapterNavigation() {
     const backwards = next === '/' || (next === '/blog' && source.startsWith('/blog/'));
     setDirection(backwards ? 'backward' : 'forward');
     setPhase('covering');
-    const start = backwards ? 'translateX(110%)' : 'translateX(-110%)';
+    const start = interruptedTransform ?? (backwards ? 'translateX(110%)' : 'translateX(-110%)');
     const end = backwards ? 'translateX(-110%)' : 'translateX(110%)';
     element.style.transform = start;
     element.style.visibility = 'visible';
 
     try {
       animation.current = animate(element, { transform: [start, 'translateX(0%)'] }, {
-        duration: 0.28, ease: [0.65, 0, 0.35, 1],
+        duration: interruptedTransform ? 0.14 : 0.28, ease: [0.65, 0, 0.35, 1],
       });
       await animation.current;
       if (run !== generation.current) return;
@@ -90,8 +93,8 @@ export function useChapterNavigation() {
       if (next !== target.current) void changePage(next);
     };
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const skipAnimation = () => {
-      if (!animation.current || (!document.hidden && !preference.matches)) return;
+    const finishTransition = () => {
+      if (!animation.current) return false;
       ++generation.current;
       animation.current?.stop();
       animation.current = null;
@@ -99,14 +102,23 @@ export function useChapterNavigation() {
       setPath(target.current);
       setPhase('idle');
       window.scrollTo(0, 0);
+      return true;
+    };
+    const skipAnimation = () => {
+      if (document.hidden || preference.matches) finishTransition();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && finishTransition()) event.preventDefault();
     };
     window.addEventListener('popstate', syncRoute);
+    document.addEventListener('keydown', onKeyDown);
     document.addEventListener('visibilitychange', skipAnimation);
     preference.addEventListener('change', skipAnimation);
     return () => {
       ++generation.current;
       animation.current?.stop();
       window.removeEventListener('popstate', syncRoute);
+      document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('visibilitychange', skipAnimation);
       preference.removeEventListener('change', skipAnimation);
     };
