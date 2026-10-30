@@ -337,7 +337,7 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Original cut-paper silhouettes, animated with Motion's MIT-licensed mini API. */
+/* A black curtain with a restrained red edge. */
 .chapter-curtain {
   position: fixed;
   z-index: 1000;
@@ -348,9 +348,7 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   visibility: hidden;
   transform: translateX(-110%);
   pointer-events: none;
-  background:
-    repeating-linear-gradient(115deg, transparent 0 68px, #b8a26b03 69px, transparent 70px 138px),
-    radial-gradient(ellipse at 50% 46%, #20281d, #080d0b 65%);
+  background: #0b0b0c;
   clip-path: polygon(48px 0, calc(100% - 24px) 0, calc(100% - 56px) 14%, calc(100% - 18px) 26%, calc(100% - 65px) 43%, calc(100% - 30px) 55%, calc(100% - 74px) 72%, calc(100% - 20px) 87%, calc(100% - 52px) 100%, 24px 100%, 62px 82%, 18px 66%, 58px 49%, 28px 34%, 72px 18%);
 }
 .chapter-curtain:not([data-phase="idle"]) { pointer-events: auto; will-change: transform; }
@@ -359,8 +357,7 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   top: 0;
   bottom: 0;
   width: 88px;
-  background: linear-gradient(90deg, #e0bc6c, #a1442d 22%, #58251c 44%, transparent);
-  opacity: .85;
+  background: linear-gradient(90deg, #8f2e2c, #0b0b0c 80%);
 }
 .chapter-curtain-edge-left { left: 0; }
 .chapter-curtain-edge-right { right: 0; transform: scaleX(-1); }
@@ -381,7 +378,8 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   align-items: center;
   width: min(100%, 620px);
   text-align: center;
-  color: #d0b778;
+  gap: 24px;
+  color: #c4453c;
 }
 .chapter-interlude:is([data-phase="covering"], [data-phase="covered"]) .chapter-interlude-card {
   animation: chapter-crest-enter .22s .18s cubic-bezier(.2, .65, .3, 1) both;
@@ -390,55 +388,38 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
 .chapter-sigil {
   display: block;
   flex-shrink: 0;
-  width: clamp(128px, 16vw, 176px);
-  height: clamp(128px, 16vw, 176px);
-  margin-bottom: 18px;
-  filter: drop-shadow(0 5px 5px #02070499) drop-shadow(0 0 24px #c99b391a);
+  width: clamp(64px, 8vw, 80px);
+  height: clamp(64px, 8vw, 80px);
 }
 .chapter-sigil svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.chapter-interlude:is([data-phase="covering"], [data-phase="covered"]) .chapter-sigil [id$="-engraving"] {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: chapter-engraving-enter .25s .18s cubic-bezier(.2, .65, .3, 1) both;
-}
-@keyframes chapter-engraving-enter {
-  from { opacity: .3; transform: translateY(4px) scale(.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.chapter-interlude-number { font-family: var(--font-menu); font-weight: 800; font-size: 13px; letter-spacing: .23em; text-transform: uppercase; }
 .chapter-interlude-title {
-  margin: 8px 0 10px;
+  margin: 0;
   max-width: 100%;
   font-family: var(--font-menu);
   font-weight: 800;
-  font-size: clamp(34px, 6vw, 68px);
+  font-size: clamp(30px, 4.5vw, 48px);
+  letter-spacing: .025em;
   line-height: 1.05;
-  color: #f0e7ce;
+  color: #e9e5df;
   text-wrap: balance;
   overflow-wrap: anywhere;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  text-shadow: 0 3px 0 #030704, 0 0 32px #bda15b18;
 }
-.chapter-interlude-rule { display: flex; align-items: center; gap: 12px; width: min(72%, 300px); font-size: 9px; }
-.chapter-interlude-rule i { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #c8aa65a6); }
-.chapter-interlude-rule i:last-child { transform: scaleX(-1); }
-.chapter-interlude-caption { margin-top: 13px; font-family: "Newsreader", Georgia, serif; font-style: italic; font-size: clamp(14px, 2.5vw, 18px); color: #b5b7a1; }
 @keyframes chapter-crest-enter {
-  from { opacity: 0; transform: translateY(9px) scale(.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes chapter-crest-leave {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0; transform: translateY(-6px); }
 }
 @media (max-height: 500px) {
-  .chapter-sigil { width: 72px; height: 72px; margin-bottom: 10px; }
-  .chapter-interlude-title { font-size: 32px; margin-block: 6px; }
-  .chapter-interlude-number { font-size: 11px; }
-  .chapter-interlude-caption { font-size: 13px; margin-top: 8px; }
+  .chapter-interlude-card { gap: 16px; }
+  .chapter-sigil { width: 48px; height: 48px; }
+  .chapter-interlude-title { font-size: 28px; }
 }
 .title-screen[data-transition-phase="covering"] .menu-item.selected {
   color: #fff2a6;

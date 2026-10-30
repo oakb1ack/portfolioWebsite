@@ -1,14 +1,15 @@
-# Engraved chapter seals
+# Minimal chapter symbols
 
 Original vector artwork for this portfolio, authored programmatically with
-[Paper.js](https://paperjs.org/) (MIT). Each seal shares an engraved diamond
-bezel, brass bevels, dark enamel, and crimson inlays.
+[Paper.js](https://paperjs.org/) (MIT). Symbols share a 96-unit grid, a single
+crimson fill (`#c4453c`), and transparent negative space. The transition pairs
+each symbol with its section title on black.
 
-- `home.svg`: an arched gateway with layered stonework and steps.
-- `about.svg`: curved laurel branches surrounding a carved A monogram.
-- `experience.svg`: an astrolabe with orbital rings, graduations, and a faceted needle.
-- `blog.svg`: an open codex with curved pages, a bookmark, and a feather quill.
-- `uncharted.svg`: a fractured compass for missing routes.
+- `home.svg`: an open arched doorway.
+- `about.svg`: a single laurel sprig.
+- `experience.svg`: a compass rose with a circular center cutout.
+- `blog.svg`: a folded page with two text cuts.
+- `uncharted.svg`: a broken compass for missing routes.
 
 Edit `scripts/chapter-artwork.mjs`, then run:
 
@@ -18,11 +19,11 @@ npm run generate:crests
 ```
 
 The generator uses Paper.js in a local headless browser to perform curve and
-boolean geometry operations, then exports standalone SVGs. It prefixes gradient
-and clipping IDs so multiple seals can coexist in a document. Generation is
+boolean geometry operations, then exports standalone SVGs. It prefixes exported
+IDs so multiple symbols can coexist in a document. Generation is
 deterministic. The finished assets are checked in; deployment builds do not
 require a browser or regenerate them.
 
 The application imports these trusted local SVGs as inline markup so the entire
-set is ready before navigation and the frame and engraving can animate separately.
+set is ready before navigation.
 Paper.js is a development dependency and is not shipped to visitors.

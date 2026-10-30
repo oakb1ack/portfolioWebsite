@@ -14,7 +14,7 @@ try {
   await mkdir(output, { recursive: true });
   for (const kind of ['home', 'about', 'experience', 'blog', 'uncharted']) {
     const exported = await page.evaluate(drawChapterCrest, kind);
-    // Keep gradient and clipping IDs unique if several crests share a document.
+    // Keep exported IDs unique if several symbols share a document.
     const prefix = `crest-${kind}-`;
     const svg = exported.replace(/\bid="([^"]+)"/g, (_, id) => `id="${prefix}${id}"`)
       .replace(/url\(#([^)]+)\)/g, (_, id) => `url(#${prefix}${id})`)
