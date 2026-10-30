@@ -14,6 +14,8 @@ Section navigation uses an 820ms jagged shadow wipe with crimson and gold edges.
 
 Enabling music also enables an original, quiet whoosh on section changes. Pausing music mutes both, and each page load begins silent. The cue is fetched only when played; failed playback never blocks navigation. See [sounds/README.md](public/sounds/README.md).
 
+Chapter crests are original engraved seals generated with [Paper.js](https://paperjs.org/): a gateway, laurel monogram, astrolabe, open codex and quill, and fractured compass. Their shared brass bezel, crimson inlays, curved silhouettes, and etched details are exported as SVG. The frame and central engraving animate in layers. To edit the artwork, change `scripts/chapter-artwork.mjs` and run `npm run generate:crests` (requires Playwright Chromium). The checked-in SVGs are ready before navigation, and Paper.js stays out of the visitor's JavaScript bundle. See [crests/README.md](src/assets/crests/README.md).
+
 ## Requirements
 
 - Node.js 20.19+ or 22.12+

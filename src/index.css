@@ -388,18 +388,23 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
 }
 .chapter-interlude[data-phase="revealing"] .chapter-interlude-card { animation: chapter-crest-leave .16s ease-in both; }
 .chapter-sigil {
-  width: clamp(72px, 11vw, 96px);
-  height: clamp(72px, 11vw, 96px);
-  margin-bottom: 23px;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  filter: drop-shadow(0 0 18px #c99b3933);
+  display: block;
+  flex-shrink: 0;
+  width: clamp(128px, 16vw, 176px);
+  height: clamp(128px, 16vw, 176px);
+  margin-bottom: 18px;
+  filter: drop-shadow(0 5px 5px #02070499) drop-shadow(0 0 24px #c99b391a);
 }
-.chapter-sigil-frame { opacity: .55; stroke-width: 1; }
-.chapter-sigil-rays { opacity: .45; stroke-width: 1; }
-.chapter-sigil-accent { fill: #a8442e; stroke: #c16d45; }
+.chapter-sigil svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.chapter-interlude:is([data-phase="covering"], [data-phase="covered"]) .chapter-sigil [id$="-engraving"] {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: chapter-engraving-enter .25s .18s cubic-bezier(.2, .65, .3, 1) both;
+}
+@keyframes chapter-engraving-enter {
+  from { opacity: .3; transform: translateY(4px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 .chapter-interlude-number { font-family: var(--font-menu); font-weight: 800; font-size: 13px; letter-spacing: .23em; text-transform: uppercase; }
 .chapter-interlude-title {
   margin: 8px 0 10px;
@@ -430,7 +435,7 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   to { opacity: 0; transform: translateY(-6px); }
 }
 @media (max-height: 500px) {
-  .chapter-sigil { width: 48px; height: 48px; margin-bottom: 12px; }
+  .chapter-sigil { width: 72px; height: 72px; margin-bottom: 10px; }
   .chapter-interlude-title { font-size: 32px; margin-block: 6px; }
   .chapter-interlude-number { font-size: 11px; }
   .chapter-interlude-caption { font-size: 13px; margin-top: 8px; }
