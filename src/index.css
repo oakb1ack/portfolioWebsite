@@ -336,6 +336,46 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Original cut-paper silhouettes, animated with Motion's MIT-licensed mini API. */
+.chapter-curtain {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: -96px;
+  width: calc(100% + 192px);
+  visibility: hidden;
+  transform: translateX(-110%);
+  pointer-events: none;
+  background: radial-gradient(ellipse at 45% 50%, #17201b, #080d0b 65%);
+  clip-path: polygon(48px 0, calc(100% - 24px) 0, calc(100% - 56px) 14%, calc(100% - 18px) 26%, calc(100% - 65px) 43%, calc(100% - 30px) 55%, calc(100% - 74px) 72%, calc(100% - 20px) 87%, calc(100% - 52px) 100%, 24px 100%, 62px 82%, 18px 66%, 58px 49%, 28px 34%, 72px 18%);
+}
+.chapter-curtain[data-phase="covering"],
+.chapter-curtain[data-phase="revealing"] { pointer-events: auto; will-change: transform; }
+.chapter-curtain-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 88px;
+  background: linear-gradient(90deg, #b48846, #8c3025 28%, #391e18 66%, transparent);
+  opacity: .85;
+}
+.chapter-curtain-edge-left { left: 0; }
+.chapter-curtain-edge-right { right: 0; transform: scaleX(-1); }
+.title-screen[data-transition-phase="covering"] .menu-item.selected {
+  color: #fff2a6;
+  text-shadow: 0 0 24px #f5d95499;
+}
+.title-screen[data-transition-direction] > main { animation: chamber-arrive .65s cubic-bezier(.2, .65, .3, 1) both; }
+.title-screen[data-transition-direction="backward"] { --chamber-offset: -18px; }
+.title-screen[data-transition-direction] :is(.about-dialogue, .experience-list, .blog-list, .blog-paper, .menu) {
+  animation: chamber-arrive .55s .1s cubic-bezier(.2, .65, .3, 1) both;
+}
+@keyframes chamber-arrive {
+  from { opacity: 0; transform: translateX(var(--chamber-offset, 18px)); }
+  to { opacity: 1; transform: translateX(0); }
+}
 /* About follows the game's dialogue composition: scene, speaker, dialogue. */
 .about-screen {
   display: grid;

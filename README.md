@@ -10,6 +10,8 @@ Kevin MacLeod’s ambient track “Long Note Two” starts only when the visitor
 
 Use Tab to focus the menu, arrow keys to move between entries, and Enter to select. Mouse and touch navigation are also supported.
 
+Section navigation uses a 620ms jagged shadow wipe with crimson and gold edges. The page changes beneath the opaque curtain, then its content enters; returning home or from an article to the blog reverses the direction. The artwork and music stay mounted. Browser history uses the same transition, and reduced-motion preferences skip it. The original curtain artwork is CSS; animation uses the free [Motion mini API](https://motion.dev/docs/animate), distributed under the [MIT license](https://github.com/motiondivision/motion/blob/main/LICENSE.md). No paid Motion+ resources or third-party transition artwork are used.
+
 ## Requirements
 
 - Node.js 20.19+ or 22.12+

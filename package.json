@@ -14,6 +14,7 @@
     "test:dev": "playwright test --config playwright.dev.config.ts"
   },
   "dependencies": {
+    "motion": "^14.9.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
