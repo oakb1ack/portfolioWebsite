@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { music } from '../data/music';
 
-export function MusicPlayer() {
+export function MusicPlayer({ onPlaybackChange }: { onPlaybackChange?: (playing: boolean) => void }) {
   const audio = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,19 +43,21 @@ export function MusicPlayer() {
         src={music.src}
         loop
         preload="none"
-        onPlaying={() => { setPlaying(true); setLoading(false); }}
-        onPause={() => { setPlaying(false); setLoading(false); }}
+        onPlaying={() => { setPlaying(true); setLoading(false); onPlaybackChange?.(true); }}
+        onPause={() => { setPlaying(false); setLoading(false); onPlaybackChange?.(false); }}
         onWaiting={() => setLoading(true)}
-        onError={() => { setPlaying(false); setLoading(false); setError('Music is unavailable. Please try again later.'); }}
+        onError={() => { setPlaying(false); setLoading(false); onPlaybackChange?.(false); setError('Music is unavailable. Please try again later.'); }}
       />
       <button
         className="music-toggle"
         onClick={togglePlayback}
         aria-pressed={playing || loading}
         aria-label={playing || loading ? 'Pause background music' : 'Play background music'}
+        aria-description="Also controls subtle section transition sounds. Pause music to mute both."
+        title={playing || loading ? 'Pause music and transition sounds' : 'Play music and transition sounds'}
       >
         <span aria-hidden="true">{playing || loading ? 'Ⅱ' : '♫'}</span>
-        <span className="music-label">{loading ? 'Loading music' : playing ? 'Pause music' : 'Play music'}</span>
+        <span className="music-label">{loading ? 'Loading music' : playing ? 'Pause music & sounds' : 'Play music & sounds'}</span>
       </button>
       {error && <p className="music-error" role="status">{error}</p>}
     </div>

@@ -13,6 +13,8 @@ import { site } from './data/site';
 import { music } from './data/music';
 import { pageFor } from './data/routes';
 import { useChapterNavigation } from './hooks/useChapterNavigation';
+import { ChapterTransition } from './components/ChapterTransition';
+import { TransitionSound } from './components/TransitionSound';
 
 const chapters = [
   { id: 'about', label: 'About', caption: 'Meet the mortal behind the work' },
@@ -20,7 +22,8 @@ const chapters = [
   { id: 'blog', label: 'Blog', caption: 'Notes from the journey' },
 ] as const;
 export default function App() {
-  const { path, phase, direction, curtain, goTo } = useChapterNavigation();
+  const { path, phase, direction, destination, curtain, goTo } = useChapterNavigation();
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const page = pageFor(path);
   const isAbout = page === 'about';
   const isExperience = page === 'experience';
@@ -133,15 +136,13 @@ export default function App() {
         <div className="footer-tools">
           {site.profiles.map(profile => <a className="utility-link" key={profile.label} href={profile.href} target="_blank" rel="noreferrer" aria-label={profile.label} title={profile.label}><UtilityIcon name={profile.label} /></a>)}
           <a className="utility-link" href={`mailto:${site.email}`} aria-label="Email Ali" title="Email Ali"><UtilityIcon name="email" /></a>
-          <MusicPlayer />
+          <MusicPlayer onPlaybackChange={setSoundEnabled} />
         </div>
       </footer>
       <p className="screen-credits">Music: <a href={music.source} target="_blank" rel="noreferrer">{music.title} — {music.artist} (incompetech.com)</a> · <a href={music.licenseUrl} target="_blank" rel="noreferrer">{music.license}</a></p>
     </div>
-    <div ref={curtain} className="chapter-curtain" aria-hidden="true" data-phase={phase} data-direction={direction}>
-      <span className="chapter-curtain-edge chapter-curtain-edge-left" />
-      <span className="chapter-curtain-edge chapter-curtain-edge-right" />
-    </div>
+    <ChapterTransition curtainRef={curtain} phase={phase} direction={direction} destination={destination} articleTitle={posts.find(post => `/blog/${post.slug}` === destination)?.title} />
+    <TransitionSound enabled={soundEnabled} phase={phase} />
     </>
   );
 }

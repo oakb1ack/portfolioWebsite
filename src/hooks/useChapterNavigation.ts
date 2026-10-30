@@ -7,10 +7,13 @@ function currentPath() {
   return normalizedPath(window.location.pathname);
 }
 
+export type ChapterPhase = 'idle' | 'covering' | 'covered' | 'revealing';
+
 // Keep the shared artwork and audio mounted while a curtain covers route changes.
 export function useChapterNavigation() {
   const [path, setPath] = useState(currentPath);
-  const [phase, setPhase] = useState<'idle' | 'covering' | 'revealing'>('idle');
+  const [phase, setPhase] = useState<ChapterPhase>('idle');
+  const [destination, setDestination] = useState(path);
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
   const curtain = useRef<HTMLDivElement>(null);
   const target = useRef(path);
@@ -21,7 +24,9 @@ export function useChapterNavigation() {
     const run = ++generation.current;
     const source = target.current;
     target.current = next;
+    setDestination(next);
     animation.current?.stop();
+    animation.current = null;
     const element = curtain.current;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const commit = () => {
@@ -46,17 +51,22 @@ export function useChapterNavigation() {
 
     try {
       animation.current = animate(element, { transform: [start, 'translateX(0%)'] }, {
-        duration: 0.26, ease: [0.65, 0, 0.35, 1],
+        duration: 0.28, ease: [0.65, 0, 0.35, 1],
       });
       await animation.current;
       if (run !== generation.current) return;
 
       // Commit beneath the opaque center, before the reveal starts.
       flushSync(() => {
-        setPhase('revealing');
+        setPhase('covered');
         setPath(next);
       });
       window.scrollTo(0, 0);
+      // Let the chapter crest settle while the new content enters underneath.
+      animation.current = animate(element, { transform: ['translateX(0%)', 'translateX(0%)'] }, { duration: 0.18 });
+      await animation.current;
+      if (run !== generation.current) return;
+      setPhase('revealing');
       animation.current = animate(element, { transform: ['translateX(0%)', end] }, {
         duration: 0.36, ease: [0.55, 0, 0.2, 1],
       });
@@ -109,5 +119,5 @@ export function useChapterNavigation() {
     void changePage(next);
   };
 
-  return { path, phase, direction, curtain, goTo };
+  return { path, phase, direction, destination, curtain, goTo };
 }

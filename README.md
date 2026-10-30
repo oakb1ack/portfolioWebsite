@@ -10,7 +10,9 @@ Kevin MacLeod’s ambient track “Long Note Two” starts only when the visitor
 
 Use Tab to focus the menu, arrow keys to move between entries, and Enter to select. Mouse and touch navigation are also supported.
 
-Section navigation uses a 620ms jagged shadow wipe with crimson and gold edges. The page changes beneath the opaque curtain, then its content enters; returning home or from an article to the blog reverses the direction. The artwork and music stay mounted. Browser history uses the same transition, and reduced-motion preferences skip it. The original curtain artwork is CSS; animation uses the free [Motion mini API](https://motion.dev/docs/animate), distributed under the [MIT license](https://github.com/motiondivision/motion/blob/main/LICENSE.md). No paid Motion+ resources or third-party transition artwork are used.
+Section navigation uses an 820ms jagged shadow wipe with crimson and gold edges. A brief chapter card displays an original crest for About, Experience, Blog, or the return to the house; article transitions show the article title. The page changes beneath the opaque curtain, then its content enters; returning home or from an article to the blog reverses the direction. The artwork and music stay mounted. Browser history uses the same transition, and reduced-motion preferences skip it. The original curtain artwork is CSS and SVG; animation uses the free [Motion mini API](https://motion.dev/docs/animate), distributed under the [MIT license](https://github.com/motiondivision/motion/blob/main/LICENSE.md). No paid Motion+ resources or third-party transition artwork are used.
+
+Enabling music also enables an original, quiet whoosh on section changes. Pausing music mutes both, and each page load begins silent. The cue is fetched only when played; failed playback never blocks navigation. See [sounds/README.md](public/sounds/README.md).
 
 ## Requirements
 
