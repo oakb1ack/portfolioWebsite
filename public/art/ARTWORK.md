@@ -1,23 +1,18 @@
 # Background artwork sources
 
-## Active region backgrounds
+## Active background: Tartarus
 
-The House uses the HUD-free **House of Hades interior** screenshot from
-[Supergiant’s official Hades gallery](https://www.supergiantgames.com/games/hades/).
-The original is 1,920 × 1,080 and was downloaded on October 30, 2026 from:
+The site uses only Joanne Tran’s **Tartarus** artwork, `hades-tran-01.webp`,
+with a visible artist credit and a link to the artist’s portfolio entry:
+https://joannetran.artstation.com/projects/lV6YgJ
 
-https://images.ctfassets.net/5owu3y35gz1g/jce84av2Stq3zFI4KGSlB/7e016dd8d9956468e2a681edbe5bb0ac/Hades_Aug2019_01.png
+The download and conversion details are recorded in the Joanne Tran section below.
+The Studio Grackle scenes and the other Joanne Tran images are retained as unused
+source assets. There is no artwork switching or House background in the active site.
 
-`hades-house.webp` is a quality-92 WebP conversion at the original dimensions,
-without upscaling. The visible credit is **Supergiant Games · Hades**;
-the gallery does not name a specific artist for this screenshot.
-Tartarus uses Joanne Tran’s `hades-tran-01.webp`, documented below.
-These remain copyrighted game images; no open-use license is asserted.
-The older Studio Grackle trailer art is retained as an unused source asset.
+## Previous slideshow: Studio Grackle / Hades
 
-## Active slideshow: Studio Grackle / Hades
-
-The active backgrounds were downloaded from [Studio Grackle’s Hades portfolio](https://www.studiograckle.com/work/hades) on October 8, 2026, at the user’s request. The portfolio credits **Jane Bak** for backgrounds and identifies the project as **Hades / Supergiant Games**. The page displays a Jane Bak / Studio Grackle / Hades credit and links back to the source.
+These earlier backgrounds were downloaded from [Studio Grackle’s Hades portfolio](https://www.studiograckle.com/work/hades) on October 8, 2026, at the user’s request. The portfolio credits **Jane Bak** for backgrounds and identifies the project as **Hades / Supergiant Games**. The page displays a Jane Bak / Studio Grackle / Hades credit and links back to the source.
 
 These are copyrighted production artworks. The source page does not state a public-domain or open-use license; attribution is not a grant of reuse permission. The public-domain terms below apply only to the earlier painting assets.
 

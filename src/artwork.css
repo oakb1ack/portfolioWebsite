@@ -1,0 +1,26 @@
+/* A single, still Tartarus environment with its matching interface palette. */
+.artwork-image { transition: none; }
+.artwork-location {
+  margin: 0;
+  color: #d4c3a5;
+  font-family: var(--font-menu);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.tartarus-screen { background: #080c0b; }
+.tartarus-screen .menu-item.selected {
+  color: #f1b1a0;
+  text-shadow: 0 3px 0 #20110f, 0 0 24px #c4483544;
+}
+.tartarus-screen .menu-pointer,
+.tartarus-screen .menu-item:hover { color: #f1b1a0; }
+.tartarus-screen .occupation { background: #e2d7bf; color: #241d19; }
+.tartarus-screen .utility-link {
+  color: #decbb4;
+  background: #25231fe6;
+  border-color: #aa725966;
+}
+.tartarus-screen .music-toggle { color: #c4b49a; }
+.tartarus-screen :is(button, a):focus-visible { outline-color: #efb49e; }
