@@ -20,7 +20,7 @@ test('missing pages return 404, stay out of search, and offer navigation', async
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
   await page.goto('/does-not-exist');
-  await page.getByRole('link', { name: 'Return to the house' }).click();
+  await page.getByRole('link', { name: 'Return to menu' }).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(page.locator('.menu-item')).toHaveCount(3);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
@@ -52,7 +52,7 @@ test('the missing-page explanation is readable without JavaScript', async ({ bro
     const response = await page.goto('http://127.0.0.1:4175/does-not-exist');
     expect(response?.status()).toBe(404);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('A missing page.');
-    await expect(page.getByRole('link', { name: 'Return to the house' })).toHaveAttribute('href', '/');
+    await expect(page.getByRole('link', { name: 'Return to menu' })).toHaveAttribute('href', '/');
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
   } finally {
     await context.close();

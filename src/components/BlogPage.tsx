@@ -133,7 +133,7 @@ export function BlogPage({ posts, slug, headingRef, onNavigate }: BlogPageProps)
     <main className={`blog-page page-enter${post ? ' blog-article-page' : ' blog-index-page'}`} aria-labelledby="blog-heading">
       <nav className="blog-navigation" aria-label="Blog navigation">
         <a className="back-button" href={returnPath} onClick={event => onNavigate?.(event, returnPath)}>
-          <span aria-hidden="true">←</span> {slug ? 'Back to the notebook' : 'Return to the house'}
+          <span aria-hidden="true">←</span> {slug ? 'Back to the notebook' : 'Return to menu'}
         </a>
       </nav>
       <div className="blog-content">

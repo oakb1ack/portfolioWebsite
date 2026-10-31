@@ -2,9 +2,9 @@
 
 A Hades-inspired portfolio built with React, TypeScript, Vite, and Tailwind CSS. The title-screen menu links to About, Experience, and Blog pages; résumé links open in a new tab, and email is available on About and in the footer. It deploys as a static site on Vercel.
 
-The interface follows the original Hades main menu’s layout: a fractured white title above a widely spaced menu, yellow selected entries, a lower-left utility strip, and a framed lower-right artwork switch. Alegreya Sans SC and Alegreya SC are served locally, with their SIL Open Font License files in `public/fonts/`. The portfolio title and content sit over illustrated Hades backgrounds by Jane Bak at Studio Grackle and Joanne Tran at Supergiant Games, with credits updated for each slide.
+The interface follows the original Hades main menu’s layout: a fractured white title above a widely spaced menu, a lower-left utility strip, and a framed lower-right region control. Alegreya Sans SC and Alegreya SC are served locally, with their SIL Open Font License files in `public/fonts/`. The portfolio title and content sit over a House interior screenshot from Supergiant’s official gallery and Tartarus artwork by Joanne Tran, with credits updated for each environment.
 
-The background cycles through seven Hades backgrounds: four finished Studio Grackle scenes and Tartarus, Asphodel, and Elysium by Joanne Tran, with manual switching through “Next artwork.” Optimized WebP images prioritize the opening background and prepare the next background one at a time, rather than fetching the whole gallery at startup. Backgrounds stay still until the visitor chooses another image; there is no automatic rotation or ambient ember animation. Reduced-motion preferences disable the transition between images. The layout adapts to phone, tablet, and short desktop screens. Menu captions are visible on desktop; utility controls use vector icons with 44px minimum touch heights on mobile.
+The region control replaces the artwork gallery. Visitors begin at the House and can choose “Enter Tartarus,” the first region, then return to the House. A 920ms jagged stone-and-crimson wipe reveals the region name, original gate emblem, and new environment. Tartarus pairs Joanne Tran’s artwork with warm crimson and bone interface accents. Page-back links use “Return to menu” to distinguish section navigation from region travel. Region changes preserve the current page, reading position, and music playback; the region stays selected across section navigation. Reloading starts at the House. Only these two backgrounds are requested, and Tartarus must load and decode before entry is enabled. Reduced-motion preferences skip the wipe, Escape finishes it immediately, and keyboard focus returns to the region control. The layout adapts to phone, tablet, and short desktop screens; utility controls have 44px minimum touch heights on mobile.
 
 Kevin MacLeod’s ambient track “Long Note Two” starts only when the visitor presses Play in the bottom utility strip, then loops at 25% volume. The single music control toggles playback, and track credits remain at the bottom of the page. Page loads and navigation leave music paused until Play is pressed; playback continues across navigation once started. The MP3 is hosted locally and fetched when playback is requested. Reuse details are in [MUSIC.md](public/music/MUSIC.md).
 
@@ -87,10 +87,10 @@ Development browser tests start Vite on port 5178 and check module loading and d
 src/
   App.tsx          Title menu and page navigation
   components/
-    ArtworkBackground.tsx  Manual artwork switching and source credits
+    ArtworkBackground.tsx  Region travel controls and source credits
     MusicPlayer.tsx        Audio playback, volume, and music credits
     BlogPage.tsx           Blog index, article, and missing-page layouts
-  data/artwork.ts  Image paths, artists, sources, and rotation interval
+  data/artwork.ts  Region definitions, image paths, artists, and sources
   data/music.ts    Music path and attribution
   data/site.ts     Portfolio identity and external links
   index.css        Layout, theme, animation, and responsive styles
@@ -101,6 +101,6 @@ scripts/           Build-time Markdown pipeline and static blog generation
 tests/             Content, generated-output, and browser checks
 ```
 
-Update the profile details in `src/data/site.ts`, experience records in `src/data/experience.ts`, and blog posts in `content/blog/`. Background images are stored locally in `public/art/`; update `src/data/artwork.ts` to change the selection or timing. Image sources and reuse details are recorded in [ARTWORK.md](public/art/ARTWORK.md). Display fonts are bundled locally; body text loads DM Sans from Google Fonts with a local sans-serif fallback.
+Update the profile details in `src/data/site.ts`, experience records in `src/data/experience.ts`, and blog posts in `content/blog/`. Background images are stored locally in `public/art/`; region artwork and credits are defined in `src/data/artwork.ts`, travel behavior in `src/hooks/useRegionTravel.ts`, and visual treatments in `src/regions.css`. Image sources and reuse details are recorded in [ARTWORK.md](public/art/ARTWORK.md). Display fonts are bundled locally; body text loads DM Sans from Google Fonts with a local sans-serif fallback.
 
 Visual reference: [Hades main menu](https://interfaceingame.com/screenshots/hades-main-menu/). This is an independent personal portfolio.
