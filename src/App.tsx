@@ -11,19 +11,19 @@ import { posts, siteOrigin } from 'virtual:blog-posts';
 import { updatePageMetadata } from './data/pageMetadata';
 import { site } from './data/site';
 import { music } from './data/music';
-import { normalizedPath, pageFor } from './data/routes';
+import { pageFor } from './data/routes';
+import { useChapterNavigation } from './hooks/useChapterNavigation';
+import { ChapterTransition } from './components/ChapterTransition';
+import { TransitionSound } from './components/TransitionSound';
 
 const chapters = [
   { id: 'about', label: 'About', caption: 'Meet the mortal behind the work' },
   { id: 'experience', label: 'Experience', caption: 'A record of the journey so far' },
   { id: 'blog', label: 'Blog', caption: 'Notes from the journey' },
 ] as const;
-function currentPath() {
-  return normalizedPath(window.location.pathname);
-}
-
 export default function App() {
-  const [path, setPath] = useState(currentPath);
+  const { path, phase, direction, destination, curtain, goTo } = useChapterNavigation();
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const page = pageFor(path);
   const isAbout = page === 'about';
   const isExperience = page === 'experience';
@@ -34,28 +34,29 @@ export default function App() {
   const menu = useRef<HTMLElement>(null);
   const pageHeading = useRef<HTMLHeadingElement>(null);
   const previousPage = useRef(page);
-
-  useEffect(() => {
-    const syncRoute = () => {
-      setPath(currentPath());
-    };
-    window.addEventListener('popstate', syncRoute);
-    return () => window.removeEventListener('popstate', syncRoute);
-  }, []);
+  const previousPhase = useRef(phase);
 
   useEffect(() => {
     updatePageMetadata(path, posts, siteOrigin);
+  }, [path]);
+
+  useEffect(() => {
+    const wasTransitioning = previousPhase.current !== 'idle';
+    previousPhase.current = phase;
+    if (phase !== 'idle') return;
     if (page !== 'home') pageHeading.current?.focus({ preventScroll: true });
-    else if (previousPage.current !== 'home') menu.current?.querySelector<HTMLAnchorElement>(`a[href="/${previousPage.current}"]`)?.focus({ preventScroll: true });
+    else if (previousPage.current !== 'home' || wasTransitioning) {
+      const previousLink = menu.current?.querySelector<HTMLAnchorElement>(`a[href="/${previousPage.current}"]`);
+      const selectedLink = menu.current?.querySelector<HTMLAnchorElement>('.menu-item.selected');
+      (previousLink ?? selectedLink)?.focus({ preventScroll: true });
+    }
     previousPage.current = page;
-  }, [page, path]);
+  }, [page, path, phase]);
 
   function navigate(event: MouseEvent<HTMLAnchorElement>, href: string) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    window.history.pushState(null, '', href);
-    setPath(normalizedPath(href));
-    window.scrollTo(0, 0);
+    goTo(href);
   }
 
   function moveSelection(event: KeyboardEvent<HTMLElement>) {
@@ -74,7 +75,8 @@ export default function App() {
   }
 
   return (
-    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog || isMissing ? ' blog-screen' : ''}`}>
+    <>
+    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog || isMissing ? ' blog-screen' : ''}`} inert={phase !== 'idle'} data-transition-phase={phase} data-transition-direction={direction}>
       <ArtworkBackground compactControls={isContentPage} />
       <div className="screen-shade" aria-hidden="true" />
       {isAbout ? (
@@ -116,7 +118,7 @@ export default function App() {
             </div>
           </article>
         </main>
-      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : isBlog ? <BlogPage posts={posts} slug={path === '/blog' ? undefined : path.slice('/blog/'.length)} headingRef={pageHeading} onNavigate={navigate} /> : isMissing ? <NotFoundPage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : <main className="main-menu page-enter" key="home">
+      ) : isExperience ? <ExperiencePage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : isBlog ? <BlogPage key={path} posts={posts} slug={path === '/blog' ? undefined : path.slice('/blog/'.length)} headingRef={pageHeading} onNavigate={navigate} /> : isMissing ? <NotFoundPage headingRef={pageHeading} onReturn={event => navigate(event, '/')} /> : <main className="main-menu page-enter" key="home">
         <div className="title-lockup">
           <h1 aria-label={site.name}>
             <span className="title-emblem" aria-hidden="true">
@@ -141,10 +143,13 @@ export default function App() {
         <div className="footer-tools">
           {site.profiles.map(profile => <a className="utility-link" key={profile.label} href={profile.href} target="_blank" rel="noreferrer" aria-label={profile.label} title={profile.label}><UtilityIcon name={profile.label} /></a>)}
           <a className="utility-link" href={`mailto:${site.email}`} aria-label="Email Ali" title="Email Ali"><UtilityIcon name="email" /></a>
-          <MusicPlayer />
+          <MusicPlayer onPlaybackChange={setSoundEnabled} />
         </div>
       </footer>
       <p className="screen-credits">Music: <a href={music.source} target="_blank" rel="noreferrer">{music.title} — {music.artist} (incompetech.com)</a> · <a href={music.licenseUrl} target="_blank" rel="noreferrer">{music.license}</a></p>
     </div>
+    <ChapterTransition curtainRef={curtain} phase={phase} direction={direction} destination={destination} articleTitle={posts.find(post => `/blog/${post.slug}` === destination)?.title} />
+    <TransitionSound enabled={soundEnabled} phase={phase} />
+    </>
   );
 }
