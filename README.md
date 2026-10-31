@@ -23,6 +23,20 @@ The build outputs to `dist/`. Vercel deployment settings are in `vercel.json`.
 For browser tests, install Chromium with `npx playwright install chromium`,
 then run `npm run test:dev` or `npm run test:e2e`.
 
+## Pull request checks
+
+GitHub Actions runs the `Build and test` check on every pull request and push to
+`main`, alongside Vercel's deployment checks. It uses Node.js 24 and `npm ci`, then
+runs `npm run check`, production browser tests on desktop and mobile Chromium,
+and development-server tests for blog draft previews.
+
+Browser reports, screenshots, and failure traces are available in the
+`playwright-results` artifact on the workflow run for 14 days. New commits cancel
+older runs for the same pull request.
+
+To block merges when tests fail, add `Build and test` as a required status check
+in the GitHub branch protection rule or ruleset for `main` after its first run.
+
 ## Update content
 
 - Profile and links: `src/data/site.ts`

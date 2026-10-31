@@ -2,8 +2,13 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/dev',
+  outputDir: './test-results/dev',
   workers: 1,
-  reporter: 'list',
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  reporter: process.env.CI
+    ? [['list'], ['html', { outputFolder: 'playwright-report/dev', open: 'never' }]]
+    : 'list',
   use: {
     ...devices['Desktop Chrome'],
     baseURL: 'http://127.0.0.1:5178',
