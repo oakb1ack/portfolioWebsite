@@ -336,6 +336,104 @@ h1 { margin: 0; font-family: var(--font-title); font-weight: 900; color: #fffff7
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* A black curtain with a restrained red edge. */
+.chapter-curtain {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  bottom: 0;
+  left: -96px;
+  width: calc(100% + 192px);
+  visibility: hidden;
+  transform: translateX(-110%);
+  pointer-events: none;
+  background: #0b0b0c;
+  clip-path: polygon(48px 0, calc(100% - 24px) 0, calc(100% - 56px) 14%, calc(100% - 18px) 26%, calc(100% - 65px) 43%, calc(100% - 30px) 55%, calc(100% - 74px) 72%, calc(100% - 20px) 87%, calc(100% - 52px) 100%, 24px 100%, 62px 82%, 18px 66%, 58px 49%, 28px 34%, 72px 18%);
+}
+.chapter-curtain:not([data-phase="idle"]) { pointer-events: auto; will-change: transform; }
+.chapter-curtain-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 88px;
+  background: linear-gradient(90deg, #8f2e2c, #0b0b0c 80%);
+}
+.chapter-curtain-edge-left { left: 0; }
+.chapter-curtain-edge-right { right: 0; transform: scaleX(-1); }
+.chapter-interlude {
+  position: fixed;
+  z-index: 1001;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  pointer-events: none;
+  visibility: hidden;
+}
+.chapter-interlude:not([data-phase="idle"]) { visibility: visible; }
+.chapter-interlude-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 620px);
+  text-align: center;
+  gap: 24px;
+  color: #c4453c;
+}
+.chapter-interlude:is([data-phase="covering"], [data-phase="covered"]) .chapter-interlude-card {
+  animation: chapter-crest-enter .22s .18s cubic-bezier(.2, .65, .3, 1) both;
+}
+.chapter-interlude[data-phase="revealing"] .chapter-interlude-card { animation: chapter-crest-leave .16s ease-in both; }
+.chapter-sigil {
+  display: block;
+  flex-shrink: 0;
+  width: clamp(64px, 8vw, 80px);
+  height: clamp(64px, 8vw, 80px);
+}
+.chapter-sigil svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.chapter-interlude-title {
+  margin: 0;
+  max-width: 100%;
+  font-family: var(--font-menu);
+  font-weight: 800;
+  font-size: clamp(30px, 4.5vw, 48px);
+  letter-spacing: .025em;
+  line-height: 1.05;
+  color: #e9e5df;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+@keyframes chapter-crest-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes chapter-crest-leave {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@media (max-height: 500px) {
+  .chapter-interlude-card { gap: 16px; }
+  .chapter-sigil { width: 48px; height: 48px; }
+  .chapter-interlude-title { font-size: 28px; }
+}
+.title-screen[data-transition-phase="covering"] .menu-item.selected {
+  color: #fff2a6;
+  text-shadow: 0 0 24px #f5d95499;
+}
+.title-screen[data-transition-direction] > main { animation: chamber-arrive .65s cubic-bezier(.2, .65, .3, 1) both; }
+.title-screen[data-transition-direction="backward"] { --chamber-offset: -18px; }
+.title-screen[data-transition-direction] :is(.about-dialogue, .experience-list, .blog-list, .blog-paper, .menu) {
+  animation: chamber-arrive .55s .1s cubic-bezier(.2, .65, .3, 1) both;
+}
+@keyframes chamber-arrive {
+  from { opacity: .35; transform: translateX(var(--chamber-offset, 18px)); }
+  to { opacity: 1; transform: translateX(0); }
+}
 /* About follows the game's dialogue composition: scene, speaker, dialogue. */
 .about-screen {
   display: grid;

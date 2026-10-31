@@ -10,8 +10,6 @@ Kevin MacLeod’s ambient track “Long Note Two” starts only when the visitor
 
 Use Tab to focus the menu, arrow keys to move between entries, and Enter to select. Mouse and touch navigation are also supported.
 
-Desktop pointers use a compact, original SVG interpretation of Stygius, the Stygian Blade: an ivory blade, red trim, green runes, and a skull guard. The blade tip is the click point; links highlight gold and clicks briefly flash red. Sparse rune embers follow movement, controls greet the pointer with a gold pulse, and clicks release a short crimson slash and sparks. The browser renders the sword directly, keeping its tip precise. Text retains its selection cursor and has no effects; touch devices keep native behavior, and reduced-motion preferences disable all cursor effects. Effects stop when idle and clear when leaving the page or scrolling. See [cursors/README.md](public/cursors/README.md) for the visual reference.
-
 ## Requirements
 
 - Node.js 20.19+ or 22.12+
