@@ -15,9 +15,6 @@ import { pageFor } from './data/routes';
 import { useChapterNavigation } from './hooks/useChapterNavigation';
 import { ChapterTransition } from './components/ChapterTransition';
 import { TransitionSound } from './components/TransitionSound';
-import { useRegionTravel } from './hooks/useRegionTravel';
-import { RegionTransition } from './components/RegionTransition';
-import { regions } from './data/artwork';
 
 const chapters = [
   { id: 'about', label: 'About', caption: 'Meet the mortal behind the work' },
@@ -26,13 +23,6 @@ const chapters = [
 ] as const;
 export default function App() {
   const { path, phase, direction, destination, curtain, goTo } = useChapterNavigation();
-  const regionTravel = useRegionTravel();
-  const regionPhase = regionTravel.phase;
-  const finishRegion = regionTravel.finish;
-  useEffect(() => {
-    // Browser history can change pages while region travel is in progress.
-    if (phase !== 'idle') finishRegion();
-  }, [phase, finishRegion]);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const page = pageFor(path);
   const isAbout = page === 'about';
@@ -86,8 +76,8 @@ export default function App() {
 
   return (
     <>
-    <div className={`title-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog || isMissing ? ' blog-screen' : ''}`} inert={phase !== 'idle' || regionPhase !== 'idle'} data-region={regionTravel.region} data-transition-phase={phase} data-transition-direction={direction}>
-      <ArtworkBackground compactControls={isContentPage} region={regionTravel.region} onTravel={(next, button) => { void regionTravel.travel(next, button); }} />
+    <div className={`title-screen tartarus-screen${isContentPage ? ' about-screen' : ''}${isExperience ? ' experience-screen' : ''}${isBlog || isMissing ? ' blog-screen' : ''}`} inert={phase !== 'idle'} data-transition-phase={phase} data-transition-direction={direction}>
+      <ArtworkBackground compactControls={isContentPage} />
       <div className="screen-shade" aria-hidden="true" />
       {isAbout ? (
         <main className="about-page" key="about">
@@ -159,9 +149,7 @@ export default function App() {
       <p className="screen-credits">Music: <a href={music.source} target="_blank" rel="noreferrer">{music.title} — {music.artist} (incompetech.com)</a> · <a href={music.licenseUrl} target="_blank" rel="noreferrer">{music.license}</a></p>
     </div>
     <ChapterTransition curtainRef={curtain} phase={phase} direction={direction} destination={destination} articleTitle={posts.find(post => `/blog/${post.slug}` === destination)?.title} />
-    <RegionTransition curtainRef={regionTravel.curtain} phase={regionPhase} destination={regionTravel.destination} />
-    <p className="sr-only" aria-live="polite" aria-atomic="true">{regionPhase === 'idle' ? `Current region: ${regions[regionTravel.region].title}` : ''}</p>
-    <TransitionSound enabled={soundEnabled} phase={phase !== 'idle' ? phase : regionPhase} />
+    <TransitionSound enabled={soundEnabled} phase={phase} />
     </>
   );
 }

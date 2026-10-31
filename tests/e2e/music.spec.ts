@@ -95,15 +95,3 @@ test('unavailable transition audio does not interrupt navigation or music', asyn
   await expect(page.getByRole('button', { name: 'Pause background music' })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.chapter-curtain')).toBeHidden();
 });
-
-test('region travel preserves music and only plays effects after opt-in', async ({ page }) => {
-  await page.getByRole('button', { name: /Enter Tartarus/ }).click();
-  await expect(page.locator('.region-curtain')).toBeHidden();
-  await expect(page.locator('html')).not.toHaveAttribute('data-transition-sounds');
-  await page.getByRole('button', { name: 'Play background music' }).click();
-  await page.getByRole('button', { name: /Return to the House/ }).click();
-  await expect(page.locator('.region-curtain')).toBeHidden();
-  await expect(page.locator('html')).toHaveAttribute('data-music-starts', '1');
-  await expect(page.locator('html')).toHaveAttribute('data-transition-sounds', '1');
-  await expect(page.getByRole('button', { name: 'Pause background music' })).toHaveAttribute('aria-pressed', 'true');
-});
