@@ -1,7 +1,66 @@
+.stygius-effects {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.stygius-effects > span { position: absolute; pointer-events: none; }
+
+.stygius-mote {
+  width: 3px;
+  height: 3px;
+  border-radius: 1px;
+  background: #b8f4c5;
+  box-shadow: 0 0 5px 1px #81dba877;
+}
+
+.stygius-mote-gold { background: #ffe68b; box-shadow: 0 0 5px 1px #f6c96b77; }
+
+.stygius-hover-pulse {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #f5d16f;
+  box-shadow: 0 0 7px #f6c96b33;
+}
+
+.stygius-slash {
+  width: 112px;
+  height: 112px;
+  transform-origin: center;
+}
+
+.stygius-slash svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.stygius-slash-blade svg { filter: drop-shadow(0 0 2px #f4693d66); }
+.stygius-slash-echo .stygius-cut-body { fill: #a92835; }
+.stygius-slash-echo .stygius-cut-edge { stroke: #ed6147; stroke-width: .7; }
+.stygius-slash-echo .stygius-cut-thread { display: none; }
+
+.stygius-impact {
+  width: 20px;
+  height: 20px;
+  background: #fff3cf;
+  clip-path: polygon(50% 0, 57% 41%, 100% 50%, 57% 59%, 50% 100%, 43% 59%, 0 50%, 43% 41%);
+}
+
+.stygius-strike-spark {
+  width: 9px;
+  height: 1.5px;
+  border-radius: 100%;
+  background: #f38458;
+  box-shadow: 0 0 3px #e6513e77;
+}
+
+.stygius-strike-spark-gold { background: #ffe6a1; box-shadow: 0 0 3px #f5c87077; }
+
 @media (hover: hover) and (pointer: fine) {
   :root {
-    --cursor-default: url('/cursors/obsidian.svg') 4 3, default;
-    --cursor-interactive: url('/cursors/obsidian-hover.svg') 4 3, pointer;
+    /* All states share the blade-tip hotspot so highlighting never shifts the click. */
+    --cursor-default: url('/cursors/stygius.svg') 3 3, default;
+    --cursor-interactive: url('/cursors/stygius-hover.svg') 3 3, pointer;
   }
 
   body { cursor: var(--cursor-default); }
@@ -22,8 +81,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .stygius-effects { display: block; }
+
   :root[data-cursor-pressed] {
-    --cursor-default: url('/cursors/obsidian-pressed.svg') 4 3, default;
-    --cursor-interactive: url('/cursors/obsidian-pressed.svg') 4 3, pointer;
+    --cursor-default: url('/cursors/stygius-pressed.svg') 3 3, default;
+    --cursor-interactive: url('/cursors/stygius-pressed.svg') 3 3, pointer;
   }
 }
