@@ -18,9 +18,12 @@
 .tartarus-screen .menu-item:hover { color: #f1b1a0; }
 .tartarus-screen .occupation { background: #e2d7bf; color: #241d19; }
 .tartarus-screen .utility-link {
-  color: #decbb4;
-  background: #25231fe6;
-  border-color: #aa725966;
+  --utility-color: #decbb4;
+  --utility-background: #25231fe6;
+  --utility-border: #aa725966;
+  --utility-hover-background: #343025;
+  --utility-hover-color: #f3df9a;
 }
 .tartarus-screen .music-toggle { color: #c4b49a; }
 .tartarus-screen :is(button, a):focus-visible { outline-color: #efb49e; }
+.tartarus-screen .utility-link:focus-visible { outline-color: #e6c875; }
