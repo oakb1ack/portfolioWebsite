@@ -16,7 +16,7 @@ test('menu, article navigation, history, and focus work', async ({ page }, testI
   await expect(page.getByRole('navigation', { name: 'On this page' })).toHaveCount(0);
   await page.goBack();
   await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeVisible();
-  await page.getByRole('link', { name: 'Return to the house' }).click();
+  await page.getByRole('link', { name: 'Return to menu' }).click();
   await expect(page.locator('.menu-item[href="/blog"]')).toBeFocused();
   expect(errors).toEqual([]);
 });

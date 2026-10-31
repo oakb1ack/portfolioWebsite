@@ -8,7 +8,7 @@ export function NotFoundPage({ headingRef, onReturn }: {
     <main className="blog-page page-enter" aria-labelledby="page-not-found">
       <nav className="blog-navigation" aria-label="Page navigation">
         <a className="back-button" href="/" onClick={onReturn}>
-          <span aria-hidden="true">←</span> Return to the house
+          <span aria-hidden="true">←</span> Return to menu
         </a>
       </nav>
       <div className="blog-content">

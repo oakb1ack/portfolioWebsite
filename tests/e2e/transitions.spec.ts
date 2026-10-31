@@ -13,7 +13,7 @@ test('chapters reveal, restore keyboard focus, and reverse on return', async ({ 
     await expect(page.locator('.chapter-curtain')).toBeHidden();
     await expect(page.locator('.title-screen')).toHaveAttribute('data-transition-direction', 'forward');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.getByRole('link', { name: 'Return to the house' }).click();
+    await page.getByRole('link', { name: 'Return to menu' }).click();
     await expect(page.getByRole('link', { name: chapter, exact: true })).toBeFocused();
     await expect(page.locator('.title-screen')).toHaveAttribute('data-transition-direction', 'backward');
   }
@@ -54,7 +54,7 @@ test('changing motion preference during a wipe finishes navigation', async ({ pa
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.getByRole('heading', { name: 'Experience', exact: true })).toBeFocused();
   await expect(page.locator('.chapter-curtain')).toBeHidden();
-  await page.getByRole('link', { name: 'Return to the house' }).click();
+  await page.getByRole('link', { name: 'Return to menu' }).click();
   await expect(page.getByRole('link', { name: 'Experience', exact: true })).toBeFocused();
 });
 
@@ -76,7 +76,7 @@ test('Escape skips the transition and leaves the destination usable', async ({ p
   await expect(page.getByRole('heading', { name: 'Experience', exact: true })).toBeFocused();
   await expect(page.locator('.chapter-curtain')).toBeHidden();
   await expect(page.locator('.chapter-interlude')).toBeHidden();
-  await page.getByRole('link', { name: 'Return to the house' }).click();
+  await page.getByRole('link', { name: 'Return to menu' }).click();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('link', { name: 'Experience', exact: true })).toBeFocused();
 });

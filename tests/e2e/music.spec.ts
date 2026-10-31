@@ -51,7 +51,7 @@ test('explicit playback starts once and stays paused after navigation', async ({
   await page.getByRole('link', { name: 'About', exact: true }).click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(page.getByRole('button', { name: 'Pause background music' })).toHaveAttribute('aria-pressed', 'true');
-  await page.getByRole('link', { name: 'Return to the house' }).click();
+  await page.getByRole('link', { name: 'Return to menu' }).click();
   await page.getByRole('button', { name: 'Pause background music' }).click();
   await expect(page.getByRole('button', { name: 'Play background music' })).toHaveAttribute('aria-pressed', 'false');
   await page.getByRole('link', { name: 'About', exact: true }).click();
@@ -75,7 +75,7 @@ test('transition sounds follow explicit music playback and stop when paused', as
   await expect(page.locator('html')).toHaveAttribute('data-transition-sounds', '1');
   await expect(page.locator('html')).toHaveAttribute('data-music-starts', '1');
   await page.getByRole('button', { name: 'Pause background music' }).click();
-  await page.getByRole('link', { name: 'Return to the house' }).click();
+  await page.getByRole('link', { name: 'Return to menu' }).click();
   await expect(page.getByRole('link', { name: 'About', exact: true })).toBeFocused();
   await expect(page.locator('html')).toHaveAttribute('data-transition-sounds', '1');
   expect(await page.locator('[data-transition-sound]').evaluate((element: HTMLAudioElement) => element.paused)).toBe(true);
@@ -94,4 +94,16 @@ test('unavailable transition audio does not interrupt navigation or music', asyn
   await expect(page.getByRole('heading', { name: 'Blog', exact: true })).toBeFocused();
   await expect(page.getByRole('button', { name: 'Pause background music' })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.chapter-curtain')).toBeHidden();
+});
+
+test('region travel preserves music and only plays effects after opt-in', async ({ page }) => {
+  await page.getByRole('button', { name: /Enter Tartarus/ }).click();
+  await expect(page.locator('.region-curtain')).toBeHidden();
+  await expect(page.locator('html')).not.toHaveAttribute('data-transition-sounds');
+  await page.getByRole('button', { name: 'Play background music' }).click();
+  await page.getByRole('button', { name: /Return to the House/ }).click();
+  await expect(page.locator('.region-curtain')).toBeHidden();
+  await expect(page.locator('html')).toHaveAttribute('data-music-starts', '1');
+  await expect(page.locator('html')).toHaveAttribute('data-transition-sounds', '1');
+  await expect(page.getByRole('button', { name: 'Pause background music' })).toHaveAttribute('aria-pressed', 'true');
 });

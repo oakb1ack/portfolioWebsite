@@ -9,7 +9,7 @@ export function ExperiencePage({ headingRef, onReturn }: {
 }) {
   return (
     <main className="experience-page page-enter" aria-labelledby="experience-heading">
-      <a className="back-button" href="/" onClick={onReturn}><span className="experience-return-mark" aria-hidden="true">«</span> Return to the house</a>
+      <a className="back-button" href="/" onClick={onReturn}><span className="experience-return-mark" aria-hidden="true">«</span> Return to menu</a>
       <div className="experience-content">
         <header className="experience-heading">
           <div className="experience-title">
